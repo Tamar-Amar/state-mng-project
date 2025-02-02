@@ -3,12 +3,13 @@ import { AgGridReact } from 'ag-grid-react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { useStates, useDeleteState, useUpdateState } from '../../hooks/useStates';
+import { useStates, useDeleteState } from '../../hooks/useStates';
 import { Button } from '@mui/material';
 import { State } from '../../types/State';
 import { useRecoilState } from 'recoil';
 import { editingStateAtom } from '../../store/stateAtoms';
 import { useNavigate } from 'react-router-dom';
+import '../../styles/_statesTable.scss';
 
 
 const StatesTable: React.FC = () => {
@@ -100,25 +101,13 @@ const StatesTable: React.FC = () => {
   );
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      marginTop: '3%', 
-      marginLeft:"10%", 
-      marginRight:"10%" }}>
-      <input
-        type="text"
-        placeholder="Quick search"
-        onChange={(e) => setQuickFilterText(e.target.value)}
-        style={{ 
-          marginBottom: '25px', 
-          padding: '8px', 
-          width: '300px',
-          borderRadius: '5px',
-          border: '1px solid #ccc',
-        }}
-      />
-      <div className="ag-theme-alpine rtl" style={{ height: 600, width: '100%' }}>
+    <div className="states-table-container">
+    <input
+      type="text"
+      placeholder="Quick search"
+      onChange={(e) => setQuickFilterText(e.target.value)}
+    />
+      <div className="ag-theme-alpine rtl">
         <AgGridReact
           rowData={states}
           columnDefs={columnDefs}
@@ -127,7 +116,6 @@ const StatesTable: React.FC = () => {
           quickFilterText={quickFilterText}
           paginationPageSize={40}
         />
-
       </div>
     </div>
   );
