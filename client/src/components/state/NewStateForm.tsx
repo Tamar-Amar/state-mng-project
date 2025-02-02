@@ -58,7 +58,7 @@ const handleRestore = async () => {
             setRestoreDialogOpen(true);
           } else {
             alert('State added successfully!');
-            navigate('/');
+            navigate('/states-list');
           }
         },
         onError: () => {

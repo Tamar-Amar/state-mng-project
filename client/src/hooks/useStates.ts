@@ -13,11 +13,13 @@ export const useStates = () => useQuery<State[]>('states', fetchStates);
 
 export const useAddState = () => {
   const queryClient = useQueryClient();
-  return useMutation<State, unknown, State>(addState, {
-    onSuccess: (newState) => {
-      queryClient.setQueryData<State[]>('states', (oldStates) =>
-        oldStates ? [...oldStates, newState] : [newState]
-      );
+  return useMutation<AddStateResponse, unknown, State>(addState, {
+    onSuccess: (data) => {
+      if (data.state) {
+        queryClient.setQueryData<State[]>('states', (oldStates) =>
+          oldStates ? [...oldStates, data.state!] : [data.state!]
+        );
+      }
     },
   });
 };

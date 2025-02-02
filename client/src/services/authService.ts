@@ -6,8 +6,12 @@ export const loginUser = async (credentials: { username: string; password: strin
     return response.data;
   };
   
-  export const registerUser = async (userData: User): Promise<User> => {
-    const response = await api.post('/users/register', userData);
+  export const registerUser = async (userData: FormData): Promise<User> => {
+    const response = await api.post('/users/register', userData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', 
+      },
+    });
     return response.data;
   };
   

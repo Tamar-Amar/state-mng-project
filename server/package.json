@@ -5,7 +5,8 @@
   "scripts": {
     "test": "set NODE_ENV=test&& jest --detectOpenHandles",
     "start": "nodemon src/index.ts",
-    "serve": "node dist/index.js"
+    "serve": "node dist/index.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
