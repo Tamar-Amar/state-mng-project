@@ -3,9 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import logger from '../utils/logger';
 
-/**
- * Middleware לבדיקה אם המשתמש מחובר
- */
+
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
@@ -25,17 +23,15 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return;
         }
 
-        req.user = user; // ✅ עכשיו `req.user` יוכר!
-        next(); // ממשיכים לבקשה הבאה
+        req.user = user; 
+        next(); 
     } catch (err) {
         logger.error('Unauthorized: Invalid token');
         res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
 };
 
-/**
- * Middleware לבדיקה אם המשתמש הוא מנהל
- */
+
 export const adminMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     logger.debug('Checking admin access');
     console.log('Checking admin access', req.user);

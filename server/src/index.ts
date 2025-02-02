@@ -8,10 +8,10 @@ import helmet from 'helmet';
 import stateRoutes from './routes/stateRoutes';
 import logger from './utils/logger';
 import regionRoutes from './routes/regionRoutes';
-import userRoutes from 'routes/userRoutes';
-import permissionRoutes from 'routes/permissionRoutes';
-import permissionRequestRoutes from 'routes/permissionRequestRoutes';
-import authRoutes from 'routes/authRoutes';
+import userRoutes from './routes/userRoutes';
+import permissionRoutes from './routes/permissionRoutes';
+import permissionRequestRoutes from './routes/permissionRequestRoutes';
+import authRoutes from './routes/authRoutes';
 
 //import xssClean from 'xss-clean';
 

@@ -6,7 +6,7 @@ import {
     updateUser,
     deleteUser
 } from '../services/userService';
-import User from 'models/User';
+import User from '../models/User';
 
 
 export const createUserController = async (req: Request, res: Response) => {

@@ -7,7 +7,7 @@ import {
     deleteUserController
 } from '../controllers/userController';
 import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware';
-import upload from 'middlewares/uploadMiddleware';
+import upload from '../middlewares/uploadMiddleware';
 
 const router = express.Router();
 
