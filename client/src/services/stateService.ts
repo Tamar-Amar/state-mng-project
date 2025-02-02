@@ -1,32 +1,35 @@
-import axios from 'axios';
-import { State } from '../types/State';
+import { AddStateResponse, State } from "../types";
+import { api } from "./apiService";
 
-const API_BASE_URL = 'http://localhost:5000/api/states'; // כתובת ה-API
 
-export const fetchStates = async () => {
-  const response = await axios.get(API_BASE_URL);
+
+
+export const fetchStates = async (): Promise<State[]> => {
+  const response = await api.get('/states');
   return response.data;
 };
 
-export const addState = async (newState: {
-  name: string;
-  flag: string;
-  population: number;
-  region: string;
-}) => {
-  const response = await axios.post(API_BASE_URL, newState);
+export const getStateById = async (id: string): Promise<State> => {
+  const response = await api.get(`/states/${id}`);
   return response.data;
 };
 
-export const deleteState = async (id: string) => {
-  const response = await axios.delete(`${API_BASE_URL}/${id}`);
+export const addState = async (state: State): Promise<AddStateResponse> => {
+  const response = await api.post('/states', state);
   return response.data;
 };
 
-export const updateState = async ({
-  _id,
-  ...updatedState
-}: State): Promise<State> => {
-  const response = await axios.put(`${API_BASE_URL}/${_id}`, updatedState);
+export const updateState = async (id: string, state: State): Promise<State> => {
+  const response = await api.put(`/states/${id}`, state);
+  return response.data;
+};
+
+export const deleteState = async (id: string): Promise<{ message: string }> => {
+  const response = await api.delete(`/states/${id}`);
+  return response.data;
+};
+
+export const restoreState = async (id: string) => {
+  const response = await api.patch(`/states/${id}/restore`);
   return response.data;
 };

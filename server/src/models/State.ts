@@ -6,6 +6,7 @@ interface IState extends Document {
     population: number;
     region: string;
     isActive: boolean;
+    cities: mongoose.Types.ObjectId[];
 
 }
 
@@ -15,6 +16,7 @@ const StateSchema: Schema = new Schema({
     population: { type: Number, required: true, min: 0 },
     region: { type: String, required: true },
     isActive: { type: Boolean, default: true },
+    cities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'City' }]
 });
 
 

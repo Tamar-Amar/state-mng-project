@@ -7,25 +7,25 @@ import {
     deleteState,
     restoreState,
 } from '../controllers/stateController';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { adminMiddleware, authMiddleware } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
 //create state
-router.post('/', authMiddleware, createState);
+router.post('/', adminMiddleware, createState);
 
 //get all states
-router.get('/', authMiddleware, getAllStates);
+router.get('/', adminMiddleware, getAllStates);
 
 //get state by id
-router.get('/:id', authMiddleware, getStateById);
+router.get('/:id', adminMiddleware, getStateById);
 
 //update state by id
-router.put('/:id', authMiddleware, updateState);
+router.put('/:id', adminMiddleware, updateState);
 
 //delete state by id
-router.delete('/:id', authMiddleware, deleteState);
+router.delete('/:id', adminMiddleware, deleteState);
 // Restore state by ID
-router.patch('/:id/restore', authMiddleware, restoreState); 
+router.patch('/:id/restore', adminMiddleware, restoreState); 
 
 export default router;

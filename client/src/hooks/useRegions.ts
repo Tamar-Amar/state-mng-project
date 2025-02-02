@@ -21,7 +21,7 @@ export const createRegion = async (regionName: string): Promise<string> => {
 export const useRegionsWithRecoil = () => {
     const [regions, setRegions] = useRecoilState(regionsAtom);
   
-    const { data, isLoading, isError } = useQuery('regions', fetchRegions, {
+    const { isLoading, isError } = useQuery('regions', fetchRegions, {
       onSuccess: (data) => {
         const regionNames = data.map((region: { nameRegion: string }) => region.nameRegion);
         setRegions(regionNames);
