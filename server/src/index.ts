@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import connectDB from '../config/db';
 import { fetchAndSaveStates } from './utils/fetchStates';
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import helmet from 'helmet';
@@ -12,6 +11,7 @@ import userRoutes from './routes/userRoutes';
 import permissionRoutes from './routes/permissionRoutes';
 import permissionRequestRoutes from './routes/permissionRequestRoutes';
 import authRoutes from './routes/authRoutes';
+import connectDB from 'db';
 
 //import xssClean from 'xss-clean';
 

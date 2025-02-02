@@ -49,7 +49,7 @@ const handleRestore = async () => {
       region: '',
       isActive: true,
     },
-    validationSchema: stateCreateValidationSchema(regions),
+    validationSchema: stateCreateValidationSchema(),
     onSubmit: (values) => {
       addMutation.mutate(values, {
         onSuccess: (data) => {
