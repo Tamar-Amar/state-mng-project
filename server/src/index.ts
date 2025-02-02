@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import connectDB from './config/db';
+import connectDB from '../config/db';
 import { fetchAndSaveStates } from './utils/fetchStates';
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import helmet from 'helmet';

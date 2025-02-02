@@ -11,21 +11,16 @@ import { adminMiddleware, authMiddleware } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-//create state
-router.post('/', adminMiddleware, createState);
+router.post('/', authMiddleware, createState);
 
-//get all states
-router.get('/', adminMiddleware, getAllStates);
+router.get('/', authMiddleware, getAllStates);
 
-//get state by id
-router.get('/:id', adminMiddleware, getStateById);
+router.get('/:id', authMiddleware, getStateById);
 
-//update state by id
-router.put('/:id', adminMiddleware, updateState);
+router.put('/:id', authMiddleware, updateState);
 
-//delete state by id
-router.delete('/:id', adminMiddleware, deleteState);
-// Restore state by ID
-router.patch('/:id/restore', adminMiddleware, restoreState); 
+router.delete('/:id', authMiddleware, deleteState);
+
+router.patch('/:id/restore', authMiddleware, restoreState); 
 
 export default router;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import logger from '../utils/logger';
+import logger from '../src/utils/logger';
 
 const connectDB = async () => {
     const uri = process.env.NODE_ENV === 'test' 
