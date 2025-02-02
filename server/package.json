@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "set NODE_ENV=test&& jest --detectOpenHandles",
+    "test": "set NODE_ENV=test&& jest --detectOpenHandles --testPathIgnorePatterns=\"/dist/\"",
     "start": "nodemon src/index.ts",
     "serve": "node dist/index.js"
   },
