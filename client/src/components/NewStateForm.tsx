@@ -6,7 +6,6 @@ import { stateCreateValidationSchema } from '../types/StateValidation';
 import { State } from '../types/State';
 import { useNavigate } from 'react-router-dom';
 import { useCreateRegionWithRecoil, useRegionsWithRecoil } from '../hooks/useRegions';
-import axios from 'axios';
 
 const NewStateForm: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +48,7 @@ const handleRestore = async () => {
       region: '',
       isActive: true,
     },
-    validationSchema: stateCreateValidationSchema(regions),
+    validationSchema: stateCreateValidationSchema(),
     onSubmit: (values) => {
       addMutation.mutate(values, {
         onSuccess: (data) => {

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { State } from '../types/State';
 
-const API_BASE_URL = 'http://localhost:5000/api/states'; // כתובת ה-API
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL+"/states";
+
 
 export const fetchStates = async () => {
   const response = await axios.get(API_BASE_URL);

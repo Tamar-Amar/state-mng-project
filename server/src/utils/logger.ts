@@ -1,11 +1,9 @@
 import { createLogger, format, transports } from 'winston';
 
-// הגדרות הפורמט של הלוגים
 const logFormat = format.printf(({ level, message, timestamp }) => {
     return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
 });
 
-// יצירת לוגים עם Winston
 const logger = createLogger({
     level: 'info', 
     format: format.combine(

@@ -4,7 +4,6 @@ export const getAllRegionsService = async () => {
     return await Region.find();
 };
 
-
 export const createRegionService = async (regionData: {
     nameRegion: string;
 }) => {

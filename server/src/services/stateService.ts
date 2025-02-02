@@ -9,7 +9,6 @@ export const getAllStatesService = async () => {
     }
 };
 
-
 export const getStateByIdService = async (id: string) => {
     try {
         const state = await State.findOne({ _id: id, isActive: true });
@@ -46,12 +45,12 @@ export const restoreStateService = async (id: string) => {
     );
 };
 
-
 export const updateStateService = async (id: string, updateData: Partial<{
     name: string;
     flag: string;
     population: number;
     region: string;
+    isActive: boolean;
 }>) => {
     return await State.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
 };

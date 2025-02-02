@@ -49,15 +49,16 @@ const StateForm: React.FC = () => {
       flag: stateToEdit?.flag || '',
       population: stateToEdit?.population || 0,
       region: stateToEdit?.region || '',
+      isActive: stateToEdit?.isActive || true,
     },
     validationSchema: isEditMode
-      ? stateEditValidationSchema(regions)
-      : stateCreateValidationSchema(regions),
+      ? stateEditValidationSchema()
+      : stateCreateValidationSchema(),
     enableReinitialize: true,
     onSubmit: (values) => {
       if (isEditMode) {
         updateMutation.mutate(
-          { ...values, _id: id },
+          { ...values, _id: id},
           {
             onSuccess: () => {
               alert('State updated successfully!');
