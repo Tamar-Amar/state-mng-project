@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ListPage from '../pages/ListPage';
 import CreateStatePage from '../pages/CreateStatePage';
-import StateForm from '../components/StateForm';
+import StateForm from '../components/state/StateForm';
 
 const AppRoutes: React.FC = () => {
     return (

@@ -1,75 +1,90 @@
-import React, { useState } from 'react';
-import { Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
-import { useFormik } from 'formik';
-import { useAddState, useRestoreState } from '../hooks/useStates';
-import { stateCreateValidationSchema } from '../types/StateValidation';
-import { State } from '../types/State';
-import { useNavigate } from 'react-router-dom';
-import { useCreateRegionWithRecoil, useRegionsWithRecoil } from '../hooks/useRegions';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, Button, TextField, Typography, Autocomplete, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { setNestedObjectValues, useFormik } from 'formik';
+import { stateCreateValidationSchema, stateEditValidationSchema } from '../../types/StateValidation';
+import { useAddState, useUpdateState } from '../../hooks/useStates';
+import { useCreateRegionWithRecoil, useRegionsWithRecoil } from '../../hooks/useRegions';
+import { useQueryClient } from 'react-query';
+import { State } from '../../types/State';
+import { editingStateAtom } from '../../store/stateAtoms';
+import { useRecoilState } from 'recoil';
 
-const NewStateForm: React.FC = () => {
+const StateForm: React.FC = () => {
+  const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const addMutation = useAddState();
   const { regions } = useRegionsWithRecoil();
+  const queryClient = useQueryClient();
+  const addMutation = useAddState();
+  const updateMutation = useUpdateState();
   const [newRegion, setNewRegion] = useState<string>('');
   const createRegionMutation = useCreateRegionWithRecoil();
+  const stateToEdit = id ? queryClient.getQueryData<State[]>('states')?.find((state) => state._id === id) : null;
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [existingState, setExistingState] = useState<State | null>(null);
-const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
-
-const restoreMutation = useRestoreState();
-
-const handleRestore = async () => {
-  if (existingState) {
-    restoreMutation.mutate(existingState._id!, {
-      onSuccess: () => {
-        alert('State restored successfully!');
-        setExistingState(null);
-        setRestoreDialogOpen(false);
-        navigate('/');
-      },
-      onError: () => {
-        alert('Failed to restore state.');
-      },
-    });
-  }
-};
-
+  const [editingStateName, setEditingStateName] = useRecoilState(editingStateAtom); 
+  const isEditMode = !!id;
+  
   const confirmCancel = () => {
     setShowConfirmation(false);
+    if (isEditMode) {
+        setEditingStateName(null);
+    }
     navigate('/');
   };
 
-  const formik = useFormik<State>({
+  const handleCancel = () => {
+    if (formik.dirty) {
+      setShowConfirmation(true);
+    } else {
+        if (isEditMode) {
+            setEditingStateName(null);
+        }
+      navigate('/');
+    }
+  };
+
+  const formik = useFormik({
     initialValues: {
-      name: '',
-      flag: '',
-      population: 0,
-      region: '',
-      isActive: true,
+      name: stateToEdit?.name || '',
+      flag: stateToEdit?.flag || '',
+      population: stateToEdit?.population || 0,
+      region: stateToEdit?.region || '',
+      isActive: stateToEdit?.isActive || true,
     },
-    validationSchema: stateCreateValidationSchema(),
+    validationSchema: isEditMode
+      ? stateEditValidationSchema()
+      : stateCreateValidationSchema(),
+    enableReinitialize: true,
     onSubmit: (values) => {
-      addMutation.mutate(values, {
-        onSuccess: (data) => {
-          if (data.message?.includes('Would you like to restore')) {
-            setExistingState(data.state);
-            setRestoreDialogOpen(true);
-          } else {
+      if (isEditMode) {
+        updateMutation.mutate(
+          { ...values, _id: id},
+          {
+            onSuccess: () => {
+              alert('State updated successfully!');
+              navigate('/');
+            },
+            onError: () => {
+              alert('Failed to update state.');
+            },
+          }
+        );
+      } else {
+        addMutation.mutate(values, {
+          onSuccess: () => {
             alert('State added successfully!');
             navigate('/');
-          }
-        },
-        onError: () => {
-          alert('Failed to add state.');
-        },
-      });
+          },
+          onError: () => {
+            alert('Failed to add state.');
+          },
+        });
+      }
     },
   });
-  
 
   const handleAddRegion = () => {
-    if (newRegion) {
+    if (newRegion && /^[a-zA-Z\s]+$/.test(newRegion)) {
       createRegionMutation.mutate(newRegion, {
         onSuccess: () => {
           alert(`Region "${newRegion}" added successfully!`);
@@ -80,21 +95,15 @@ const handleRestore = async () => {
           alert('Failed to add region.');
         },
       });
-    }
-  };
-
-  const handleCancel = () => {
-    if (formik.dirty) {
-      setShowConfirmation(true);
     } else {
-      navigate('/');
+      alert('Invalid region name. Please use only letters and spaces.');
     }
   };
 
   return (
     <Box sx={{ padding: 3, maxWidth: 500, margin: 'auto' }}>
       <Typography variant="h4" gutterBottom>
-        Add New State
+        {isEditMode ? `Edit State: ${stateToEdit?.name || ''}` : 'Add New State'}
       </Typography>
       <form onSubmit={formik.handleSubmit}>
         <TextField
@@ -107,6 +116,7 @@ const handleRestore = async () => {
           margin="normal"
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
+          disabled={isEditMode} // שם המדינה לא ניתן לעריכה
         />
         <TextField
           fullWidth
@@ -131,7 +141,7 @@ const handleRestore = async () => {
           error={formik.touched.population && Boolean(formik.errors.population)}
           helperText={formik.touched.population && formik.errors.population}
         />
-          <Autocomplete
+<Autocomplete
             options={regions}
             freeSolo
             value={formik.values.region || ''}
@@ -172,7 +182,7 @@ const handleRestore = async () => {
             Cancel
           </Button>
           <Button variant="contained" color="primary" type="submit" disabled={!formik.dirty || !formik.isValid}>
-            Add State
+            {isEditMode ? 'Update State' : 'Add State'}
           </Button>
         </Box>
       </form>
@@ -193,27 +203,8 @@ const handleRestore = async () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Dialog open={restoreDialogOpen} onClose={() => setRestoreDialogOpen(false)}>
-        <DialogTitle>State Already Exists</DialogTitle>
-        <DialogContent>
-          <Typography>
-            The state "{existingState?.name}" already exists but is marked as deleted.
-            Would you like to restore it?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setRestoreDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleRestore} color="secondary">
-            Restore State
-          </Button>
-        </DialogActions>
-      </Dialog>
-
     </Box>
   );
 };
 
-export default NewStateForm;
+export default StateForm;

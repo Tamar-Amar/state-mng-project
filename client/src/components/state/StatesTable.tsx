@@ -3,11 +3,11 @@ import { AgGridReact } from 'ag-grid-react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { useStates, useDeleteState, useUpdateState } from '../hooks/useStates';
+import { useStates, useDeleteState, useUpdateState } from '../../hooks/useStates';
 import { Button } from '@mui/material';
-import { State } from '../types/State';
+import { State } from '../../types/State';
 import { useRecoilState } from 'recoil';
-import { editingStateAtom } from '../store/stateAtoms';
+import { editingStateAtom } from '../../store/stateAtoms';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -15,13 +15,9 @@ const StatesTable: React.FC = () => {
   const { data: states, isLoading, isError } = useStates();
   const [quickFilterText, setQuickFilterText] = useState('');
   const deleteMutation = useDeleteState();
-  const updateMutation = useUpdateState();
   const [editingStateName, setEditingStateName] = useRecoilState(editingStateAtom); 
   const navigate = useNavigate();
   
-
-
-
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this state?')) {
