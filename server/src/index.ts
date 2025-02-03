@@ -11,7 +11,7 @@ import userRoutes from './routes/userRoutes';
 import permissionRoutes from './routes/permissionRoutes';
 import permissionRequestRoutes from './routes/permissionRequestRoutes';
 import authRoutes from './routes/authRoutes';
-import connectDB from 'db';
+import connectDB from './config/db';
 
 //import xssClean from 'xss-clean';
 
