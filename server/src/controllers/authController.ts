@@ -4,7 +4,7 @@ import User from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET||'tamar747';
 
 export const loginUserController = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -12,18 +12,24 @@ export const loginUserController = async (req: Request, res: Response): Promise<
       const user = await User.findOne({ username });
   
       if (!user) {
+        console.log('User not found');
         res.status(404).json({ message: 'User not found' });
         return;
       }
   
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
+        console.log('Password', password,"---", user.password);
+        console.log('Invalid credentials');
         res.status(401).json({ message: 'Invalid credentials' });
         return;
       }
+      console.log('===JWT_SECRET:', process.env.JWT_SECRET);
+
   
-      const token = jwt.sign({ userId: user._id, role: user.role }, 'secret', { expiresIn: '1h' });
-      res.status(200).json({ token, user }); // ✅ ללא return
+      const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '5d' });
+      console.log('User logged in:', user.username);
+      res.status(200).json({ token, user }); 
     } catch (error) {
       res.status(500).json({ message: 'Login failed', error });
     }

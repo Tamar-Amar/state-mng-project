@@ -5,6 +5,7 @@ import logger from '../utils/logger';
 
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    console.log('---------Checking authentication', req.headers.authorization);
     try {
         const token = req.headers.authorization?.split(' ')[1];
 
@@ -15,9 +16,12 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         }
 
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+        console.log("decoded",decoded);
         const user = await User.findById(decoded.userId).select('-password');
+        console.log("user found",user);
 
         if (!user) {
+
             logger.error('Unauthorized: User not found');
             res.status(401).json({ message: 'Unauthorized: User not found' });
             return;

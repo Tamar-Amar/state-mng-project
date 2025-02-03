@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { useAddState, useRestoreState } from '../../hooks/useStates';
-import { stateCreateValidationSchema } from '../../types/StateValidation';
+import { stateCreateValidationSchema } from '../../types/validations/StateValidation';
 import { AddStateResponse, State } from '../../types/State';
 import { useNavigate } from 'react-router-dom';
 import { useCreateRegionWithRecoil, useRegionsWithRecoil } from '../../hooks/useRegions';

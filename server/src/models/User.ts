@@ -23,12 +23,11 @@ const UserSchema: Schema = new Schema({
     phone: { type: String, required: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
-    profilePicture: { type: String }, // נשמר כנתיב לקובץ ולא בבסיס הנתונים
+    profilePicture: { type: String }, 
     joinDate: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true }
 });
 
-// Hash the password before saving
 UserSchema.pre<IUser>('save', async function (next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
@@ -36,7 +35,6 @@ UserSchema.pre<IUser>('save', async function (next) {
     next();
 });
 
-// Compare password
 UserSchema.methods.comparePassword = async function (candidatePassword: string) {
     return await bcrypt.compare(candidatePassword, this.password);
 };

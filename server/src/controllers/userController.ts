@@ -6,29 +6,34 @@ import {
     updateUser,
     deleteUser
 } from '../services/userService';
-import User from '../models/User';
 
 
 export const createUserController = async (req: Request, res: Response) => {
-  try {
-    const { firstName, lastName, username, email, phone, password } = req.body;
-    const profilePicture = req.file ? `/uploads/${req.file.filename}` : '';
+    try {
+        const { firstName, lastName, username, email, phone, password, role, joinDate } = req.body;
+        const profilePicture = req.file ? `/uploads/${req.file.filename}` : '';
+        const isActive = req.body.isActive === 'true' || req.body.isActive === true;
 
-    const newUser = new User({
-      firstName,
-      lastName,
-      username,
-      email,
-      phone,
-      password,
-      profilePicture 
-    });
+        const userData = {
+            firstName,
+            lastName,
+            username,
+            email,
+            phone,
+            password,
+            profilePicture,
+            role,
+            joinDate,
+            isActive,
+        };
 
-    await newUser.save();
-    res.status(201).json({ message: 'User created successfully', user: newUser });
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating user', error });
-  }
+        const newUser = await createUser(userData);  
+        res.status(201).json({ message: 'User created successfully', user: newUser });
+    } 
+    catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ message: 'Error creating user', error });
+    }
 };
 
 
