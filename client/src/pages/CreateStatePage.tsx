@@ -1,5 +1,5 @@
 import React from 'react';
-import NewStateForm from '../components/NewStateForm';
+import NewStateForm from '../components/state/NewStateForm';
 
 const CreateStatePage: React.FC = () => {
     return <div style={{marginTop:"7%"}}>

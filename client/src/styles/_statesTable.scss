@@ -1,0 +1,58 @@
+.states-table-container {
+    display: flex;
+    flex-direction: column;
+    margin: 3% auto;
+    padding: 0 5%;
+    max-width: 1200px;
+    width: 100%;
+  
+    input {
+      margin-bottom: 20px;
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+  
+    .ag-theme-alpine {
+      height: 70vh;
+      width: 100%;
+    }
+  
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+  
+      button {
+        min-width: 70px;
+        padding: 6px 12px;
+        height: auto;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .states-table-container {
+      padding: 0 2%;
+  
+      input {
+        max-width: 100%;
+      }
+  
+      .action-buttons {
+        flex-direction: column;
+  
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+  

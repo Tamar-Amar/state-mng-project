@@ -1,68 +1,66 @@
+// src/hooks/useStates.ts
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { fetchStates, addState, deleteState, updateState } from '../services/stateService';
-import { State } from '../types/State';
-import axios from 'axios';
+import {
+  fetchStates,
+  addState,
+  deleteState,
+  updateState,
+  restoreState,
+} from '../services/stateService';
+import { State, AddStateResponse } from '../types';
 
-
-export const useStates = () => {
-  return useQuery('states', fetchStates);
-};
+export const useStates = () => useQuery<State[]>('states', fetchStates);
 
 export const useAddState = () => {
   const queryClient = useQueryClient();
-  return useMutation(addState, {
-    onSuccess: (newState) => {
-      queryClient.setQueryData('states', (oldStates: State[] | undefined) => {
-        return oldStates ? [...oldStates, newState] : [newState];
-      });
+  return useMutation<AddStateResponse, unknown, State>(addState, {
+    onSuccess: (data) => {
+      if (data.state) {
+        queryClient.setQueryData<State[]>('states', (oldStates) =>
+          oldStates ? [...oldStates, data.state!] : [data.state!]
+        );
+      }
     },
   });
 };
 
 export const useDeleteState = () => {
   const queryClient = useQueryClient();
-  return useMutation(deleteState, {
-    onSuccess: (deletedStateId) => {
-      queryClient.setQueryData('states', (oldStates: State[] | undefined) => {
-        return oldStates ? oldStates.filter((state) => state._id !== deletedStateId) : [];
-      });
+  return useMutation((id: string) => deleteState(id), {
+    onSuccess: (_, deletedStateId) => {
+      queryClient.setQueryData<State[]>('states', (oldStates) =>
+        oldStates ? oldStates.filter((state) => state._id !== deletedStateId) : []
+      );
     },
   });
 };
-
 
 export const useUpdateState = () => {
   const queryClient = useQueryClient();
-  return useMutation(updateState, {
+  return useMutation((updatedState: State) => updateState(updatedState._id!, updatedState), {
     onSuccess: (updatedState) => {
-      queryClient.setQueryData('states', (oldStates: State[] | undefined) => {
-        return oldStates
+      queryClient.setQueryData<State[]>('states', (oldStates) =>
+        oldStates
           ? oldStates.map((state) =>
               state._id === updatedState._id ? updatedState : state
             )
-          : [];
-      });
+          : [updatedState]
+      );
     },
   });
 };
 
-export  const useRestoreState = () => {
+export const useRestoreState = () => {
   const queryClient = useQueryClient();
-  return useMutation(
-    async (id: string) => {
-      const response = await axios.patch(`http://localhost:5000/api/states/${id}/restore`);
-      return response.data;
+  return useMutation((id: string) => restoreState(id), {
+    onSuccess: (restoredState) => {
+      queryClient.setQueryData<State[]>('states', (oldStates) =>
+        oldStates
+          ? oldStates.map((state) =>
+              state._id === restoredState._id ? restoredState : state
+            )
+          : [restoredState]
+      );
     },
-    {
-      onSuccess: (restoredState) => {
-        queryClient.setQueryData('states', (oldStates: State[] | undefined) => {
-          return oldStates
-            ? oldStates.map((state) =>
-                state._id === restoredState._id ? restoredState : state
-              )
-            : [restoredState];
-        });
-      },
-    }
-  );
+  });
 };

@@ -1,12 +1,12 @@
 import express from 'express';
 import {getAllRegion, createRegion} from '../controllers/regionController';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { adminMiddleware, authMiddleware } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-router.post('/', authMiddleware, createRegion);
+router.post('/', adminMiddleware, createRegion);
 
-router.get('/', authMiddleware, getAllRegion);
+router.get('/', adminMiddleware, getAllRegion);
 
 
 export default router;

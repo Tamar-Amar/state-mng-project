@@ -1,5 +1,5 @@
 import React from 'react';
-import StatesTable from '../components/StatesTable';
+import StatesTable from '../components/state/StatesTable';
 import { Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 

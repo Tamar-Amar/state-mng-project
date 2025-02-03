@@ -30,7 +30,6 @@ export const getStateById = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const createState = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     try {
         const result = await createStateService(req.body);
 
@@ -83,7 +82,6 @@ export const deleteState = async (req: Request, res: Response, next: NextFunctio
 import State from '../models/State';
 
 export const restoreState = async (req: Request, res: Response, next: NextFunction) => {
-    console.log("----------",req.params.id);
     try {
         const state = await State.findByIdAndUpdate(
             req.params.id,

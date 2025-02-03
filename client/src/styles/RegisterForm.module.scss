@@ -1,0 +1,36 @@
+.formContainer {
+    margin-top: 16px;
+  }
+  
+  .title {
+    margin-bottom: 16px;
+  }
+  
+  .flexContainer {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .uploadButton {
+    margin-top: 8px;
+    max-height: 40px;
+  
+    &.uploaded {
+      width: auto;
+    }
+  }
+  
+  .avatarContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .submitButton {
+    margin-top: 16px;
+  }

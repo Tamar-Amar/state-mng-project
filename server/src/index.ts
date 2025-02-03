@@ -1,13 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import connectDB from './config/db';
 import { fetchAndSaveStates } from './utils/fetchStates';
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import helmet from 'helmet';
 import stateRoutes from './routes/stateRoutes';
 import logger from './utils/logger';
 import regionRoutes from './routes/regionRoutes';
+import userRoutes from './routes/userRoutes';
+import permissionRoutes from './routes/permissionRoutes';
+import permissionRequestRoutes from './routes/permissionRequestRoutes';
+import authRoutes from './routes/authRoutes';
+import connectDB from './config/db';
+
 //import xssClean from 'xss-clean';
 
 const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
@@ -23,6 +28,12 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/states', stateRoutes);
 app.use('/api/regions', regionRoutes);
+app.use('/api/users', userRoutes); 
+app.use('/api/permissions', permissionRoutes); 
+app.use('/api/permission-requests', permissionRequestRoutes);
+app.use('/uploads', express.static('public/uploads'));
+app.use('/api/auth', authRoutes);
+
 
 app.get('/', (req, res) => {
     logger.info('Root route accessed');
