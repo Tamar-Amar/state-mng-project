@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 import { useLoginUser } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from '../../store/userAtom';
 
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const loginMutation = useLoginUser();
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userAtom);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -19,7 +22,8 @@ const LoginForm: React.FC = () => {
 
     loginMutation.mutate(credentials, {
       onSuccess: (data) => {
-        alert('Login successful!');
+        localStorage.setItem('token', data.token);
+        setUser(data.user);
         navigate('/home'); 
       },
       onError: (error) => {
