@@ -1,28 +1,56 @@
 import React from 'react';
 import StatesTable from '../components/state/StatesTable';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../store/userAtom';
 
 const ListPage: React.FC = () => {
   const navigate = useNavigate();
+  const user = useRecoilValue(userAtom);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  const handleAddStateClick = () => {
+    if (user?.permissions.canAdd) {
+      navigate('/state-form');
+    } else {
+      setOpenSnackbar(true);
+    }
+  };
 
   return (
     <Box sx={{ padding: 3 }}>
-
       <StatesTable />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginLeft: "40%", marginTop: "2%"}}>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2%' }}>
         <Button
           variant="contained"
-          color="primary"
-          style={{
-             paddingLeft: "10%",
-             paddingRight: "10%"
+          onClick={handleAddStateClick}
+          sx={{
+            paddingLeft: '10%',
+            paddingRight: '10%',
+            backgroundColor: user?.permissions.canAdd ? 'primary.main' : '#e0e0e0',
+            color: user?.permissions.canAdd ? 'white' : '#757575',
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: user?.permissions.canAdd ? 'primary.dark' : '#bdbdbd',
+            },
           }}
-          onClick={() => navigate('/state-form')}
         >
           Add New State
         </Button>
       </Box>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="warning" onClose={() => setOpenSnackbar(false)} sx={{ fontSize: '1rem', padding: '16px 24px' , mt: '70%'}}>
+          You don’t have permission to add a new state. Please contact the system administrator.
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

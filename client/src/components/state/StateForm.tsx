@@ -8,7 +8,8 @@ import { useCreateRegionWithRecoil, useRegionsWithRecoil } from '../../hooks/use
 import { useQueryClient } from 'react-query';
 import { State } from '../../types/State';
 import { editingStateAtom } from '../../store/stateAtoms';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userAtom } from '../../store/userAtom';
 
 const StateForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -23,13 +24,46 @@ const StateForm: React.FC = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [editingStateName, setEditingStateName] = useRecoilState(editingStateAtom); 
   const isEditMode = !!id;
-  
+  const user = useRecoilValue(userAtom);
+
+  useEffect(() => {
+    const hasPermission = id 
+        ? user?.permissions.canUpdate 
+        : user?.permissions.canAdd;
+
+    if (!hasPermission) {
+        setTimeout(() => {
+            navigate('/home');
+        }, 3000);
+    }
+}, [id, user, navigate]);
+
+const hasPermission = id 
+? user?.permissions.canUpdate 
+: user?.permissions.canAdd;
+
+if (!hasPermission) {
+  return (
+      <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6" color="error">
+              You don’t have permission to {id ? 'edit' : 'add'} a state.
+          </Typography>
+          <Typography variant="body1">
+              Redirecting you back to the home page...
+          </Typography>
+          <Button onClick={() => navigate('/home')} variant="contained" sx={{ mt: 2 }}>
+              Go to Home Now
+          </Button>
+      </Box>
+  );
+}
+
   const confirmCancel = () => {
     setShowConfirmation(false);
     if (isEditMode) {
         setEditingStateName(null);
     }
-    navigate('/');
+    navigate('/home');
   };
 
   const handleCancel = () => {
@@ -39,7 +73,7 @@ const StateForm: React.FC = () => {
         if (isEditMode) {
             setEditingStateName(null);
         }
-      navigate('/states-list');
+      navigate('/home');
     }
   };
 
@@ -63,7 +97,7 @@ const StateForm: React.FC = () => {
           {
             onSuccess: () => {
               alert('State updated successfully!');
-              navigate('/');
+              navigate('/home');
             },
             onError: () => {
               alert('Failed to update state.');
@@ -74,7 +108,7 @@ const StateForm: React.FC = () => {
         addMutation.mutate(values, {
           onSuccess: () => {
             alert('State added successfully!');
-            navigate('/');
+            navigate('/home');
           },
           onError: () => {
             alert('Failed to add state.');

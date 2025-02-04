@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
     loginMutation.mutate(credentials, {
       onSuccess: (data) => {
         alert('Login successful!');
-        navigate('/states-list'); 
+        navigate('/home'); 
       },
       onError: (error) => {
         console.error('Login failed:', error);

@@ -8,11 +8,11 @@ import PersonalPage from '../pages/PersonalPage';
 const AppRoutes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/state-form/:id?" element={<StateForm />} />
             <Route path="/" element={<AuthPage />} />
-            <Route path="/states-list" element={<ListPage />} />
-            <Route path="*" element={<p>not found</p>} />
+            <Route path="/home" element={<ListPage />} />
+            <Route path="/state-form/:id?" element={<StateForm />} />
             <Route path="/personal" element={<PersonalPage />} />
+            <Route path="*" element={<p>not found</p>} />
         </Routes>
     );
 };
