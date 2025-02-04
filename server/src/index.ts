@@ -8,10 +8,10 @@ import stateRoutes from './routes/stateRoutes';
 import logger from './utils/logger';
 import regionRoutes from './routes/regionRoutes';
 import userRoutes from './routes/userRoutes';
-import permissionRoutes from './routes/permissionRoutes';
 import permissionRequestRoutes from './routes/permissionRequestRoutes';
 import authRoutes from './routes/authRoutes';
 import connectDB from './config/db';
+import path from 'path';
 
 //import xssClean from 'xss-clean';
 
@@ -21,19 +21,19 @@ dotenv.config({ path: envFile });
 const PORT = process.env.PORT || (process.env.NODE_ENV === 'development' ? 5000 : undefined);
 
 const app = express();
-app.use(helmet());
+app.use(helmet(
+));
 //app.use(xssClean());
 
 app.use(cors());
+
 app.use(express.json());
 app.use('/api/states', stateRoutes);
 app.use('/api/regions', regionRoutes);
 app.use('/api/users', userRoutes); 
-app.use('/api/permissions', permissionRoutes); 
 app.use('/api/permission-requests', permissionRequestRoutes);
 app.use('/uploads', express.static('public/uploads'));
 app.use('/api/auth', authRoutes);
-
 
 app.get('/', (req, res) => {
     logger.info('Root route accessed');

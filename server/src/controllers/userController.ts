@@ -13,7 +13,10 @@ export const createUserController = async (req: Request, res: Response) => {
         const { firstName, lastName, username, email, phone, password, role, joinDate } = req.body;
         const profilePicture = req.file ? `/uploads/${req.file.filename}` : '';
         const isActive = req.body.isActive === 'true' || req.body.isActive === true;
-
+        const permissions = role === 'admin' ? 
+            { canAdd: true, canUpdate: true, canDelete: true } 
+            : { canAdd: false, canUpdate: false, canDelete: false };
+        
         const userData = {
             firstName,
             lastName,
@@ -25,6 +28,7 @@ export const createUserController = async (req: Request, res: Response) => {
             role,
             joinDate,
             isActive,
+            permissions
         };
 
         const newUser = await createUser(userData);  

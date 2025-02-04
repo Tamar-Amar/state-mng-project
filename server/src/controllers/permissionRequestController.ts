@@ -8,9 +8,7 @@ import {
     getUserPermissionRequests
 } from '../services/permissionRequestService';
 
-/**
- * משתמש מגיש בקשת הרשאה
- */
+
 export const requestPermissionController = async (req: Request, res: Response): Promise<void> => {
     try {
         const permissionRequest = await requestPermission(req.user!.id, req.body);
@@ -20,9 +18,7 @@ export const requestPermissionController = async (req: Request, res: Response): 
     }
 };
 
-/**
- * קבלת כל הבקשות הממתינות (למנהלים בלבד)
- */
+
 export const getPendingRequestsController = async (_req: Request, res: Response): Promise<void> => {
     try {
         const requests = await getPendingRequests();
@@ -32,9 +28,7 @@ export const getPendingRequestsController = async (_req: Request, res: Response)
     }
 };
 
-/**
- * קבלת בקשת הרשאה לפי ID
- */
+
 export const getRequestByIdController = async (req: Request, res: Response): Promise<void> => {
     try {
         const request = await getRequestById(req.params.id);

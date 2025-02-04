@@ -12,8 +12,14 @@ interface IUser extends Document {
     profilePicture: string;
     joinDate: Date;
     isActive: boolean;
+    permissions: {
+        canAdd: boolean;
+        canUpdate: boolean;
+        canDelete: boolean;
+    };
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
+
 
 const UserSchema: Schema = new Schema({
     firstName: { type: String, required: true },
@@ -25,7 +31,12 @@ const UserSchema: Schema = new Schema({
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
     profilePicture: { type: String }, 
     joinDate: { type: Date, default: Date.now },
-    isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true },
+    permissions: {
+        canAdd: { type: Boolean, default: false },
+        canUpdate: { type: Boolean, default: false },
+        canDelete: { type: Boolean, default: false }
+    }
 });
 
 UserSchema.pre<IUser>('save', async function (next) {

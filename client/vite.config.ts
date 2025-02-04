@@ -8,5 +8,14 @@ export default defineConfig(({ mode }) => {
     define: {
       'process.env': env, 
     },
+    server: {
+      proxy: {
+        '/uploads': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
   };
 });
