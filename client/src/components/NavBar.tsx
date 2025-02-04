@@ -22,8 +22,7 @@ const Navbar = () => {
   return (
     <AppBar position="fixed" color="primary" elevation={3} sx={{ zIndex: 1300 }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        
-        {/* Left Section - Navigation Buttons */}
+
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             color={location.pathname === '/home' ? 'secondary' : 'inherit'}
@@ -58,7 +57,6 @@ const Navbar = () => {
           </Button>
         </Box>
 
-        {/* Center Section - Editing Info */}
         {editingStateName && (
           <Typography
             variant="subtitle1"
@@ -68,7 +66,6 @@ const Navbar = () => {
           </Typography>
         )}
 
-        {/* Right Section - User Avatar */}
         {user && (
           <IconButton onClick={handleProfileClick} sx={{ cursor: 'pointer' }}>
             <Avatar
