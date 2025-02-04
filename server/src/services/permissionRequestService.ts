@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import PermissionRequest from '../models/PermissionRequest';
-import { setUserPermissions } from './permissionService';
+import User from '../models/User';
 
 export const requestPermission = async (userId: string, permissions: { canAdd: boolean; canUpdate: boolean; canDelete: boolean }) => {
     return await PermissionRequest.create({
@@ -18,18 +18,30 @@ export const getRequestById = async (requestId: string) => {
     return await PermissionRequest.findById(requestId).populate('user', 'username email');
 };
 
+export const setUserPermissions = async (userId: string, permissions: { canAdd: boolean; canUpdate: boolean; canDelete: boolean }) => {
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { permissions },
+            { new: true, runValidators: true }
+        );
+        return updatedUser;
+    } catch (error) {
+        console.error('Error updating user permissions:', error);
+        throw new Error('Failed to update user permissions');
+    }
+};
+
 export const approvePermissionRequest = async (requestId: string, adminId: string, approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean }) => {
     const request = await PermissionRequest.findById(requestId);
     if (!request) throw new Error('Request not found');
 
-    // עדכון ההרשאות
     await setUserPermissions(request.user.toString(), {
         canAdd: approvals.canAdd || false,
         canUpdate: approvals.canUpdate || false,
         canDelete: approvals.canDelete || false
     });
 
-    // סימון הבקשה כמטופלת
     request.status = 'approved';
     request.reviewedBy = new mongoose.Types.ObjectId(adminId);
     return await request.save();
@@ -45,6 +57,6 @@ export const denyPermissionRequest = async (requestId: string, adminId: string) 
 
 export const getUserPermissionRequests = async (userId: string) => {
     return await PermissionRequest.find({ user: userId })
-        .populate('reviewedBy', 'firstName lastName') // מביא את שם המנהל שאישר
-        .sort({ createdAt: -1 }); // מסדר לפי תאריך מהחדש לישן
+        .populate('reviewedBy', 'firstName lastName') 
+        .sort({ createdAt: -1 }); 
 };

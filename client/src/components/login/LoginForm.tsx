@@ -19,7 +19,6 @@ const LoginForm: React.FC = () => {
 
     loginMutation.mutate(credentials, {
       onSuccess: (data) => {
-        console.log('Login successful:', data);
         alert('Login successful!');
         navigate('/states-list'); 
       },

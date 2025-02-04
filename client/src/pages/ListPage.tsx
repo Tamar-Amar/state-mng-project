@@ -18,7 +18,7 @@ const ListPage: React.FC = () => {
              paddingLeft: "10%",
              paddingRight: "10%"
           }}
-          onClick={() => navigate('/state-create')}
+          onClick={() => navigate('/state-form')}
         >
           Add New State
         </Button>

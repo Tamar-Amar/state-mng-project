@@ -39,7 +39,7 @@ const StateForm: React.FC = () => {
         if (isEditMode) {
             setEditingStateName(null);
         }
-      navigate('/');
+      navigate('/states-list');
     }
   };
 

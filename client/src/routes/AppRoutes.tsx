@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ListPage from '../pages/ListPage';
-import CreateStatePage from '../pages/CreateStatePage';
 import AuthPage from '../pages/AuthPage';
 import StateForm from '../components/state/StateForm';
+import PersonalPage from '../pages/PersonalPage';
 
 const AppRoutes: React.FC = () => {
     return (
@@ -11,8 +11,8 @@ const AppRoutes: React.FC = () => {
             <Route path="/state-form/:id?" element={<StateForm />} />
             <Route path="/" element={<AuthPage />} />
             <Route path="/states-list" element={<ListPage />} />
-            <Route path="/state-create" element={<CreateStatePage />} />
             <Route path="*" element={<p>not found</p>} />
+            <Route path="/personal" element={<PersonalPage />} />
         </Routes>
     );
 };

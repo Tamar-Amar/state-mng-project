@@ -6,16 +6,15 @@ import {
     updateUserController,
     deleteUserController
 } from '../controllers/userController';
-import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware';
+import { authAndPermissionMiddleware } from '../middlewares/authAndPermissionMiddleware';
 import upload from '../middlewares/uploadMiddleware';
 
 const router = express.Router();
 
 router.post('/register', upload.single('profilePicture'), createUserController);
-router.get('/', adminMiddleware, getAllUsersController);
-router.get('/:id', authMiddleware, getUserByIdController);
-router.put('/:id', authMiddleware, updateUserController);
-router.delete('/:id', adminMiddleware, deleteUserController);
-
+router.get('/', authAndPermissionMiddleware('admin'), getAllUsersController);
+router.get('/:id', authAndPermissionMiddleware(), getUserByIdController);
+router.put('/:id', authAndPermissionMiddleware(undefined, 'canUpdate'), updateUserController);
+router.delete('/:id', authAndPermissionMiddleware(undefined, 'canDelete'), deleteUserController);
 
 export default router;

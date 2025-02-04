@@ -8,7 +8,7 @@ interface IPermissionRequest extends Document {
         canDelete: boolean;
     };
     status: 'pending' | 'approved' | 'denied';
-    reviewedBy?: mongoose.Types.ObjectId; // מנהל שאישר/דחה
+    reviewedBy?: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }

@@ -7,20 +7,15 @@ import {
     deleteState,
     restoreState,
 } from '../controllers/stateController';
-import { adminMiddleware, authMiddleware } from '../middlewares/authMiddleware';
+import { authAndPermissionMiddleware } from '../middlewares/authAndPermissionMiddleware';
 
 const router = express.Router();
 
-router.post('/', authMiddleware, createState);
-
-router.get('/', authMiddleware, getAllStates);
-
-router.get('/:id', authMiddleware, getStateById);
-
-router.put('/:id', authMiddleware, updateState);
-
-router.delete('/:id', authMiddleware, deleteState);
-
-router.patch('/:id/restore', authMiddleware, restoreState); 
+router.post('/', authAndPermissionMiddleware(undefined, 'canAdd'), createState);
+router.get('/', authAndPermissionMiddleware(), getAllStates);
+router.get('/:id', authAndPermissionMiddleware(), getStateById);
+router.put('/:id', authAndPermissionMiddleware(undefined, 'canUpdate'), updateState);
+router.delete('/:id', authAndPermissionMiddleware(undefined, 'canDelete'), deleteState);
+router.patch('/:id/restore', authAndPermissionMiddleware('admin'), restoreState);
 
 export default router;

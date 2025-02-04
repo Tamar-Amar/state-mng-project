@@ -5,7 +5,7 @@ import {
   getPendingRequests,
   approvePermissionRequest,
   denyPermissionRequest,
-} from '../services/permissionService';
+} from '../services/permissionRequestsService';
 import { PermissionRequest } from '../types';
 
 export const useRequestPermission = () => {
