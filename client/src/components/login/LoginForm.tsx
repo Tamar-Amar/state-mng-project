@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Alert } from '@mui/material';
+import { TextField, Button, Box, Typography, Snackbar, Alert } from '@mui/material';
 import { useLoginUser } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
@@ -8,6 +8,7 @@ import { userAtom } from '../../store/userAtom';
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const loginMutation = useLoginUser();
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
@@ -18,13 +19,14 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); 
+    setError(null);
 
     loginMutation.mutate(credentials, {
       onSuccess: (data) => {
         localStorage.setItem('token', data.token);
         setUser(data.user);
-        navigate('/home'); 
+        setSuccess(true); 
+        setTimeout(() => navigate('/home'), 1500);
       },
       onError: (error) => {
         console.error('Login failed:', error);
@@ -33,12 +35,15 @@ const LoginForm: React.FC = () => {
     });
   };
 
-
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-      <Typography variant="h5" gutterBottom>Login</Typography>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, maxWidth: 400, mx: 'auto' }}>
+      <Typography variant="h5" gutterBottom align="center">Login</Typography>
 
-      {error && <Alert severity="error">{error}</Alert>}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <TextField
         label="Username"
@@ -57,9 +62,21 @@ const LoginForm: React.FC = () => {
         onChange={handleChange}
         required
       />
+
       <Button type="submit" variant="contained" fullWidth disabled={loginMutation.isLoading}>
         {loginMutation.isLoading ? 'Logging in...' : 'Login'}
       </Button>
+
+      <Snackbar
+        open={success}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Login successful! Redirecting...
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
