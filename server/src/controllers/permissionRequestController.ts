@@ -10,6 +10,7 @@ import {
 
 
 export const requestPermissionController = async (req: Request, res: Response): Promise<void> => {
+    console.log('requestPermissionController')
     try {
         const permissionRequest = await requestPermission(req.user!.id, req.body);
         res.status(201).json(permissionRequest);
@@ -20,8 +21,10 @@ export const requestPermissionController = async (req: Request, res: Response): 
 
 
 export const getPendingRequestsController = async (_req: Request, res: Response): Promise<void> => {
+    console.log('"---------getPendingRequestsController')
     try {
         const requests = await getPendingRequests();
+        console.log("requests: " + requests);
         res.status(200).json(requests);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving permission requests', error });

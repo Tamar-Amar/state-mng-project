@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { usePendingRequests } from '../../hooks/usePermissions';
-import { PermissionRequest } from '../../types';
+import {PermissionRequestFromServer } from '../../types';
 
 interface PermissionRequestsPopupProps {
   open: boolean;
@@ -29,15 +29,13 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   onClose,
   userId,
 }) => {
-  const { data, isLoading, error } = usePendingRequests();
+    const { data, isLoading, error } = usePendingRequests();
+    console.log("re",data);
+    const userRequests: PermissionRequestFromServer[] = (data as PermissionRequestFromServer[])?.filter(
+      (req) => req.user._id === userId
+    ) || [];
 
-  // Filter the requests so that only the ones sent by the given user are shown.
-  const userRequests: PermissionRequest[] = data
-    ? data.filter((req: PermissionRequest) => req.user === userId)
-    : [];
-
-  // Helper function to format requested permissions as a comma-separated string.
-  const formatPermissions = (requestedPermissions: PermissionRequest['requestedPermissions']) => {
+  const formatPermissions = (requestedPermissions: PermissionRequestFromServer['requestedPermissions']) => {
     const perms: string[] = [];
     if (requestedPermissions.canAdd) perms.push('Add');
     if (requestedPermissions.canUpdate) perms.push('Update');

@@ -1,4 +1,4 @@
-import { PermissionRequest } from "../types";
+import { PermissionRequest, PermissionRequestFromServer } from "../types";
 import { api } from "./apiService";
 
 export const requestPermission = async (permission: PermissionRequest): Promise<PermissionRequest> => {
@@ -6,7 +6,7 @@ export const requestPermission = async (permission: PermissionRequest): Promise<
     return response.data;
   };
   
-  export const getPendingRequests = async (): Promise<PermissionRequest[]> => {
+  export const getPendingRequests = async (): Promise<PermissionRequestFromServer[]> => {
     const response = await api.get('/permission-requests');
     return response.data;
   };
