@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, MenuItem, Alert, IconButton, InputAdornment, Avatar } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Box, Typography, MenuItem, Alert, IconButton, InputAdornment, Avatar, Snackbar } from '@mui/material';
+import { Visibility, VisibilityOff, Close } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import { registerValidationSchema } from '../../types/validations/UserValidation';
-import { useRegisterUser } from '../../hooks/useAuth';
-import styles from '../../styles/RegisterForm.module.scss'; 
+import { useCurrentUser, useRegisterUser } from '../../hooks/useAuth';
+import styles from '../../styles/RegisterForm.module.scss';
 import { useNavigate } from 'react-router-dom';
+
 
 const RegisterForm: React.FC = () => {
   const registerMutation = useRegisterUser();
@@ -13,7 +14,9 @@ const RegisterForm: React.FC = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const navigate = useNavigate();
-
+  const currentUser = useCurrentUser();
+  
+  
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -41,6 +44,7 @@ const RegisterForm: React.FC = () => {
         }
       });
 
+      console.log("user", data);
       registerMutation.mutate(data, {
         onSuccess: () => {
           alert('Registration successful! Redirecting to login...');
@@ -48,7 +52,7 @@ const RegisterForm: React.FC = () => {
           setPreview(null);
           setIsImageUploaded(false);
           setSubmitting(false);
-          navigate('/'); 
+          navigate('/home');
         },
         onError: (err) => {
           console.error('Registration failed:', err);
@@ -56,9 +60,9 @@ const RegisterForm: React.FC = () => {
           setSubmitting(false);
         },
       });
-      
     },
   });
+
 
   return (
     <Box component="form" onSubmit={formik.handleSubmit} className={styles.formContainer}>
@@ -66,7 +70,11 @@ const RegisterForm: React.FC = () => {
         Register
       </Typography>
 
-      {formik.errors.email && <Alert severity="error">{formik.errors.email}</Alert>}
+      {formik.errors.email && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {formik.errors.email}
+        </Alert>
+      )}
 
       <Box className={styles.flexContainer}>
         <TextField
@@ -155,17 +163,19 @@ const RegisterForm: React.FC = () => {
         }}
       />
 
-      <TextField
+<TextField
         select
-        label="Role"
+        label="תפקיד"
         name="role"
         fullWidth
         margin="normal"
         value={formik.values.role}
         onChange={formik.handleChange}
       >
-        <MenuItem value="user">User</MenuItem>
-        <MenuItem value="admin">Admin</MenuItem>
+        <MenuItem value="user">user</MenuItem>
+        {currentUser && currentUser.user?.role === 'admin' && (
+          <MenuItem value="admin">admin</MenuItem>
+        )}
       </TextField>
 
       <Box className={styles.flexContainer}>
@@ -200,8 +210,10 @@ const RegisterForm: React.FC = () => {
       <Button type="submit" variant="contained" fullWidth className={styles.submitButton} disabled={formik.isSubmitting}>
         Register
       </Button>
+
     </Box>
   );
 };
 
 export default RegisterForm;
+

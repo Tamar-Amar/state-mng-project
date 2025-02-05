@@ -11,7 +11,7 @@ const ListPage: React.FC = () => {
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
   const handleAddStateClick = () => {
-    if (user?.permissions.canAdd) {
+    if (user?.permissions?.canAdd) {
       navigate('/state-form');
     } else {
       setOpenSnackbar(true);
@@ -29,11 +29,11 @@ const ListPage: React.FC = () => {
           sx={{
             paddingLeft: '10%',
             paddingRight: '10%',
-            backgroundColor: user?.permissions.canAdd ? 'primary.main' : '#e0e0e0',
-            color: user?.permissions.canAdd ? 'white' : '#757575',
+            backgroundColor: user?.permissions?.canAdd ? 'primary.main' : '#e0e0e0',
+            color: user?.permissions?.canAdd ? 'white' : '#757575',
             cursor: 'pointer',
             '&:hover': {
-              backgroundColor: user?.permissions.canAdd ? 'primary.dark' : '#bdbdbd',
+              backgroundColor: user?.permissions?.canAdd ? 'primary.dark' : '#bdbdbd',
             },
           }}
         >

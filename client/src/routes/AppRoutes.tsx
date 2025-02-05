@@ -11,18 +11,18 @@ import ProtectedRoute from './ProtectedRoute';
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-        <Route path="/" element={<AuthPage />} />
+        <Route path="/login" element={<AuthPage />} />
         
       <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
         <Route path="/users" element={<UsersPage />} />
         <Route path="/permissions" element={<PermissionsPage />} />
+        <Route path="/create-user" element={<AuthPage />} />
       </Route>
 
       <Route element={<ProtectedRoute allowedRoles={['admin', 'user']} />}>
         <Route path="/state-form/:id?" element={<StateForm />} />
-        
-      <Route path="/home" element={<ListPage />} />
-      <Route path="/personal" element={<PersonalPage />} />
+        <Route path="/" element={<ListPage />} />
+        <Route path="/personal" element={<PersonalPage />} />
       </Route>
 
       <Route path="*" element={<p>Not Found</p>} />

@@ -1,3 +1,4 @@
+import PermissionRequest from '../models/PermissionRequest';
 import User from '../models/User';
 import bcrypt from 'bcrypt';
 
@@ -11,8 +12,8 @@ export const getUserById = async (userId: string) => {
 };
 
 export const getAllUsers = async () => {
-    return await User.find().select('-password');
-};
+    return await User.find({ isActive: true }).select('-password');
+  };
 
 export const updateUser = async (userId: string, updateData: any) => {
     if (updateData.password) {
@@ -22,8 +23,19 @@ export const updateUser = async (userId: string, updateData: any) => {
 };
 
 export const deleteUser = async (userId: string) => {
-    return await User.findByIdAndDelete(userId);
-};
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { isActive: false },
+      { new: true }
+    );
+  
+    await PermissionRequest.updateMany(
+      { userId: userId },
+      { isActive: false }
+    );
+  
+    return updatedUser;
+  };
 
 export const authenticateUser = async (username: string, password: string) => {
     const user = await User.findOne({ username });

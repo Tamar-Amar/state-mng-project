@@ -1,6 +1,6 @@
 export interface PermissionRequest {
     _id?: string;
-    user: string; // userId
+    userId: string;
     requestedPermissions: {
       canAdd: boolean;
       canUpdate: boolean;
@@ -12,3 +12,20 @@ export interface PermissionRequest {
     updatedAt: Date;
   }
   
+  export interface PermissionRequestFromServer {
+    _id?: string;
+    user:{
+      _id: string;
+      username: string;
+      email: string;
+    }
+    requestedPermissions: {
+      canAdd: boolean;
+      canUpdate: boolean;
+      canDelete: boolean;
+    };
+    status: 'pending' | 'approved' | 'denied';
+    reviewedBy?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }

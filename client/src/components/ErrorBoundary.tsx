@@ -1,33 +1,63 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Box, Paper, Typography, Button } from '@mui/material';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 interface Props {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 interface State {
-    hasError: boolean;
+  hasError: boolean;
 }
 
 class ErrorBoundary extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = { hasError: false };
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    console.error('Uncaught error:', error, errorInfo);
+  }
+
+  handleReload = () => {
+    window.location.reload();
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            bgcolor: '#f5f5f5',
+          }}
+        >
+          <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+            <ErrorOutlineIcon color="error" sx={{ fontSize: 50 }} />
+            <Typography variant="h5" sx={{ mt: 2 }}>
+              Oops! Something went wrong.
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 1 }}>
+              An unexpected error occurred. Please try refreshing the page.
+            </Typography>
+            <Button variant="contained" color="primary" sx={{ mt: 3 }} onClick={this.handleReload}>
+              Reload Page
+            </Button>
+          </Paper>
+        </Box>
+      );
     }
 
-    static getDerivedStateFromError(): State {
-        return { hasError: true };
-    }
-
-    componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-        console.error('Uncaught error:', error, errorInfo);
-    }
-
-    render() {
-        if (this.state.hasError) {
-            return <h1>Something went wrong.</h1>;
-        }
-        return this.props.children;
-    }
+    return this.props.children;
+  }
 }
 
 export default ErrorBoundary;

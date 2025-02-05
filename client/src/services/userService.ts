@@ -3,6 +3,7 @@ import { api } from "./apiService";
 
 // Users Service
 export const fetchUsers = async (): Promise<User[]> => {
+  console.log("Fetching users...");
     const response = await api.get('/users');
     return response.data;
   };
@@ -24,7 +25,7 @@ export const fetchUsers = async (): Promise<User[]> => {
     return response.data;
   };
   
-  export const deleteUser = async (id: string): Promise<{ message: string }> => {
+  export const deleteUser = async (id: string): Promise<{ message: string, user: User }> => {
     const response = await api.delete(`/users/${id}`);
     return response.data;
   };
