@@ -22,12 +22,14 @@ interface PermissionRequestsPopupProps {
   open: boolean;
   onClose: () => void;
   userId: string;
+  username: string;
 }
 
 const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   open,
   onClose,
   userId,
+  username,
 }) => {
     const { data, isLoading, error } = usePendingRequests();
     console.log("re",data);
@@ -45,7 +47,7 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Permission Requests</DialogTitle>
+      <DialogTitle>Pending Permission Requests for {username}</DialogTitle>
       <DialogContent>
         {isLoading && <CircularProgress />}
         {error ? (
