@@ -38,11 +38,14 @@ export const useUpdateUser = () => {
 
   export const useDeleteUser = () => {
     const queryClient = useQueryClient();
-    return useMutation((id: string) => deleteUser(id), {
-      onSuccess: (_, deletedUserId) => {
-        queryClient.setQueryData<User[]>('users', (oldUsers) =>
-          oldUsers ? oldUsers.filter((user) => user._id !== deletedUserId) : []
-        );
-      },
-    });
+    return useMutation<{ message: string, user: User }, unknown, string, unknown>(
+      (id: string) => deleteUser(id),
+      {
+        onSuccess: (data) => {
+          queryClient.setQueryData<User[]>('users', (oldUsers) =>
+            oldUsers ? oldUsers.filter((user) => user._id !== data.user._id) : []
+          );
+        },
+      }
+    );
   };

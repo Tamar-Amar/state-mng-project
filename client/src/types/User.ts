@@ -1,5 +1,3 @@
-import { Permission } from "./Premission";
-
 export interface User {
     _id?: string;
     firstName: string;
@@ -10,5 +8,10 @@ export interface User {
     profilePicture?: string; 
     role: 'admin' | 'user';
     joinDate: Date;
-    permissions?: Permission;
+    permissions?: {
+      canAdd: boolean;
+      canUpdate: boolean;
+      canDelete: boolean;
+    };
+    isActive?: boolean;
   }

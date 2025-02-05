@@ -1,6 +1,8 @@
 import { useMutation } from 'react-query';
-import { loginUser, registerUser } from '../services/authService';
-import { CleaningServices } from '@mui/icons-material';
+import { getCurrentUser, loginUser, registerUser } from '../services/authService';
+import { useRecoilState } from 'recoil';
+import { userAtom } from '../store/userAtom';
+import { useEffect, useState } from 'react';
 
 export const useLoginUser = () => {
   return useMutation(loginUser, {
@@ -19,4 +21,32 @@ export const useRegisterUser = () => {
       console.error('Registration failed:', error);
     },
   });
+};
+
+export const useCurrentUser = () => {
+  const [user, setUser] = useRecoilState(userAtom);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && !user) {
+      getCurrentUser()
+        .then((response) => {
+          setUser(response.user);
+        })
+        .catch((error) => {
+          console.error('Error fetching user:', error);
+          if (error.response && error.response.status === 401) {
+            localStorage.removeItem('token');
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, [user, setUser]);
+
+  return { user, loading };
 };

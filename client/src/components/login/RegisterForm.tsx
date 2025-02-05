@@ -3,18 +3,20 @@ import { TextField, Button, Box, Typography, MenuItem, Alert, IconButton, InputA
 import { Visibility, VisibilityOff, Close } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import { registerValidationSchema } from '../../types/validations/UserValidation';
-import { useRegisterUser } from '../../hooks/useAuth';
+import { useCurrentUser, useRegisterUser } from '../../hooks/useAuth';
 import styles from '../../styles/RegisterForm.module.scss';
 import { useNavigate } from 'react-router-dom';
+
 
 const RegisterForm: React.FC = () => {
   const registerMutation = useRegisterUser();
   const [showPassword, setShowPassword] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [isImageUploaded, setIsImageUploaded] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const navigate = useNavigate();
-
+  const currentUser = useCurrentUser();
+  
+  
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -61,11 +63,6 @@ const RegisterForm: React.FC = () => {
     },
   });
 
-  useEffect(() => {
-    if (formik.values.role === 'admin') {
-      setOpenSnackbar(true);
-    }
-  }, [formik.values.role]);
 
   return (
     <Box component="form" onSubmit={formik.handleSubmit} className={styles.formContainer}>
@@ -166,17 +163,19 @@ const RegisterForm: React.FC = () => {
         }}
       />
 
-      <TextField
+<TextField
         select
-        label="Role"
+        label="תפקיד"
         name="role"
         fullWidth
         margin="normal"
         value={formik.values.role}
         onChange={formik.handleChange}
       >
-        <MenuItem value="user">User</MenuItem>
-        {/* <MenuItem value="admin">Admin</MenuItem>  */}
+        <MenuItem value="user">user</MenuItem>
+        {currentUser && currentUser.user?.role === 'admin' && (
+          <MenuItem value="admin">admin</MenuItem>
+        )}
       </TextField>
 
       <Box className={styles.flexContainer}>
@@ -212,30 +211,9 @@ const RegisterForm: React.FC = () => {
         Register
       </Button>
 
-      <Snackbar
-        open={openSnackbar}
-        onClose={() => setOpenSnackbar(false)}
-        message="The request for an admin account will be sent to the system administrator for approval."
-        ContentProps={{
-          className: styles.snackbarContent,
-        }}
-        action={
-          <>
-            <Button 
-              size="small" 
-              onClick={() => setOpenSnackbar(false)} 
-              className={styles.confirmButton}
-            >
-              Confirm
-            </Button>
-            <IconButton size="small" color="inherit" onClick={() => setOpenSnackbar(false)}>
-              <Close fontSize="small" />
-            </IconButton>
-          </>
-        }
-      />
     </Box>
   );
 };
 
 export default RegisterForm;
+
