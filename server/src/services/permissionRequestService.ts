@@ -16,7 +16,8 @@ export const getPendingRequests = async () => {
 };
 
 export const getUserPendingRequests = async (userId: string) => {
-    const user = await User.findById(userId).select('permissionRequests');
+    const user = await User.findById(userId);
+    console.log("---user",user)
     if (!user) {
       throw new Error('User not found');
     }

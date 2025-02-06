@@ -37,7 +37,8 @@ export const getPendingRequestsController = async (_req: Request, res: Response)
 
 export const getUserPendingRequestsController = async (req: Request, res: Response): Promise<void> => {
     try {
-        const requests = await getUserPendingRequests(req.user!.id);
+        const requests = await getUserPendingRequests(req.params.id);
+        console.log("-----------",requests)
         res.status(200).json(requests);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving permission requests', error });

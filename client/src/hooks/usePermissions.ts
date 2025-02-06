@@ -44,8 +44,11 @@ export const useUserPermissionRequests = (userId: string) =>
     { enabled: Boolean(userId) }
   );
 
-export const usePendingRequests = () =>
-  useQuery<PermissionRequestFromServer[]>('permissionRequests', getPendingRequests);
+  export const usePendingRequests = (userId: string) =>
+    useQuery<PermissionRequestFromServer[]>(
+      ['permissionRequests', userId],
+      () => getPendingRequests(userId)
+    );
 
 export const useApprovePermission = () => {
   const queryClient = useQueryClient();
