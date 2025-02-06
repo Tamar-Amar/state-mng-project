@@ -1,0 +1,22 @@
+/* PermissionsHistory.module.scss */
+.statusCell {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 500;
+    display: inline-block;
+  }
+  
+  .approved {
+    background-color: #a5d6a7; 
+  }
+  
+  .pending {
+    background-color: #ffcc80;
+    color: #000;
+  }
+  
+  .denied {
+    background-color: #ef9a9a;
+  }
+  

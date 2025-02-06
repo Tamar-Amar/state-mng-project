@@ -32,7 +32,7 @@ const UsersPage: React.FC = () => {
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [permPopupOpen, setPermPopupOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const handleDeleteClick = (userId: string) => {
     setUserToDelete(userId);
@@ -40,8 +40,8 @@ const UsersPage: React.FC = () => {
   };
 
 
-  const handleViewPermissions = (userId: string) => {
-    setSelectedUserId(userId);
+  const handleViewPermissions = (user: User) => {
+    setSelectedUser(user);
     setPermPopupOpen(true);
   };
 
@@ -64,7 +64,7 @@ const UsersPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 15 }}>
         <CircularProgress />
       </Box>
     );
@@ -72,14 +72,14 @@ const UsersPage: React.FC = () => {
 
   if (error) {
     return (
-      <Typography color="error" align="center" sx={{ mt: 4 }}>
+      <Typography color="error" align="center" sx={{ mt: 15 }}>
         Error loading users.
       </Typography>
     );
   }
 
   return (
-    <Box sx={{ p: 2 , maxWidth: 900, mx: 'auto'}}>
+    <Box sx={{ p: 2 , maxWidth: 900, mx: 'auto', mt:15}}>
       <Typography variant="h4" align="center" gutterBottom>
         Users List
       </Typography>
@@ -116,7 +116,7 @@ const UsersPage: React.FC = () => {
                   <Tooltip title="View Permission Requests">
                     <IconButton
                       color="primary"
-                      onClick={() => handleViewPermissions(user._id || 'not-found')}
+                      onClick={() => handleViewPermissions(user || 'not-found')}
                     >
                       <VisibilityIcon />
                     </IconButton>
@@ -162,11 +162,12 @@ const UsersPage: React.FC = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
 
-      {selectedUserId && (
+      {selectedUser && (
         <PermissionRequestsPopup
           open={permPopupOpen}
           onClose={() => setPermPopupOpen(false)}
-          userId={selectedUserId}
+          userId={selectedUser?._id || 'unknown'}
+          username={selectedUser?.username|| 'unknown'}
         />
       )}
     </Box>

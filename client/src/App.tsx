@@ -9,8 +9,8 @@ import Navbar from './components/NavBar';
 import AppRoutes from './routes/AppRoutes';
 import theme from './theme'; 
 import { userAtom } from './store/userAtom';
-import { api } from './services/apiService';
 import { getCurrentUser } from './services/authService';
+import { red } from '@mui/material/colors';
 
 const queryClient = new QueryClient();
 
@@ -38,7 +38,7 @@ const AppContent: React.FC = () => {
   return (
     <>
       {user && <Navbar />}
-      <div style={{ paddingTop: user ? '64px' : '0' }}>
+      <div style={{ marginTop: user ? '64px' : '0'}}>
         <AppRoutes />
       </div>
     </>

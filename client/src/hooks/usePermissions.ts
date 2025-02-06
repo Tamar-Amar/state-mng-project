@@ -5,6 +5,7 @@ import {
   getPendingRequests,
   approvePermissionRequest,
   denyPermissionRequest,
+  getUserPermissionRequests,
 } from '../services/permissionRequestsService';
 import { PermissionRequest, PermissionRequestFromServer } from '../types';
 
@@ -14,6 +15,14 @@ export const useRequestPermission = () => {
     onSuccess: () => queryClient.invalidateQueries('permissionRequests'),
   });
 };
+
+
+export const useUserPermissionRequests = (userId: string) =>
+  useQuery<PermissionRequestFromServer[]>(
+    ['userPermissionRequests', userId],
+    () => getUserPermissionRequests(userId),
+    { enabled: Boolean(userId) }
+  );
 
 export const usePendingRequests = () =>
   useQuery<PermissionRequestFromServer[]>('permissionRequests', getPendingRequests);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import PermissionRequest from '../models/PermissionRequest';
 import User from '../models/User';
 
@@ -55,8 +55,9 @@ export const denyPermissionRequest = async (requestId: string, adminId: string) 
     );
 };
 
-export const getUserPermissionRequests = async (userId: string) => {
-    return await PermissionRequest.find({ user: userId })
-        .populate('reviewedBy', 'firstName lastName') 
-        .sort({ createdAt: -1 }); 
+export const getUserPermissionRequests = async (userId: string | mongoose.Types.ObjectId) => {
+   const users= await PermissionRequest.find({ user: userId})
+   .populate('reviewedBy', 'firstName lastName') 
+    .sort({ createdAt: -1 }); 
+   return users;  
 };

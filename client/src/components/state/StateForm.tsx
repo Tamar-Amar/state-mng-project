@@ -28,19 +28,19 @@ const StateForm: React.FC = () => {
 
   useEffect(() => {
     const hasPermission = id 
-        ? user?.permissions.canUpdate 
-        : user?.permissions.canAdd;
+        ? user?.permissions?.canUpdate 
+        : user?.permissions?.canAdd;
 
     if (!hasPermission) {
         setTimeout(() => {
-            navigate('/home');
+            navigate('/');
         }, 3000);
     }
 }, [id, user, navigate]);
 
 const hasPermission = id 
-? user?.permissions.canUpdate 
-: user?.permissions.canAdd;
+? user?.permissions?.canUpdate 
+: user?.permissions?.canAdd;
 
 if (!hasPermission) {
   return (
@@ -51,7 +51,7 @@ if (!hasPermission) {
           <Typography variant="body1">
               Redirecting you back to the home page...
           </Typography>
-          <Button onClick={() => navigate('/home')} variant="contained" sx={{ mt: 2 }}>
+          <Button onClick={() => navigate('/')} variant="contained" sx={{ mt: 2 }}>
               Go to Home Now
           </Button>
       </Box>
@@ -63,7 +63,7 @@ if (!hasPermission) {
     if (isEditMode) {
         setEditingStateName(null);
     }
-    navigate('/home');
+    navigate('/');
   };
 
   const handleCancel = () => {
@@ -73,7 +73,7 @@ if (!hasPermission) {
         if (isEditMode) {
             setEditingStateName(null);
         }
-      navigate('/home');
+      navigate('/');
     }
   };
 
@@ -97,7 +97,7 @@ if (!hasPermission) {
           {
             onSuccess: () => {
               alert('State updated successfully!');
-              navigate('/home');
+              navigate('/');
             },
             onError: () => {
               alert('Failed to update state.');
@@ -108,7 +108,7 @@ if (!hasPermission) {
         addMutation.mutate(values, {
           onSuccess: () => {
             alert('State added successfully!');
-            navigate('/home');
+            navigate('/');
           },
           onError: () => {
             alert('Failed to add state.');

@@ -25,8 +25,8 @@ const Navbar = () => {
 
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
-            color={location.pathname === '/home' ? 'secondary' : 'inherit'}
-            onClick={() => navigate('/home')}
+            color={location.pathname === '/' ? 'secondary' : 'inherit'}
+            onClick={() => navigate('/')}
           >
             States
           </Button>
