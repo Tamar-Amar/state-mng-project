@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Box, Avatar, IconButton } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { editingStateAtom } from '../store/stateAtoms';
 import { userAtom } from '../store/userAtom';
 
@@ -13,9 +13,16 @@ const Navbar = () => {
   const navigate = useNavigate();
   const editingStateName = useRecoilValue(editingStateAtom);
   const user = useRecoilValue(userAtom);
+  const setUser = useSetRecoilState(userAtom);
 
   const handleProfileClick = () => {
     navigate('/personal');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    navigate('/login');
   };
 
   console.log(user)
@@ -24,6 +31,16 @@ const Navbar = () => {
       <Toolbar sx={{ justifyContent: 'space-between' }}>
 
         <Box sx={{ display: 'flex', gap: 2 }}>
+        {user && (
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={handleLogout}
+            sx={{ textTransform: 'none' }}
+          >
+            Logout
+          </Button>
+        )}
           <Button
             color={location.pathname === '/' ? 'secondary' : 'inherit'}
             onClick={() => navigate('/')}
@@ -55,6 +72,7 @@ const Navbar = () => {
           >
             Personal Details
           </Button>
+          
         </Box>
 
         {editingStateName && (
@@ -84,6 +102,7 @@ const Navbar = () => {
             />
           </IconButton>
         )}
+
       </Toolbar>
     </AppBar>
   );

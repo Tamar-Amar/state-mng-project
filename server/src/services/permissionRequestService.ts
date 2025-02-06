@@ -6,7 +6,8 @@ export const requestPermission = async (userId: string, permissions: { canAdd: b
     return await PermissionRequest.create({
         user: userId,
         requestedPermissions: permissions,
-        status: 'pending'
+        status: 'pending',
+        reviewedBy: null,
     });
 };
 
@@ -56,8 +57,14 @@ export const denyPermissionRequest = async (requestId: string, adminId: string) 
 };
 
 export const getUserPermissionRequests = async (userId: string | mongoose.Types.ObjectId) => {
-   const users= await PermissionRequest.find({ user: userId})
-   .populate('reviewedBy', 'firstName lastName') 
-    .sort({ createdAt: -1 }); 
-   return users;  
-};
+    const user = await User.findById(userId).select('permissionRequests');
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const requests = await PermissionRequest.find({
+      _id: { $in: user.permissionRequests }
+    })
+      .populate('reviewedBy', 'username')
+      .sort({ createdAt: -1 });
+    return requests;
+  };
