@@ -15,6 +15,18 @@ export const getPendingRequests = async () => {
     return await PermissionRequest.find({ status: 'pending' }).populate('user', 'username email');
 };
 
+export const getUserPendingRequests = async (userId: string) => {
+    const user = await User.findById(userId).select('permissionRequests');
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const pendingRequests = await PermissionRequest.find({
+      _id: { $in: user.permissionRequests },
+      status: 'pending'
+    }).populate('user', 'username email');
+    
+    return pendingRequests;
+  };
 export const getRequestById = async (requestId: string) => {
     return await PermissionRequest.findById(requestId).populate('user', 'username email');
 };
