@@ -64,7 +64,7 @@ const UsersPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 15 }}>
         <CircularProgress />
       </Box>
     );
@@ -72,14 +72,14 @@ const UsersPage: React.FC = () => {
 
   if (error) {
     return (
-      <Typography color="error" align="center" sx={{ mt: 4 }}>
+      <Typography color="error" align="center" sx={{ mt: 15 }}>
         Error loading users.
       </Typography>
     );
   }
 
   return (
-    <Box sx={{ p: 2 , maxWidth: 900, mx: 'auto'}}>
+    <Box sx={{ p: 2 , maxWidth: 900, mx: 'auto', mt:15}}>
       <Typography variant="h4" align="center" gutterBottom>
         Users List
       </Typography>

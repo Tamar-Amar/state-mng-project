@@ -17,4 +17,5 @@ router.get('/:id', authAndPermissionMiddleware(), getUserByIdController);
 router.put('/:id', authAndPermissionMiddleware(undefined, 'canUpdate'), updateUserController);
 router.delete('/:id', authAndPermissionMiddleware(undefined, 'canDelete'), deleteUserController);
 
+
 export default router;

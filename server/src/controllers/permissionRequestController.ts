@@ -7,6 +7,7 @@ import {
     denyPermissionRequest,
     getUserPermissionRequests
 } from '../services/permissionRequestService';
+import { log } from 'console';
 
 
 export const requestPermissionController = async (req: Request, res: Response): Promise<void> => {
@@ -21,10 +22,8 @@ export const requestPermissionController = async (req: Request, res: Response): 
 
 
 export const getPendingRequestsController = async (_req: Request, res: Response): Promise<void> => {
-    console.log('"---------getPendingRequestsController')
     try {
         const requests = await getPendingRequests();
-        console.log("requests: " + requests);
         res.status(200).json(requests);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving permission requests', error });
@@ -66,8 +65,10 @@ export const denyPermissionRequestController = async (req: Request, res: Respons
 };
 
 export const getUserPermissionRequestsController = async (req: Request, res: Response): Promise<void> => {
+    // console.log("req.user = " , req.user)
     try {
-        const requests = await getUserPermissionRequests(req.user!.id); 
+        const requests = await getUserPermissionRequests(req.user.id); 
+        
         res.status(200).json(requests);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving user permission requests', error });

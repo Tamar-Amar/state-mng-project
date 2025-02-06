@@ -7,9 +7,15 @@ export const requestPermission = async (permission: PermissionRequest): Promise<
   };
   
   export const getPendingRequests = async (): Promise<PermissionRequestFromServer[]> => {
-    const response = await api.get('/permission-requests');
+    const response = await api.get('/permission-requests/pending');
+    return response.data;0
+  };
+
+  export const getUserPermissionRequests = async (id: string): Promise<PermissionRequestFromServer[]> => {
+    const response = await api.get(`/permission-requests/user/history/${id}`);
     return response.data;
   };
+  
   
   export const approvePermissionRequest = async (id: string): Promise<PermissionRequest> => {
     const response = await api.patch(`/permission-requests/${id}/approve`);
