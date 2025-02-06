@@ -16,6 +16,26 @@ export const useRequestPermission = () => {
   });
 };
 
+export const useCreateRequestPermission = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (permissions: { canAdd: boolean; canUpdate: boolean; canDelete: boolean }) =>
+      requestPermission(permissions),
+    {
+      onSuccess: (newRequest: PermissionRequestFromServer) => {
+        queryClient.setQueryData<PermissionRequestFromServer[]>('permissionRequests', (oldData) => {
+          return oldData ? [newRequest, ...oldData] : [newRequest];
+        });
+        queryClient.setQueryData<PermissionRequestFromServer[]>(
+          ['userPermissionRequests', newRequest.user._id as string],
+          (oldData) =>
+            oldData ? [newRequest as PermissionRequestFromServer, ...oldData] : [newRequest as PermissionRequestFromServer]
+        );
+      }
+    }
+  );
+};
+
 
 export const useUserPermissionRequests = (userId: string) =>
   useQuery<PermissionRequestFromServer[]>(

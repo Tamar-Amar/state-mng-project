@@ -7,13 +7,17 @@ import {
     denyPermissionRequest,
     getUserPermissionRequests
 } from '../services/permissionRequestService';
-import { log } from 'console';
+import User from '../models/User';
 
 
 export const requestPermissionController = async (req: Request, res: Response): Promise<void> => {
-    console.log('requestPermissionController')
     try {
         const permissionRequest = await requestPermission(req.user!.id, req.body);
+
+        await User.findByIdAndUpdate(req.user!.id, {
+            $push: { permissionRequests: permissionRequest._id }
+          });
+          
         res.status(201).json(permissionRequest);
     } catch (error) {
         res.status(500).json({ message: 'Error requesting permission', error });
@@ -64,13 +68,12 @@ export const denyPermissionRequestController = async (req: Request, res: Respons
     }
 };
 
+
 export const getUserPermissionRequestsController = async (req: Request, res: Response): Promise<void> => {
-    // console.log("req.user = " , req.user)
     try {
-        const requests = await getUserPermissionRequests(req.user.id); 
-        
-        res.status(200).json(requests);
+      const requests = await getUserPermissionRequests(req.user!.id);
+      res.status(200).json(requests);
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving user permission requests', error });
+      res.status(500).json({ message: 'Error retrieving user permission requests', error });
     }
-};
+  };

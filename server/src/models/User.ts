@@ -17,6 +17,7 @@ interface IUser extends Document {
         canUpdate: boolean;
         canDelete: boolean;
     };
+    permissionRequests: mongoose.Types.ObjectId[];
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -36,7 +37,11 @@ const UserSchema: Schema = new Schema({
         canAdd: { type: Boolean, default: false },
         canUpdate: { type: Boolean, default: false },
         canDelete: { type: Boolean, default: false }
-    }
+    },
+    permissionRequests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PermissionRequest'
+      }]
 });
 
 UserSchema.pre<IUser>('save', async function (next) {

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import PersonalDetails from '../components/personal-zone/PersonalDetails';
-import PermissionsHistory from '../components/personal-zone/PermissionsHistory';
+import PermissionsHistory from '../components/personal-zone/PersonalPermissions';
 import { userAtom } from '../store/userAtom';
 import { useRecoilValue } from 'recoil';
 

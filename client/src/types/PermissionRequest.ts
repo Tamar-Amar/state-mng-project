@@ -25,7 +25,10 @@ export interface PermissionRequest {
       canDelete: boolean;
     };
     status: 'pending' | 'approved' | 'denied';
-    reviewedBy?: string;
+    reviewedBy?:{
+      _id: string;
+      username: string;
+    }
     createdAt: Date;
     updatedAt: Date;
   }
