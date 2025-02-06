@@ -1,5 +1,5 @@
 // src/components/personal-zone/PermissionsHistory.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -11,6 +11,7 @@ import {
   TableBody,
   CircularProgress,
   Chip,
+  Button,
 } from '@mui/material';
 import { useUserPermissionRequests } from '../../hooks/usePermissions';
 import { PermissionRequestFromServer } from '../../types';
@@ -18,6 +19,8 @@ import styles from '../../styles/PermissionsHistory.module.scss';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import SendPermissionRequestPopup from './SendPermissionRequestPopup';
 
 interface PermissionsHistoryProps {
   userId: string;
@@ -34,7 +37,9 @@ const PermissionsHistory: React.FC<PermissionsHistoryProps> = ({
   username,
   currentPermissions,
 }) => {
+  
   const { data, isLoading, error } = useUserPermissionRequests(userId);
+  const [openSendPopup, setOpenSendPopup] = useState(false);
 
   return (
     <Box sx={{ p: 2, maxWidth: 800, mx: 'auto'}}>
@@ -75,6 +80,23 @@ const PermissionsHistory: React.FC<PermissionsHistoryProps> = ({
             variant="filled"
           />
         </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Button
+          variant="contained"
+          startIcon={<SendIcon />}
+          onClick={() => setOpenSendPopup(true)}
+          sx={{
+            backgroundColor: '#1976d2',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#115293',
+            },
+          }}
+        >
+          Send Permission Request
+        </Button>
+      </Box>
       </Paper>
 
 
@@ -143,6 +165,8 @@ const PermissionsHistory: React.FC<PermissionsHistoryProps> = ({
           </Table>
         </Paper>
       )}
+
+      <SendPermissionRequestPopup open={openSendPopup} onClose={() => setOpenSendPopup(false)} />
     </Box>
   );
 };
