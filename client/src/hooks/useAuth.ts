@@ -1,13 +1,15 @@
-import { useMutation } from 'react-query';
+// src/hooks/useAuth.ts
+import { useMutation } from '@tanstack/react-query';
 import { getCurrentUser, loginUser, registerUser } from '../services/authService';
 import { useRecoilState } from 'recoil';
 import { userAtom } from '../store/userAtom';
 import { useEffect, useState } from 'react';
 
 export const useLoginUser = () => {
-  return useMutation(loginUser, {
+  return useMutation({
+    mutationFn: loginUser,
     onSuccess: (data) => {
-      localStorage.setItem('token', data.token); 
+      localStorage.setItem('token', data.token);
     },
     onError: (error) => {
       console.error('Login failed:', error);
@@ -16,7 +18,8 @@ export const useLoginUser = () => {
 };
 
 export const useRegisterUser = () => {
-  return useMutation(registerUser, {
+  return useMutation({
+    mutationFn: registerUser,
     onError: (error) => {
       console.error('Registration failed:', error);
     },

@@ -53,6 +53,7 @@ export const createState = async (req: Request, res: Response, next: NextFunctio
 
 
 export const updateState = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body,req.params.id )
     try {
         const updatedState = await updateStateService(req.params.id, req.body);
         if (!updatedState) {

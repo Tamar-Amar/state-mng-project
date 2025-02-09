@@ -1,9 +1,6 @@
 import { AddStateResponse, State } from "../types";
 import { api } from "./apiService";
 
-
-
-
 export const fetchStates = async (): Promise<State[]> => {
   const response = await api.get('/states');
   return response.data;
@@ -20,6 +17,7 @@ export const addState = async (state: State): Promise<AddStateResponse> => {
 };
 
 export const updateState = async (id: string, state: State): Promise<State> => {
+  console.log(`Updating ${id}`);
   const response = await api.put(`/states/${id}`, state);
   return response.data;
 };

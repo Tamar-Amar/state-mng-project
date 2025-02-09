@@ -1,5 +1,6 @@
 // src/hooks/useStates.ts
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
 import {
   fetchStates,
   addState,
@@ -9,14 +10,19 @@ import {
 } from '../services/stateService';
 import { State, AddStateResponse } from '../types';
 
-export const useStates = () => useQuery<State[]>('states', fetchStates);
+export const useStates = () =>
+  useQuery<State[]>({
+    queryKey: ['states'],
+    queryFn: fetchStates,
+  });
 
 export const useAddState = () => {
   const queryClient = useQueryClient();
-  return useMutation<AddStateResponse, unknown, State>(addState, {
-    onSuccess: (data) => {
+  return useMutation<AddStateResponse, unknown, State>({
+    mutationFn: addState,
+    onSuccess: (data: AddStateResponse) => {
       if (data.state) {
-        queryClient.setQueryData<State[]>('states', (oldStates) =>
+        queryClient.setQueryData<State[]>(['states'], (oldStates) =>
           oldStates ? [...oldStates, data.state!] : [data.state!]
         );
       }
@@ -26,9 +32,10 @@ export const useAddState = () => {
 
 export const useDeleteState = () => {
   const queryClient = useQueryClient();
-  return useMutation((id: string) => deleteState(id), {
-    onSuccess: (_, deletedStateId) => {
-      queryClient.setQueryData<State[]>('states', (oldStates) =>
+  return useMutation({
+    mutationFn: (id: string) => deleteState(id),
+    onSuccess: (_, deletedStateId: string) => {
+      queryClient.setQueryData<State[]>(['states'], (oldStates) =>
         oldStates ? oldStates.filter((state) => state._id !== deletedStateId) : []
       );
     },
@@ -37,9 +44,11 @@ export const useDeleteState = () => {
 
 export const useUpdateState = () => {
   const queryClient = useQueryClient();
-  return useMutation((updatedState: State) => updateState(updatedState._id!, updatedState), {
-    onSuccess: (updatedState) => {
-      queryClient.setQueryData<State[]>('states', (oldStates) =>
+  return useMutation({
+    mutationFn: (updatedState: State) =>
+      updateState(updatedState._id!, updatedState),
+    onSuccess: (updatedState: State) => {
+      queryClient.setQueryData<State[]>(['states'], (oldStates) =>
         oldStates
           ? oldStates.map((state) =>
               state._id === updatedState._id ? updatedState : state
@@ -52,9 +61,10 @@ export const useUpdateState = () => {
 
 export const useRestoreState = () => {
   const queryClient = useQueryClient();
-  return useMutation((id: string) => restoreState(id), {
-    onSuccess: (restoredState) => {
-      queryClient.setQueryData<State[]>('states', (oldStates) =>
+  return useMutation({
+    mutationFn: (id: string) => restoreState(id),
+    onSuccess: (restoredState: State) => {
+      queryClient.setQueryData<State[]>(['states'], (oldStates) =>
         oldStates
           ? oldStates.map((state) =>
               state._id === restoredState._id ? restoredState : state

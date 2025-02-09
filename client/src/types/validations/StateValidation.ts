@@ -1,10 +1,11 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { regionsAtom } from '../../store/regionsAtoms';
+import { useQueryClient } from '@tanstack/react-query';
 import * as yup from 'yup';
+import { useRegions } from '../../hooks/useRegions';
 
 
 export const stateEditValidationSchema = () => {
-  const regions = useRecoilValue(regionsAtom);
+  const { data: regions = [] } = useRegions();
+  
   return yup.object().shape({
     flag: yup.string().url('Flag must be a valid URL').required('Flag is required'),
     population: yup.number().min(0, 'Population cannot be less than 0').required('Population is required'),
@@ -17,7 +18,7 @@ export const stateEditValidationSchema = () => {
 };
 
 export const stateCreateValidationSchema = () => {
-  const regions = useRecoilValue(regionsAtom);
+  const { data: regions = [] } = useRegions();
   return yup.object().shape({
     name: yup.string()
       .min(3, 'Name must be at least 3 characters long')
@@ -36,15 +37,19 @@ export const stateCreateValidationSchema = () => {
 };
 
 
-    export const useDynamicRegions = () => {
-      const [regions, setRegions] = useRecoilState(regionsAtom);
-    
-      const addRegion = (newRegion: string) => {
-        if (!regions.includes(newRegion)) {
-          setRegions(prevRegions => [...prevRegions, newRegion]);
-        }
-      };
-    
-      return { regions, addRegion };
-    };
+export const useDynamicRegions = () => {
+  const { data: regions = [] } = useRegions();
+  const queryClient = useQueryClient();
+
+  const addRegion = (newRegion: string) => {
+    queryClient.setQueryData<string[]>(['regions'], (oldRegions = []) => {
+      if (!oldRegions.includes(newRegion)) {
+        return [...oldRegions, newRegion];
+      }
+      return oldRegions;
+    });
+  };
+
+  return { regions, addRegion };
+};
     

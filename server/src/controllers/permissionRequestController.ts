@@ -62,6 +62,7 @@ export const getRequestByIdController = async (req: Request, res: Response): Pro
 
 export const approvePermissionRequestController = async (req: Request, res: Response): Promise<void> => {
     try {
+        console.log('Approve permission request',req.params.id, req.user!.id, req.body);
         await approvePermissionRequest(req.params.id, req.user!.id, req.body);
         res.status(200).json({ message: 'Permission request approved' });
     } catch (error) {

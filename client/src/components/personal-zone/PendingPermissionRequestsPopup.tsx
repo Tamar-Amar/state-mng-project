@@ -32,6 +32,7 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   username,
 }) => {
     const { data:userPendingRequest , isLoading, error } = usePendingRequests(userId);
+    
     const approveMutation = useApprovePermission();
 
 
@@ -42,6 +43,18 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
     if (requestedPermissions.canDelete) perms.push('Delete');
     return perms.join(', ') || 'None';
   };
+
+  const handleApprove = (requestId: string) => {
+    approveMutation.mutate(requestId, {
+      onSuccess: () => {
+        console.log('Approve', requestId);
+      },
+      onError: (error) => {
+        console.error('Error approving permission request:', error);
+      },
+    });
+  };
+
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -65,6 +78,7 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
                 <TableCell>Date</TableCell>
                 <TableCell>Requested Permissions</TableCell>
                 <TableCell>Status</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -73,6 +87,18 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
                   <TableCell>{new Date(request.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell>{formatPermissions(request.requestedPermissions)}</TableCell>
                   <TableCell>{request.status}</TableCell>
+                  <TableCell>
+                    {request.status === 'pending' && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="primary"
+                        onClick={() => handleApprove(request._id!)}
+                      >
+                        Approve
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

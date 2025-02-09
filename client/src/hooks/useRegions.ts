@@ -1,15 +1,12 @@
-import { useRecoilState } from 'recoil';
-import { useQuery, useMutation } from 'react-query';
-import { regionsAtom } from '../store/regionsAtoms';
-import axios from 'axios';
+// src/hooks/useRegions.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/apiService';
-
+import { Region } from '../types';
 
 export const fetchRegions = async (): Promise<{ nameRegion: string }[]> => {
-    const response = await api.get("/regions");
-    return response.data;
-  };
-
+  const response = await api.get("/regions");
+  return response.data;
+};
 
 export const createRegion = async (regionName: string): Promise<string> => {
   const response = await api.post("/regions", { nameRegion: regionName });
@@ -17,25 +14,24 @@ export const createRegion = async (regionName: string): Promise<string> => {
 };
 
 
-export const useRegionsWithRecoil = () => {
-    const [regions, setRegions] = useRecoilState(regionsAtom);
+export const useRegions = () =>
+  useQuery<Region[], Error, string[]>({
+    queryKey: ['regions'],
+    queryFn: fetchRegions,
+    select: (data) => data.map((region) => region.nameRegion),
+    placeholderData: [],
+  });
+
+
+  export const useCreateRegion = () => {
+    const queryClient = useQueryClient();
   
-    const { isLoading, isError } = useQuery('regions', fetchRegions, {
-      onSuccess: (data) => {
-        const regionNames = data.map((region: { nameRegion: string }) => region.nameRegion);
-        setRegions(regionNames);
+    return useMutation({
+      mutationFn: createRegion,
+      onSuccess: (newRegion: string) => {
+        queryClient.setQueryData<string[]>(['regions'], (oldRegions = []) => {
+          return [...oldRegions, newRegion];
+        });
       },
     });
-  
-    return { regions, isLoading, isError };
   };
-  
-
-export const useCreateRegionWithRecoil = () => {
-  const [regions, setRegions] = useRecoilState(regionsAtom);
-  return useMutation(createRegion, {
-    onSuccess: (newRegion) => {
-      setRegions((prevRegions) => [...prevRegions, newRegion]); 
-    },
-  });
-};
