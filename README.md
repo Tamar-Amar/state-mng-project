@@ -13,7 +13,7 @@ A **full-stack application** for managing **states and cities** using **MongoDB,
 
 ### 1️⃣ Clone the Repo
 ```bash
-git clone https://github.com/your-repo/state-mng-project.git
+git clone https://github.com/Tamar-Amar/state-mng-project
 cd state-mng-project
 ```
 
