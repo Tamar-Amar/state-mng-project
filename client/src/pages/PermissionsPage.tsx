@@ -13,7 +13,6 @@ const PermissionsPage: React.FC = () => {
   if (isLoading) return <Typography>Loading pending requests...</Typography>;
   if (error) return <Typography color="error">Error loading requests</Typography>;
 
-  // קיבוץ לפי משתמש
   const groupedByUser: Record<string, PermissionRequestFromServer[]> = pendingRequests.reduce((acc, request) => {
     if (!acc[request.user._id]) {
       acc[request.user._id] = [];
@@ -22,7 +21,6 @@ const PermissionsPage: React.FC = () => {
     return acc;
   }, {} as Record<string, PermissionRequestFromServer[]>);
 
-  // פונקציה לאישור בקשה
   const handleApprove = (requestId: string) => {
     approveMutation.mutate(requestId, {
       onSuccess: () => queryClient.invalidateQueries({ queryKey: ['permissionRequests'] }),

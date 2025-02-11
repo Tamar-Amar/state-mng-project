@@ -24,6 +24,7 @@ import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-m
 import { useUsers, useDeleteUser } from '../hooks/useUsers';
 import { User } from '../types';
 import PermissionRequestsPopup from '../components/personal-zone/PendingPermissionRequestsPopup';
+import { usePendingRequests } from '../hooks/usePermissions';
 
 const UsersPage: React.FC = () => {
   const { data: users, isLoading, error } = useUsers();
@@ -33,6 +34,7 @@ const UsersPage: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [permPopupOpen, setPermPopupOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { data: pendingRequests, isLoading: isLoadingRequests } = usePendingRequests(); 
 
   const handleDeleteClick = (userId: string) => {
     setUserToDelete(userId);
@@ -41,6 +43,7 @@ const UsersPage: React.FC = () => {
 
 
   const handleViewPermissions = (user: User) => {
+    if (!pendingRequests || isLoadingRequests) return; 
     setSelectedUser(user);
     setPermPopupOpen(true);
   };

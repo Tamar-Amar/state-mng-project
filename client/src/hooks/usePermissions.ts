@@ -35,12 +35,12 @@ export const useCreateRequestPermission = () => {
   });
 };
 
-export const useUserPermissionRequests = (userId: string) =>
-  useQuery<PermissionRequestFromServer[]>({
-    queryKey: ['userPermissionRequests', userId],
-    queryFn: () => getUserPermissionRequests(userId),
-    enabled: Boolean(userId),
-  });
+
+  export const useFilteredUserRequests = (userId: string) => {
+    const queryClient = useQueryClient();
+    const pendingRequests = queryClient.getQueryData<PermissionRequestFromServer[]>(['pendingPermissionRequests']) || [];
+    return pendingRequests.filter(request => request.user._id === userId);
+  };
 
 export const usePendingRequests = () =>
   useQuery<PermissionRequestFromServer[]>({
