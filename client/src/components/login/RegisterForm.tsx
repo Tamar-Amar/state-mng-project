@@ -174,6 +174,7 @@ const RegisterForm: React.FC = () => {
       >
         <MenuItem value="user">user</MenuItem>
         {currentUser && currentUser.user?.role === 'admin' && (
+          
           <MenuItem value="admin">admin</MenuItem>
         )}
       </TextField>
