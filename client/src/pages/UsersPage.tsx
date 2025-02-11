@@ -18,7 +18,8 @@ import {
   DialogActions,
   Button,
   Snackbar,
-  Tooltip
+  Tooltip,
+  Avatar
 } from '@mui/material';
 import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 import { useUsers, useDeleteUser } from '../hooks/useUsers';
@@ -90,6 +91,7 @@ const UsersPage: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
+            <TableCell>Profile</TableCell>
               <TableCell>Username</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
@@ -102,6 +104,15 @@ const UsersPage: React.FC = () => {
             {users &&
               users.map((user: User) => (
                 <TableRow key={user._id}>
+                   <TableCell>
+                    <Avatar 
+                      src={user.profilePicture || ""} 
+                      alt={user.username} 
+                      sx={{ width: 40, height: 40 }}
+                    >
+                      {!user.profilePicture && user.username.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>
                     {user.firstName} {user.lastName}

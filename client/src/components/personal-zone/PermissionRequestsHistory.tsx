@@ -11,9 +11,9 @@ import {
   TableBody,
   CircularProgress,
 } from '@mui/material';
-import { useUserPermissionRequests } from '../../hooks/usePermissions';
 import { PermissionRequestFromServer } from '../../types';
 import styles from '../../styles/PermissionsHistory.module.scss';
+import { useUserPermissionRequests } from '../../hooks/usePermissions';
 
 interface PermissionRequestsHistoryProps {
   userId: string;

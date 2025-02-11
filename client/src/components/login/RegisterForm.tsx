@@ -52,7 +52,7 @@ const RegisterForm: React.FC = () => {
           setPreview(null);
           setIsImageUploaded(false);
           setSubmitting(false);
-          navigate('/home');
+          navigate('/');
         },
         onError: (err) => {
           console.error('Registration failed:', err);
@@ -165,7 +165,7 @@ const RegisterForm: React.FC = () => {
 
 <TextField
         select
-        label="תפקיד"
+        label="Role"
         name="role"
         fullWidth
         margin="normal"
@@ -174,7 +174,7 @@ const RegisterForm: React.FC = () => {
       >
         <MenuItem value="user">user</MenuItem>
         {currentUser && currentUser.user?.role === 'admin' && (
-          
+
           <MenuItem value="admin">admin</MenuItem>
         )}
       </TextField>

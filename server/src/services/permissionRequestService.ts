@@ -50,9 +50,9 @@ export const approvePermissionRequest = async (requestId: string, adminId: strin
     const request = await PermissionRequest.findById(requestId);
 
     if (!request) throw new Error('Request not found');
-
     const user= await User.findById(request.user);
 
+    console.log("user", user);
 
     await setUserPermissions(request.user.toString(), {
         canAdd: approvals.canAdd || user?.permissions?.canAdd || false,
