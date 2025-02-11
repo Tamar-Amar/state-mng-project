@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline'; 
@@ -10,7 +10,8 @@ import AppRoutes from './routes/AppRoutes';
 import theme from './theme'; 
 import { userAtom } from './store/userAtom';
 import { getCurrentUser } from './services/authService';
-import { red } from '@mui/material/colors';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 
 const queryClient = new QueryClient();
 
@@ -47,18 +48,19 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
+    <QueryClientProvider client={queryClient}>
     <ErrorBoundary>
       <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <AppContent />
             </ThemeProvider>
           </BrowserRouter>
-        </QueryClientProvider>
       </RecoilRoot>
     </ErrorBoundary>
+    <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

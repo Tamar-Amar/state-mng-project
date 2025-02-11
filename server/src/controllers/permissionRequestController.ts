@@ -5,7 +5,8 @@ import {
     getRequestById,
     approvePermissionRequest,
     denyPermissionRequest,
-    getUserPermissionRequests
+    getUserPermissionRequests,
+    getUserPendingRequests
 } from '../services/permissionRequestService';
 import User from '../models/User';
 
@@ -13,7 +14,6 @@ import User from '../models/User';
 export const requestPermissionController = async (req: Request, res: Response): Promise<void> => {
     try {
         const permissionRequest = await requestPermission(req.user!.id, req.body);
-
         await User.findByIdAndUpdate(req.user!.id, {
             $push: { permissionRequests: permissionRequest._id }
           });
@@ -28,6 +28,15 @@ export const requestPermissionController = async (req: Request, res: Response): 
 export const getPendingRequestsController = async (_req: Request, res: Response): Promise<void> => {
     try {
         const requests = await getPendingRequests();
+        res.status(200).json(requests);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving permission requests', error });
+    }
+};
+
+export const getUserPendingRequestsController = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const requests = await getUserPendingRequests(req.params.id);
         res.status(200).json(requests);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving permission requests', error });
@@ -51,6 +60,7 @@ export const getRequestByIdController = async (req: Request, res: Response): Pro
 
 export const approvePermissionRequestController = async (req: Request, res: Response): Promise<void> => {
     try {
+        console.log('Approve permission request',req.params.id, req.user!.id, req.body);
         await approvePermissionRequest(req.params.id, req.user!.id, req.body);
         res.status(200).json({ message: 'Permission request approved' });
     } catch (error) {

@@ -23,7 +23,7 @@ import {
 import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 import { useUsers, useDeleteUser } from '../hooks/useUsers';
 import { User } from '../types';
-import PermissionRequestsPopup from '../components/personal-zone/PermissionRequestsPopup';
+import PermissionRequestsPopup from '../components/personal-zone/PendingPermissionRequestsPopup';
 
 const UsersPage: React.FC = () => {
   const { data: users, isLoading, error } = useUsers();

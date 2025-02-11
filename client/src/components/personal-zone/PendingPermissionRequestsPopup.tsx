@@ -15,7 +15,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { usePendingRequests } from '../../hooks/usePermissions';
+import { useApprovePermission, usePendingRequests, useUserPermissionRequests } from '../../hooks/usePermissions';
 import {PermissionRequestFromServer } from '../../types';
 
 interface PermissionRequestsPopupProps {
@@ -31,11 +31,10 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   userId,
   username,
 }) => {
-    const { data, isLoading, error } = usePendingRequests();
-    console.log("re",data);
-    const userRequests: PermissionRequestFromServer[] = (data as PermissionRequestFromServer[])?.filter(
-      (req) => req.user._id === userId
-    ) || [];
+    const { data:userPendingRequest , isLoading, error } = useUserPermissionRequests(userId);
+    
+    const approveMutation = useApprovePermission();
+
 
   const formatPermissions = (requestedPermissions: PermissionRequestFromServer['requestedPermissions']) => {
     const perms: string[] = [];
@@ -44,6 +43,18 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
     if (requestedPermissions.canDelete) perms.push('Delete');
     return perms.join(', ') || 'None';
   };
+
+  const handleApprove = (requestId: string) => {
+    approveMutation.mutate(requestId, {
+      onSuccess: () => {
+        console.log('Approve', requestId);
+      },
+      onError: (error) => {
+        console.error('Error approving permission request:', error);
+      },
+    });
+  };
+
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -55,26 +66,39 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
             Error loading permission requests.
         </Typography>
         ) : null}
-        {data && userRequests.length === 0 && (
+        {userPendingRequest && userPendingRequest.length === 0 && (
           <DialogContentText>
             No permission requests found for this user.
           </DialogContentText>
         )}
-        {data && userRequests.length > 0 && (
+        {userPendingRequest && userPendingRequest.length > 0 && (
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Date</TableCell>
                 <TableCell>Requested Permissions</TableCell>
                 <TableCell>Status</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {userRequests.map((request) => (
+              {userPendingRequest.map((request) => (
                 <TableRow key={request._id}>
                   <TableCell>{new Date(request.createdAt).toLocaleDateString()}</TableCell>
                   <TableCell>{formatPermissions(request.requestedPermissions)}</TableCell>
                   <TableCell>{request.status}</TableCell>
+                  <TableCell>
+                    {request.status === 'pending' && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="primary"
+                        onClick={() => handleApprove(request._id!)}
+                      >
+                        Approve
+                      </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

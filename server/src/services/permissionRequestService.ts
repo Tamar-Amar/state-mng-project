@@ -12,9 +12,22 @@ export const requestPermission = async (userId: string, permissions: { canAdd: b
 };
 
 export const getPendingRequests = async () => {
-    return await PermissionRequest.find({ status: 'pending' }).populate('user', 'username email');
+    return await PermissionRequest.find({ status: 'pending' }).populate('user', 'username');
 };
 
+export const getUserPendingRequests = async (userId: string) => {
+    const user = await User.findById(userId);
+    console.log("---user",user)
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const pendingRequests = await PermissionRequest.find({
+      _id: { $in: user.permissionRequests },
+      status: 'pending'
+    }).populate('user', 'username email');
+    
+    return pendingRequests;
+  };
 export const getRequestById = async (requestId: string) => {
     return await PermissionRequest.findById(requestId).populate('user', 'username email');
 };
@@ -35,12 +48,16 @@ export const setUserPermissions = async (userId: string, permissions: { canAdd: 
 
 export const approvePermissionRequest = async (requestId: string, adminId: string, approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean }) => {
     const request = await PermissionRequest.findById(requestId);
+
     if (!request) throw new Error('Request not found');
 
+    const user= await User.findById(request.user);
+
+
     await setUserPermissions(request.user.toString(), {
-        canAdd: approvals.canAdd || false,
-        canUpdate: approvals.canUpdate || false,
-        canDelete: approvals.canDelete || false
+        canAdd: approvals.canAdd || user?.permissions?.canAdd || false,
+        canUpdate: approvals.canUpdate || user?.permissions?.canUpdate || false,
+        canDelete: approvals.canDelete || user?.permissions?.canDelete || false
     });
 
     request.status = 'approved';

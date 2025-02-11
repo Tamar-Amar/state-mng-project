@@ -63,8 +63,8 @@ const LoginForm: React.FC = () => {
         required
       />
 
-      <Button type="submit" variant="contained" fullWidth disabled={loginMutation.isLoading}>
-        {loginMutation.isLoading ? 'Logging in...' : 'Login'}
+      <Button type="submit" variant="contained" fullWidth disabled={loginMutation.isPending}>
+        {loginMutation.isPending ? 'Logging in...' : 'Login'}
       </Button>
 
       <Snackbar

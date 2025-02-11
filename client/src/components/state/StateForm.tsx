@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Autocomplete, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { setNestedObjectValues, useFormik } from 'formik';
+import { Box, Button, TextField, Typography, Autocomplete, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert } from '@mui/material';
+import { useFormik } from 'formik';
 import { stateCreateValidationSchema, stateEditValidationSchema } from '../../types/validations/StateValidation';
 import { useAddState, useUpdateState } from '../../hooks/useStates';
-import { useCreateRegionWithRecoil, useRegionsWithRecoil } from '../../hooks/useRegions';
-import { useQueryClient } from 'react-query';
+import { useCreateRegion, useRegions } from '../../hooks/useRegions';
+import { useQueryClient } from '@tanstack/react-query';
 import { State } from '../../types/State';
 import { editingStateAtom } from '../../store/stateAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -14,54 +14,65 @@ import { userAtom } from '../../store/userAtom';
 const StateForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
-  const { regions } = useRegionsWithRecoil();
+  const { data: regions = [], isLoading, error } = useRegions();
   const queryClient = useQueryClient();
   const addMutation = useAddState();
   const updateMutation = useUpdateState();
   const [newRegion, setNewRegion] = useState<string>('');
-  const createRegionMutation = useCreateRegionWithRecoil();
-  const stateToEdit = id ? queryClient.getQueryData<State[]>('states')?.find((state) => state._id === id) : null;
+  const createRegionMutation = useCreateRegion();
+  const stateToEdit = id ? queryClient.getQueryData<State[]>(['states'])?.find((state) => state._id === id) : null;
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [editingStateName, setEditingStateName] = useRecoilState(editingStateAtom); 
   const isEditMode = !!id;
   const user = useRecoilValue(userAtom);
 
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
+
+  const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
   useEffect(() => {
     const hasPermission = id 
-        ? user?.permissions?.canUpdate 
-        : user?.permissions?.canAdd;
+      ? user?.permissions?.canUpdate 
+      : user?.permissions?.canAdd;
 
     if (!hasPermission) {
-        setTimeout(() => {
-            navigate('/');
-        }, 3000);
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
     }
-}, [id, user, navigate]);
+  }, [id, user, navigate]);
 
-const hasPermission = id 
-? user?.permissions?.canUpdate 
-: user?.permissions?.canAdd;
+  const hasPermission = id 
+    ? user?.permissions?.canUpdate 
+    : user?.permissions?.canAdd;
 
-if (!hasPermission) {
-  return (
+  if (!hasPermission) {
+    return (
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h6" color="error">
-              You don’t have permission to {id ? 'edit' : 'add'} a state.
-          </Typography>
-          <Typography variant="body1">
-              Redirecting you back to the home page...
-          </Typography>
-          <Button onClick={() => navigate('/')} variant="contained" sx={{ mt: 2 }}>
-              Go to Home Now
-          </Button>
+        <Typography variant="h6" color="error">
+          You don’t have permission to {id ? 'edit' : 'add'} a state.
+        </Typography>
+        <Typography variant="body1">
+          Redirecting you back to the home page...
+        </Typography>
+        <Button onClick={() => navigate('/')} variant="contained" sx={{ mt: 2 }}>
+          Go to Home Now
+        </Button>
       </Box>
-  );
-}
+    );
+  }
 
   const confirmCancel = () => {
     setShowConfirmation(false);
     if (isEditMode) {
-        setEditingStateName(null);
+      setEditingStateName(null);
     }
     navigate('/');
   };
@@ -70,9 +81,9 @@ if (!hasPermission) {
     if (formik.dirty) {
       setShowConfirmation(true);
     } else {
-        if (isEditMode) {
-            setEditingStateName(null);
-        }
+      if (isEditMode) {
+        setEditingStateName(null);
+      }
       navigate('/');
     }
   };
@@ -83,7 +94,7 @@ if (!hasPermission) {
       flag: stateToEdit?.flag || '',
       population: stateToEdit?.population || 0,
       region: stateToEdit?.region || '',
-      cities: stateToEdit?.cities ||  [],
+      cities: stateToEdit?.cities || [],
       isActive: stateToEdit?.isActive || true,
     },
     validationSchema: isEditMode
@@ -96,22 +107,34 @@ if (!hasPermission) {
           { ...values, _id: id },
           {
             onSuccess: () => {
-              alert('State updated successfully!');
-              navigate('/');
+              console.log("Success mutation triggered");
+              setSnackbar({ open: true, message: 'State updated successfully!', severity: 'success' });
+              setTimeout(() => {
+                navigate('/');
+              }, 3000);
+              setEditingStateName(null)
             },
-            onError: () => {
-              alert('Failed to update state.');
+            onError: (error: any) => {
+              const errorMessage = error?.response?.data?.message || 'Failed to update state.';
+              console.log("Error mutation triggered:", errorMessage);
+              setSnackbar({ open: true, message: errorMessage, severity: 'error' });
+              setEditingStateName(null)
             },
           }
         );
       } else {
         addMutation.mutate(values, {
           onSuccess: () => {
-            alert('State added successfully!');
-            navigate('/');
+            console.log("Success mutation triggered");
+            setSnackbar({ open: true, message: 'State added successfully!', severity: 'success' });
+            setTimeout(() => {
+              navigate('/');
+            }, 3000);
           },
-          onError: () => {
-            alert('Failed to add state.');
+          onError: (error: any) => {
+            const errorMessage = error?.response?.data?.message || 'Failed to add state.';
+              console.log("Error mutation triggered:", errorMessage);
+            setSnackbar({ open: true, message: errorMessage, severity: 'error' });
           },
         });
       }
@@ -122,16 +145,16 @@ if (!hasPermission) {
     if (newRegion && /^[a-zA-Z\s]+$/.test(newRegion)) {
       createRegionMutation.mutate(newRegion, {
         onSuccess: () => {
-          alert(`Region "${newRegion}" added successfully!`);
+          setSnackbar({ open: true, message: `Region "${newRegion}" added successfully!`, severity: 'success' });
           formik.setFieldValue('region', newRegion);
           setNewRegion('');
         },
         onError: () => {
-          alert('Failed to add region.');
+          setSnackbar({ open: true, message: 'Failed to add region.', severity: 'error' });
         },
       });
     } else {
-      alert('Invalid region name. Please use only letters and spaces.');
+      setSnackbar({ open: true, message: 'Invalid region name. Please use only letters and spaces.', severity: 'error' });
     }
   };
 
@@ -141,6 +164,7 @@ if (!hasPermission) {
         {isEditMode ? `Edit State: ${stateToEdit?.name || ''}` : 'Add New State'}
       </Typography>
       <form onSubmit={formik.handleSubmit}>
+        {/* שדות הטופס */}
         <TextField
           fullWidth
           label="State Name"
@@ -151,7 +175,7 @@ if (!hasPermission) {
           margin="normal"
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
-          disabled={isEditMode} // שם המדינה לא ניתן לעריכה
+          disabled={isEditMode}
         />
         <TextField
           fullWidth
@@ -176,42 +200,37 @@ if (!hasPermission) {
           error={formik.touched.population && Boolean(formik.errors.population)}
           helperText={formik.touched.population && formik.errors.population}
         />
-<Autocomplete
-            options={regions}
-            freeSolo
-            value={formik.values.region || ''}
-            onChange={(event, value) => {
-              formik.setFieldValue('region', value);
-              setNewRegion(value || '');
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Region"
-                name="region"
-                margin="dense"
-                error={formik.touched.region && Boolean(formik.errors.region)}
-                helperText={formik.touched.region && formik.errors.region}
-              />
-            )}
-            onInputChange={(event, value) => {
-              formik.setFieldValue('region', value);
-              setNewRegion(value);
-            }}
-          />
-          {newRegion && !regions.includes(newRegion) && (
-            <Box mt={2}>
-              <Typography color="error">Region not found. Add it?</Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleAddRegion}
-                style={{ marginTop: '8px' }}
-              >
-                Add "{newRegion}" as a new region
-              </Button>
-            </Box>
+        <Autocomplete
+          options={regions}
+          freeSolo
+          value={formik.values.region || ''}
+          onChange={(event, value) => {
+            formik.setFieldValue('region', value);
+            setNewRegion(value || '');
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Region"
+              name="region"
+              margin="dense"
+              error={formik.touched.region && Boolean(formik.errors.region)}
+              helperText={formik.touched.region && formik.errors.region}
+            />
           )}
+          onInputChange={(event, value) => {
+            formik.setFieldValue('region', value);
+            setNewRegion(value);
+          }}
+        />
+        {newRegion && !regions.includes(newRegion) && (
+          <Box mt={2}>
+            <Typography color="error">Region not found. Add it?</Typography>
+            <Button variant="outlined" color="primary" onClick={handleAddRegion} style={{ marginTop: '8px' }}>
+              Add "{newRegion}" as a new region
+            </Button>
+          </Box>
+        )}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
           <Button variant="outlined" color="error" onClick={handleCancel}>
             Cancel
@@ -238,6 +257,13 @@ if (!hasPermission) {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* הוספת Snackbar להצגת הודעות */}
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

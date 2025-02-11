@@ -36,10 +36,8 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
   userId,
   currentPermissions,
 }) => {
-  // קבלת הבקשות הקיימות של המשתמש
   const { data: existingRequests } = useUserPermissionRequests(userId);
-  
-  // חישוב האפשרויות הזמינות על סמך ההרשאות הקיימות והבקשות הקיימות
+
   const [availableOptions, setAvailableOptions] = useState<PermissionOption[]>([]);
   
   useEffect(() => {
@@ -47,10 +45,8 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
     setAvailableOptions(options);
   }, [currentPermissions, existingRequests]);
   
-  // אם אין אפשרויות זמינות, המשתמש כבר מורשה או קיימת בקשה ממתינה
   const hasAvailableOptions = availableOptions.length > 0;
-  
-  // מצב הבחירה – אם קיימת לפחות אפשרות אחת, נבחר כברירת מחדל את האפשרות הראשונה
+
   const [selectedOption, setSelectedOption] = useState<PermissionOption>(availableOptions[0] || 'add');
 
   useEffect(() => {
@@ -72,7 +68,6 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
       return;
     }
 
-    // בניית אובייקט הרשאות לפי האפשרות הנבחרת
     const permissions = buildPermissionsObject(selectedOption);
 
     sendPermissionRequest(permissions, {

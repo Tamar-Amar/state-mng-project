@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import State from '../models/State';
 
 export const getAllStatesService = async () => {
@@ -56,12 +57,16 @@ export const updateStateService = async (id: string, updateData: Partial<{
 };
 
 export const deleteStateService = async (id: string) => {
+    console.log('Deleting state', id);
+    const objectId = new mongoose.Types.ObjectId(id);
+    console.log('Converted id:', objectId);
     try {
         const deletedState = await State.findByIdAndUpdate(
-            id,
+            objectId,
             { isActive: false }, 
             { new: true }
         );
+        console.log('Deleted state:', deletedState);
         return deletedState;
     } catch (error) {
         throw new Error(`Error deleting state: ${(error as Error).message}`);

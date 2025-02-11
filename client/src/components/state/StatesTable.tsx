@@ -24,7 +24,7 @@ const StatesTable: React.FC = () => {
   const handleSnackbarClose = () => setSnackbarMessage(null);
 
   const handleDelete = (id: string) => {
-    if (user?.permissions.canDelete) {
+    if (user?.permissions?.canDelete) {
       if (window.confirm('Are you sure you want to delete this state?')) {
         deleteMutation.mutate(id, {
           onSuccess: () => alert('State deleted successfully!'),
@@ -37,7 +37,7 @@ const StatesTable: React.FC = () => {
   };
 
   const handleEdit = (state: State) => {
-    if (user?.permissions.canUpdate) {
+    if (user?.permissions?.canUpdate) {
       setEditingStateName(state.name);
       navigate(`/state-form/${state._id}`);
     } else {
@@ -74,9 +74,9 @@ const StatesTable: React.FC = () => {
                 fontSize: '12px',
                 textTransform: 'uppercase',
                 fontWeight: '500',
-                backgroundColor: user?.permissions.canUpdate ? 'primary.main' : '#e0e0e0',
-                color: user?.permissions.canUpdate ? 'black' : '#757575',
-                cursor: user?.permissions.canUpdate ? 'pointer' : 'not-allowed',
+                backgroundColor: user?.permissions?.canUpdate ? 'primary.main' : '#e0e0e0',
+                color: user?.permissions?.canUpdate ? 'black' : '#757575',
+                cursor: user?.permissions?.canUpdate ? 'pointer' : 'not-allowed',
               }}
               variant="outlined"
               color="primary"
@@ -92,9 +92,9 @@ const StatesTable: React.FC = () => {
                 fontSize: '12px',
                 textTransform: 'uppercase',
                 fontWeight: '500',
-                backgroundColor: user?.permissions.canDelete ? 'error.main' : '#e0e0e0',
-                color: user?.permissions.canDelete ? 'black' : 'red',
-                cursor: user?.permissions.canDelete ? 'pointer' : 'not-allowed',
+                backgroundColor: user?.permissions?.canDelete ? 'error.main' : '#e0e0e0',
+                color: user?.permissions?.canDelete ? 'black' : 'red',
+                cursor: user?.permissions?.canDelete ? 'pointer' : 'not-allowed',
               }}
               variant="outlined"
               color="error"
