@@ -15,7 +15,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { useApprovePermission, usePendingRequests, useUserPermissionRequests } from '../../hooks/usePermissions';
+import { useApprovePermission, useFilteredUserRequests } from '../../hooks/usePermissions';
 import {PermissionRequestFromServer } from '../../types';
 
 interface PermissionRequestsPopupProps {
@@ -31,7 +31,8 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   userId,
   username,
 }) => {
-    const { data:userPendingRequest , isLoading, error } = useUserPermissionRequests(userId);
+  const userPendingRequest = useFilteredUserRequests(userId);
+  console.log("userPendingRequest: " ,userPendingRequest); 
     
     const approveMutation = useApprovePermission();
 
@@ -60,13 +61,10 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Pending Permission Requests for {username}</DialogTitle>
       <DialogContent>
-        {isLoading && <CircularProgress />}
-        {error ? (
-        <Typography color="error">
-            Error loading permission requests.
-        </Typography>
-        ) : null}
-        {userPendingRequest && userPendingRequest.length === 0 && (
+      {userPendingRequest.length === 0 && (
+            <DialogContentText>No permission requests found for this user.</DialogContentText>
+          )}
+        {userPendingRequest.length > 0 && (
           <DialogContentText>
             No permission requests found for this user.
           </DialogContentText>
