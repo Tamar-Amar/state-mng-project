@@ -6,9 +6,9 @@ export const requestPermission = async (permission: { canAdd: boolean; canUpdate
     return response.data;
   };
   
-  export const getPendingRequests = async (id: string): Promise<PermissionRequestFromServer[]> => {
-    const response = await api.get(`/permission-requests/pending-user/${id}`);
-    return response.data;0
+  export const getPendingRequests = async (): Promise<PermissionRequestFromServer[]> => {
+    const response = await api.get('/permission-requests/pending');
+    return response.data;
   };
 
   export const getUserPermissionRequests = async (id: string): Promise<PermissionRequestFromServer[]> => {

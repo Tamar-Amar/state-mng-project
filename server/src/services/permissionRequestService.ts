@@ -12,7 +12,7 @@ export const requestPermission = async (userId: string, permissions: { canAdd: b
 };
 
 export const getPendingRequests = async () => {
-    return await PermissionRequest.find({ status: 'pending' }).populate('user', 'username email');
+    return await PermissionRequest.find({ status: 'pending' }).populate('user', 'username');
 };
 
 export const getUserPendingRequests = async (userId: string) => {

@@ -15,7 +15,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { useApprovePermission, usePendingRequests } from '../../hooks/usePermissions';
+import { useApprovePermission, usePendingRequests, useUserPermissionRequests } from '../../hooks/usePermissions';
 import {PermissionRequestFromServer } from '../../types';
 
 interface PermissionRequestsPopupProps {
@@ -31,7 +31,7 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   userId,
   username,
 }) => {
-    const { data:userPendingRequest , isLoading, error } = usePendingRequests(userId);
+    const { data:userPendingRequest , isLoading, error } = useUserPermissionRequests(userId);
     
     const approveMutation = useApprovePermission();
 

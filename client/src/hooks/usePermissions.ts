@@ -42,17 +42,17 @@ export const useUserPermissionRequests = (userId: string) =>
     enabled: Boolean(userId),
   });
 
-export const usePendingRequests = (userId: string) =>
+export const usePendingRequests = () =>
   useQuery<PermissionRequestFromServer[]>({
-    queryKey: ['permissionRequests', userId],
-    queryFn: () => getPendingRequests(userId),
+    queryKey: ['pendingPermissionRequests'],
+    queryFn: () => getPendingRequests(),
   });
 
 export const useApprovePermission = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: approvePermissionRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['permissionRequests'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
   });
 };
 
@@ -60,6 +60,6 @@ export const useDenyPermission = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: denyPermissionRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['permissionRequests'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
   });
 };

@@ -4,7 +4,10 @@ import User from '../models/User';
 import logger from '../utils/logger';
 
 export const authAndPermissionMiddleware = (requiredRole?: 'admin' | 'user', requiredPermission?: 'canAdd' | 'canUpdate' | 'canDelete') => {
+    
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        console.log("🔹 User Data in Middleware:", req.user);
+
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
