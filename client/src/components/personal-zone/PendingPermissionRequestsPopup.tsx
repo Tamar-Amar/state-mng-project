@@ -45,15 +45,21 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
     return perms.join(', ') || 'None';
   };
 
-  const handleApprove = (requestId: string) => {
-    approveMutation.mutate(requestId, {
-      onSuccess: () => {
-        console.log('Approve', requestId);
+  const handleApprove = (requestId: string, requestedPermissions: PermissionRequestFromServer['requestedPermissions']) => {
+    approveMutation.mutate(
+      {
+        id: requestId,
+        approvals: requestedPermissions, 
       },
-      onError: (error) => {
-        console.error('Error approving permission request:', error);
-      },
-    });
+      {
+        onSuccess: () => {
+          console.log('✔️ Approved request:', requestId);
+        },
+        onError: (error) => {
+          console.error('❌ Error approving permission request:', error);
+        },
+      }
+    );
   };
 
 
@@ -91,9 +97,10 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
                         variant="contained"
                         size="small"
                         color="primary"
-                        onClick={() => handleApprove(request._id!)}
+                        onClick={() => handleApprove(request._id || "unde", request.requestedPermissions)}
+                        disabled={approveMutation.isPending}
                       >
-                        Approve
+                        {approveMutation.isPending ? "Approving..." : "Approve"}
                       </Button>
                     )}
                   </TableCell>

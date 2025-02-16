@@ -7,7 +7,7 @@ export interface State {
   population: number;
   region: string;
   isActive: boolean;
-  cities?: City[];
+  cities?: City[]; 
 }
 
 export interface AddStateResponse {

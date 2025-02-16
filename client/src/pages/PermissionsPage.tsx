@@ -2,7 +2,9 @@ import React from 'react';
 import { usePendingRequests, useApprovePermission, useDenyPermission } from '../hooks/usePermissions';
 import { PermissionRequestFromServer } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
-import { Box, Button, Card, CardContent, Typography, Divider } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, Divider, CircularProgress, TableCell, TableRow, TableBody, Table, TableHead, Tooltip, IconButton } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const PermissionsPage: React.FC = () => {
   const { data: pendingRequests = [], isLoading, error } = usePendingRequests();
@@ -10,9 +12,21 @@ const PermissionsPage: React.FC = () => {
   const denyMutation = useDenyPermission();
   const queryClient = useQueryClient();
 
-  if (isLoading) return <Typography>Loading pending requests...</Typography>;
-  if (error) return <Typography color="error">Error loading requests</Typography>;
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
+  if (error) {
+    return (
+      <Typography color="error" align="center" sx={{ mt: 4 }}>
+        Error loading permission requests.
+      </Typography>
+    );
+  }
   const groupedByUser: Record<string, PermissionRequestFromServer[]> = pendingRequests.reduce((acc, request) => {
     if (!acc[request.user._id]) {
       acc[request.user._id] = [];
@@ -21,61 +35,96 @@ const PermissionsPage: React.FC = () => {
     return acc;
   }, {} as Record<string, PermissionRequestFromServer[]>);
 
-  const handleApprove = (requestId: string) => {
-    approveMutation.mutate(requestId, {
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: ['permissionRequests'] }),
-    });
+  const handleApprove = (request: PermissionRequestFromServer) => {
+    approveMutation.mutate(
+      { id: request._id || "unde", approvals: request.requestedPermissions },
+      {
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
+      }
+    );
   };
 
-  // פונקציה לדחיית בקשה
   const handleDeny = (requestId: string) => {
     denyMutation.mutate(requestId, {
       onSuccess: () => queryClient.invalidateQueries({ queryKey: ['permissionRequests'] }),
     });
   };
 
+  const formatPermissions = (permissions: PermissionRequestFromServer['requestedPermissions']) => {
+    const perms: string[] = [];
+    if (permissions.canAdd) perms.push('Add');
+    if (permissions.canUpdate) perms.push('Update');
+    if (permissions.canDelete) perms.push('Delete');
+    return perms.join(', ') || 'None';
+  };
+
   return (
-    <Box sx={{ maxWidth: 800, margin: 'auto', padding: 3 }}>
-      <Typography variant="h4" gutterBottom>Pending Permission Requests</Typography>
-      
-      {Object.entries(groupedByUser).map(([userId, requests]) => (
-        <Card key={userId} sx={{ mb: 3 }}>
+    <Box sx={{ maxWidth: 900, margin: 'auto', padding: 3, mt: 13 }}>
+      <Typography variant="h4" gutterBottom align="center">
+        Pending Permission Requests
+      </Typography>
+
+      {Object.keys(groupedByUser).length === 0 ? (
+      <Typography variant="h6" align="center" color="textSecondary">
+        No pending requests.
+      </Typography>
+    ) : (
+      Object.entries(groupedByUser).map(([userId, requests]) => (
+        <Card key={userId} sx={{ mb: 3, p: 2 }}>
           <CardContent>
             <Typography variant="h6">User: {requests[0].user.username}</Typography>
-            <Typography variant="body2" color="textSecondary">ID: {userId}</Typography>
-            <Divider sx={{ my: 1 }} />
+            <Typography variant="body2" color="textSecondary">User ID: {userId}</Typography>
+            <Divider sx={{ my: 2 }} />
 
-            {requests
-              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // מיון מהחדש לישן
-              .map((request: PermissionRequestFromServer) => (
-                <Box key={request._id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 1 }}>
-                  {/* <Typography>{request.permissionType}</Typography> */}
-                  <Box>
-                    <Button 
-                      variant="contained" 
-                      color="success" 
-                      size="small" 
-                      sx={{ mr: 1 }}
-                      onClick={() => handleApprove(request._id || "undefined")}
-                      disabled={approveMutation.isPending}
-                    >
-                      Approve
-                    </Button>
-                    <Button 
-                      variant="contained" 
-                      color="error" 
-                      size="small" 
-                      onClick={() => handleDeny(request._id|| "undefined")}
-                      disabled={denyMutation.isPending}
-                    >
-                      Deny
-                    </Button>
-                  </Box>
-                </Box>
-              ))}
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Requested Permissions</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {requests
+                  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // מיון מהחדש לישן
+                  .map((request: PermissionRequestFromServer) => (
+                    <TableRow key={request._id}>
+                      <TableCell>{new Date(request.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatPermissions(request.requestedPermissions)}</TableCell>
+                      <TableCell>{request.status}</TableCell>
+                      <TableCell>
+                        {request.status === 'pending' && (
+                          <>
+                            <Tooltip title="Approve">
+                              <IconButton 
+                                color="success" 
+                                onClick={() => handleApprove(request)}
+                                disabled={approveMutation.isPending}
+                              >
+                                <CheckCircleIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Deny">
+                              <IconButton 
+                                color="error" 
+                                onClick={() => handleDeny(request._id || "undefined")}
+                                disabled={denyMutation.isPending}
+                              >
+                                <CancelIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
-      ))}
+      ))
+      )}
     </Box>
   );
 };

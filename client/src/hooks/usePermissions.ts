@@ -24,7 +24,7 @@ export const useCreateRequestPermission = () => {
       requestPermission(permissions),
     onSuccess: (newRequest: PermissionRequestFromServer) => {
       queryClient.setQueryData<PermissionRequestFromServer[]>(
-        ['permissionRequests'],
+        ['pendingPermissionRequests'],
         (oldData) => (oldData ? [newRequest, ...oldData] : [newRequest])
       );
       queryClient.setQueryData<PermissionRequestFromServer[]>(
@@ -35,6 +35,12 @@ export const useCreateRequestPermission = () => {
   });
 };
 
+export const useUserPermissionRequests = (userId: string) =>
+  useQuery<PermissionRequestFromServer[]>({
+    queryKey: ['userPermissionRequests', userId],
+    queryFn: () => getUserPermissionRequests(userId),
+    enabled: Boolean(userId),
+  });
 
   export const useFilteredUserRequests = (userId: string) => {
     const queryClient = useQueryClient();
@@ -48,13 +54,14 @@ export const usePendingRequests = () =>
     queryFn: () => getPendingRequests(),
   });
 
-export const useApprovePermission = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: approvePermissionRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
-  });
-};
+  export const useApprovePermission = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: ({ id, approvals }: { id: string; approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean } }) => 
+        approvePermissionRequest( id, approvals),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
+    });
+  };
 
 export const useDenyPermission = () => {
   const queryClient = useQueryClient();

@@ -6,6 +6,7 @@ import {
     updateStateService,
     deleteStateService,
 } from '../services/stateService';
+import { State } from '../models/State';
 
 export const getAllStates = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -80,7 +81,6 @@ export const deleteState = async (req: Request, res: Response, next: NextFunctio
 };
 
 
-import State from '../models/State';
 
 export const restoreState = async (req: Request, res: Response, next: NextFunction) => {
     try {

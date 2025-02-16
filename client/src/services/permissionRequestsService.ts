@@ -17,8 +17,13 @@ export const requestPermission = async (permission: { canAdd: boolean; canUpdate
   };
   
   
-  export const approvePermissionRequest = async (id: string): Promise<PermissionRequest> => {
-    const response = await api.patch(`/permission-requests/${id}/approve`);
+  export const approvePermissionRequest = async (
+    id: string, 
+    approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean }
+  ): Promise<PermissionRequest> => {
+    const response = await api.patch(`/permission-requests/${id}/approve`,approvals, {
+      headers: { "Content-Type": "application/json" }, 
+    });
     return response.data;
   };
   

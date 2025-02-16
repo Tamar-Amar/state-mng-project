@@ -26,7 +26,7 @@ const LoginForm: React.FC = () => {
         localStorage.setItem('token', data.token);
         setUser(data.user);
         setSuccess(true); 
-        setTimeout(() => navigate('/home'), 1500);
+        setTimeout(() => navigate('/'), 1500);
       },
       onError: (error) => {
         console.error('Login failed:', error);

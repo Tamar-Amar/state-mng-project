@@ -2,11 +2,20 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Box, Avatar, IconButton } from '@mui/material';
+import { Box, Avatar, IconButton, ListItemButton } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { editingStateAtom } from '../store/stateAtoms';
 import { userAtom } from '../store/userAtom';
+import { useMediaQuery } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import { useState } from 'react';
+
 
 const Navbar = () => {
   const location = useLocation();
@@ -14,6 +23,13 @@ const Navbar = () => {
   const editingStateName = useRecoilValue(editingStateAtom);
   const user = useRecoilValue(userAtom);
   const setUser = useSetRecoilState(userAtom);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 768px)'); 
+
+  const toggleDrawer = (open: boolean) => {
+    setDrawerOpen(open);
+  };
+
 
   const handleProfileClick = () => {
     navigate('/personal');
@@ -25,11 +41,57 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  console.log(user)
+  const menuItems = (
+    <List sx={{ mt:10 }}>
+    <ListItem disablePadding>
+      <ListItemButton onClick={() => navigate('/')}>
+        <ListItemText primary="States" />
+      </ListItemButton>
+    </ListItem>
+      {user?.role === 'admin' && (
+        <>
+        <Divider />
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/users')}>
+            <ListItemText primary="Users" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/permissions')}>
+            <ListItemText primary="Permissions" />
+          </ListItemButton>
+        </ListItem>
+        </>
+      )}
+      <Divider />
+      <ListItem disablePadding>
+      <ListItemButton onClick={() => navigate('/personal')}>
+        <ListItemText primary="Personal Details" />
+      </ListItemButton>
+    </ListItem>
+      {user && (
+        <>
+          <Divider />
+          <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
+        </>
+      )}
+    </List>
+  );
+
   return (
     <AppBar position="fixed" color="primary" elevation={3} sx={{ zIndex: 1300 }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
 
+      {isMobile ? (
+          <IconButton edge="start" color="inherit" onClick={() => toggleDrawer(true)}>
+            <MenuIcon />
+          </IconButton>
+        ) : (
         <Box sx={{ display: 'flex', gap: 2 }}>
         {user && (
           <Button
@@ -74,6 +136,7 @@ const Navbar = () => {
           </Button>
           
         </Box>
+      )}
 
         {editingStateName && (
           <Typography
@@ -104,6 +167,11 @@ const Navbar = () => {
         )}
 
       </Toolbar>
+
+      <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
+        {menuItems}
+      </Drawer>
+
     </AppBar>
   );
 };
