@@ -170,6 +170,7 @@ const StatesTable: React.FC = () => {
       </div>
 
       <CityDrawer
+        selectedState={selectedState}
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         cities={selectedState?.cities || []}
