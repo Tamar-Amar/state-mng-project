@@ -59,12 +59,17 @@ const PermissionsPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 900, margin: 'auto', padding: 3 }}>
+    <Box sx={{ maxWidth: 900, margin: 'auto', padding: 3, mt: 13 }}>
       <Typography variant="h4" gutterBottom align="center">
         Pending Permission Requests
       </Typography>
-      
-      {Object.entries(groupedByUser).map(([userId, requests]) => (
+
+      {Object.keys(groupedByUser).length === 0 ? (
+      <Typography variant="h6" align="center" color="textSecondary">
+        No pending requests.
+      </Typography>
+    ) : (
+      Object.entries(groupedByUser).map(([userId, requests]) => (
         <Card key={userId} sx={{ mb: 3, p: 2 }}>
           <CardContent>
             <Typography variant="h6">User: {requests[0].user.username}</Typography>
@@ -118,7 +123,8 @@ const PermissionsPage: React.FC = () => {
             </Table>
           </CardContent>
         </Card>
-      ))}
+      ))
+      )}
     </Box>
   );
 };

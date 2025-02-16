@@ -3,6 +3,7 @@ import { api } from "./apiService";
 
 export const fetchStates = async (): Promise<State[]> => {
   const response = await api.get('/states');
+  console.log("----states:",response.data);
   return response.data;
 };
 

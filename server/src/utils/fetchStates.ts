@@ -1,6 +1,6 @@
 import axios from 'axios';
-import State from '../models/State';
 import logger from './logger';
+import { State } from '../models/State';
 
 export const fetchAndSaveStates = async () => {
     try {

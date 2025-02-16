@@ -12,6 +12,7 @@ import permissionRequestRoutes from './routes/permissionRequestRoutes';
 import authRoutes from './routes/authRoutes';
 import connectDB from './config/db';
 import path from 'path';
+import cityRoutes from './routes/cityRoutes';
 
 //import xssClean from 'xss-clean';
 
@@ -34,6 +35,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/permission-requests', permissionRequestRoutes);
 app.use('/uploads', express.static('public/uploads'));
 app.use('/api/auth', authRoutes);
+app.use('/api/cities', cityRoutes);
 
 app.get('/', (req, res) => {
     logger.info('Root route accessed');

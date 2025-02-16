@@ -1,14 +1,28 @@
 import mongoose from 'mongoose';
-import State from '../models/State';
+
+import { City, State } from '../models/State';
 
 export const getAllStatesService = async () => {
     try {
-        const states = await State.find({ isActive: true });
+        const states = await State.find({ isActive: true }) 
+        .populate({
+          path: "cities",
+          model: "City",
+        });
         return states;
     } catch (error) {
         throw new Error(`Error fetching states: ${(error as Error).message}`);
     }
 };
+
+export const getStatesWithCities = async (req: Request, res: Response) => {
+    try {
+      const states = await State.find().populate("cities"); 
+      return states;
+    } catch (error) {
+        throw new Error(`Error fetching states: ${(error as Error).message}`);
+    }
+  };
 
 export const getStateByIdService = async (id: string) => {
     try {
@@ -57,16 +71,20 @@ export const updateStateService = async (id: string, updateData: Partial<{
 };
 
 export const deleteStateService = async (id: string) => {
-    console.log('Deleting state', id);
     const objectId = new mongoose.Types.ObjectId(id);
-    console.log('Converted id:', objectId);
+
     try {
+        await City.updateMany(
+            { stateId: objectId },
+            { isActive: false }
+        );
+
         const deletedState = await State.findByIdAndUpdate(
             objectId,
             { isActive: false }, 
             { new: true }
         );
-        console.log('Deleted state:', deletedState);
+
         return deletedState;
     } catch (error) {
         throw new Error(`Error deleting state: ${(error as Error).message}`);
