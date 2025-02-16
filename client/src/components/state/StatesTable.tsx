@@ -4,7 +4,7 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { useStates, useDeleteState } from '../../hooks/useStates';
-import { useCities, useDeleteCity } from '../../hooks/useCities';
+import { useAddCity, useCities, useDeleteCity } from '../../hooks/useCities';
 import { Button, Snackbar, Alert } from '@mui/material';
 import { State } from '../../types/State';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -18,9 +18,7 @@ import LocationCityIcon from '@mui/icons-material/LocationCity';
 const StatesTable: React.FC = () => {
   const { data: states, isLoading, isError } = useStates();
   const [quickFilterText, setQuickFilterText] = useState("");
-  console.log("states: ", states);
   const { data: allCities = [] } = useCities(); 
-  console.log("citis: ", allCities);
   const deleteStateMutation = useDeleteState();
   const deleteCityMutation = useDeleteCity();
   const [editingStateName, setEditingStateName] = useRecoilState(editingStateAtom);
@@ -29,6 +27,8 @@ const StatesTable: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<State | null>(null); 
   const [drawerOpen, setDrawerOpen] = useState(false); 
+  const addCityMutation = useAddCity();
+
 
   const handleSnackbarClose = () => setSnackbarMessage(null);
 
@@ -46,9 +46,19 @@ const StatesTable: React.FC = () => {
   };
 
   const handleDeleteCity = (cityId: string) => {
+    console.log('Delete city,ת: ' , cityId);
+    if (!selectedState) return;
     if (user?.permissions?.canDelete) {
       if (window.confirm('Are you sure you want to delete this city?')) {
-        deleteCityMutation.mutate(cityId);
+        deleteCityMutation.mutate(cityId, {
+          onSuccess: () => {
+            setSelectedState((prevState) =>
+              prevState
+                ? { ...prevState, cities: (prevState.cities?? []).filter((city) => city._id !== cityId) }
+                : null
+            );
+          },
+        });
       }
     } else {
       setSnackbarMessage('You don’t have permission to delete this city.');
@@ -70,8 +80,21 @@ const StatesTable: React.FC = () => {
     setDrawerOpen(true);
   };
 
-  const handleAddCity = () => {
-    console.log("Navigate to add city form");
+  const handleAddCity = (cityName: string) => {
+    if (!selectedState || !cityName.trim()) return;
+  
+    addCityMutation.mutate(
+      { cityName, stateId: selectedState._id || " " },
+      {
+        onSuccess: (newCity) => {
+          setSelectedState((prevState) =>
+            prevState
+              ? { ...prevState, cities: [...(prevState.cities?? []), newCity] }
+              : null
+          );
+        },
+      }
+    );
   };
 
   const columnDefs = useMemo(() => [

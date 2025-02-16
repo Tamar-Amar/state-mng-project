@@ -10,12 +10,12 @@ const fetchCities = async (): Promise<City[]> => {
 };
 
 const addCity = async (cityData: { cityName: string; stateId: string }) => {
-  const { data } = await axios.post('/api/cities/add', cityData);
+  const { data } = await api.post('/cities/add', cityData);
   return data;
 };
 
 const deleteCity = async (cityId: string) => {
-  await axios.delete(`/api/cities/delete/${cityId}`);
+  await api.delete(`/cities/delete/${cityId}`);
 };
 
 export const useCities = () => {
