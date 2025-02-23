@@ -17,30 +17,41 @@ export const useRequestPermission = () => {
   });
 };
 
-export const useCreateRequestPermission = () => {
+export const useCreateRequestPermission = (userId: string) => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (permissions: { canAdd: boolean; canUpdate: boolean; canDelete: boolean }) =>
       requestPermission(permissions),
+
     onSuccess: (newRequest: PermissionRequestFromServer) => {
       queryClient.setQueryData<PermissionRequestFromServer[]>(
-        ['pendingPermissionRequests'],
-        (oldData) => (oldData ? [newRequest, ...oldData] : [newRequest])
+        ['userPermissionRequests', userId],
+        (oldData = []) => [...oldData, newRequest]
       );
+
       queryClient.setQueryData<PermissionRequestFromServer[]>(
-        ['userPermissionRequests', newRequest.user._id as string],
-        (oldData) => (oldData ? [newRequest, ...oldData] : [newRequest])
+        ['pendingPermissionRequests'],
+        (oldData = []) => [...oldData, newRequest]
       );
+
+      queryClient.invalidateQueries({ queryKey: ['userPermissionRequests', userId] });
     },
   });
 };
 
-export const useUserPermissionRequests = (userId: string) =>
-  useQuery<PermissionRequestFromServer[]>({
+
+
+
+export const useUserPermissionRequests = (userId: string) => {
+  return useQuery<PermissionRequestFromServer[]>({
     queryKey: ['userPermissionRequests', userId],
     queryFn: () => getUserPermissionRequests(userId),
     enabled: Boolean(userId),
+    staleTime: 1000 * 60, // הנתונים ייחשבו כעדכניים למשך דקה
+    refetchOnWindowFocus: true, // יוודא שהנתונים לא יתיישנו בזמן שהמשתמש נמצא בעמוד
   });
+};
 
   export const useFilteredUserRequests = (userId: string) => {
     const queryClient = useQueryClient();

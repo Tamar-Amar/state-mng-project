@@ -43,8 +43,7 @@ const RegisterForm: React.FC = () => {
           data.append(key, value as string | Blob);
         }
       });
-
-      console.log("user", data);
+      
       registerMutation.mutate(data, {
         onSuccess: () => {
           alert('Registration successful! Redirecting to login...');
