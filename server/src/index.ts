@@ -11,10 +11,9 @@ import userRoutes from './routes/userRoutes';
 import permissionRequestRoutes from './routes/permissionRequestRoutes';
 import authRoutes from './routes/authRoutes';
 import connectDB from './config/db';
-import path from 'path';
 import cityRoutes from './routes/cityRoutes';
+import xssClean from 'xss-clean';
 
-//import xssClean from 'xss-clean';
 
 const envFile = `.env.${process.env.NODE_ENV || 'development'}`;
 dotenv.config({ path: envFile });
@@ -24,7 +23,8 @@ const PORT = process.env.PORT || (process.env.NODE_ENV === 'development' ? 5000 
 const app = express();
 app.use(helmet(
 ));
-//app.use(xssClean());
+
+app.use(xssClean());
 
 app.use(cors());
 

@@ -3,12 +3,13 @@ import PermissionRequest from '../models/PermissionRequest';
 import User from '../models/User';
 
 export const requestPermission = async (userId: string, permissions: { canAdd: boolean; canUpdate: boolean; canDelete: boolean }) => {
-    return await PermissionRequest.create({
+    const newP= await PermissionRequest.create({
         user: userId,
         requestedPermissions: permissions,
         status: 'pending',
         reviewedBy: null,
     });
+    return newP;
 };
 
 export const getPendingRequests = async () => {

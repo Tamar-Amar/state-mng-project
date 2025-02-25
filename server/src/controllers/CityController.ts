@@ -6,7 +6,6 @@ export const addCityController = async (req: Request, res: Response) => {
     try {
         const { cityName, stateId } = req.body;
         const city = await addCity(cityName, stateId);
-        console.log("City added:", city);
         res.status(201).json(city);
     } catch (error) {
         console.error("Error in addCity:", error);

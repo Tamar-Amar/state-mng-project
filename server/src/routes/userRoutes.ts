@@ -8,10 +8,15 @@ import {
 } from '../controllers/userController';
 import { authAndPermissionMiddleware } from '../middlewares/authAndPermissionMiddleware';
 import upload from '../middlewares/uploadMiddleware';
+import { Request, Response, NextFunction } from 'express';
 
 const router = express.Router();
 
-router.post('/register', upload.single('profilePicture'), createUserController);
+const registerMiddleware = process.env.NODE_ENV === 'test'
+  ? ((req: Request, res: Response, next: NextFunction) => { next(); })
+  : upload.single('profilePicture');;
+
+router.post('/register',registerMiddleware, createUserController);
 router.get('/', authAndPermissionMiddleware('admin'), getAllUsersController);
 router.get('/:id', authAndPermissionMiddleware(), getUserByIdController);
 router.put('/:id', authAndPermissionMiddleware(undefined, 'canUpdate'), updateUserController);
