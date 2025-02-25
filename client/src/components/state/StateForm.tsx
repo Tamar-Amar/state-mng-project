@@ -159,12 +159,11 @@ const StateForm: React.FC = () => {
   };
 
   return (
-    <Box sx={{ padding: 3, maxWidth: 500, margin: 'auto' }}>
+    <Box sx={{ padding: 3, maxWidth: 500, margin: 'auto', mt: 15 }}>
       <Typography variant="h4" gutterBottom>
         {isEditMode ? `Edit State: ${stateToEdit?.name || ''}` : 'Add New State'}
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        {/* שדות הטופס */}
         <TextField
           fullWidth
           label="State Name"

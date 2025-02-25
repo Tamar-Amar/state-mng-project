@@ -35,7 +35,6 @@ export const useCreateRequestPermission = (userId: string) => {
         (oldData = []) => [...oldData, newRequest]
       );
 
-      queryClient.invalidateQueries({ queryKey: ['userPermissionRequests', userId] });
     },
   });
 };
