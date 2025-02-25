@@ -87,7 +87,7 @@ const PermissionsPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {requests
-                  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // מיון מהחדש לישן
+                  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) 
                   .map((request: PermissionRequestFromServer) => (
                     <TableRow key={request._id}>
                       <TableCell>{new Date(request.createdAt).toLocaleDateString()}</TableCell>

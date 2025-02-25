@@ -47,8 +47,8 @@ export const useUserPermissionRequests = (userId: string) => {
     queryKey: ['userPermissionRequests', userId],
     queryFn: () => getUserPermissionRequests(userId),
     enabled: Boolean(userId),
-    staleTime: 1000 * 60, // הנתונים ייחשבו כעדכניים למשך דקה
-    refetchOnWindowFocus: true, // יוודא שהנתונים לא יתיישנו בזמן שהמשתמש נמצא בעמוד
+    staleTime: 1000 * 60, 
+    refetchOnWindowFocus: true,
   });
 };
 

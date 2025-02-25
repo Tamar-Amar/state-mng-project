@@ -53,7 +53,6 @@ describe('StateForm Component - Add Mode', () => {
       </QueryClientProvider>
     );
     
-    // לדמות פעולת blur על השדות כדי שהשדות יסומנו כ-touched
     const nameField = screen.getByLabelText(/State Name/i);
     fireEvent.blur(nameField);
     
@@ -62,14 +61,11 @@ describe('StateForm Component - Add Mode', () => {
     
     const populationField = screen.getByLabelText(/Population/i);
     fireEvent.blur(populationField);
-    
-    // אם יש שדות נוספים, לדמות גם להם blur
   
     const submitButton = screen.getByRole('button', { name: /Add State/i });
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      // נבדוק שהודעת שגיאה מופיעה – נשתמש ב-getAllByText כדי לקבל את כל ההודעות
       expect(screen.getAllByText(/required/i).length).toBeGreaterThan(0);
     });
   });

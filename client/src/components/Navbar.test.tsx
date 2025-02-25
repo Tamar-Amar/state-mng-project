@@ -7,7 +7,6 @@ import { userAtom } from '../store/userAtom';
 
 describe('Navbar component', () => {
   it('renders the States button and navigates when clicked', () => {
-    // ניתן לספק ערכים התחלתיים ל-Recoil Root במידת הצורך
     render(
       <RecoilRoot>
         <MemoryRouter initialEntries={['/']}>
@@ -18,9 +17,7 @@ describe('Navbar component', () => {
     
     const statesButton = screen.getByRole('button', { name: /States/i });
     expect(statesButton).toBeInTheDocument();
-    // ניתן גם לבדוק ניווט, למשל על ידי לחיצה
     fireEvent.click(statesButton);
-    // כאן אפשר לבדוק אם הכתובת השתנתה או שהקומפוננטה המיועדת נטענת (באמצעות MemoryRouter)
   });
   
 

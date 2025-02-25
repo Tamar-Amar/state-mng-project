@@ -258,7 +258,6 @@ const StateForm: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      {/* הוספת Snackbar להצגת הודעות */}
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}

@@ -47,7 +47,6 @@ const StatesTable: React.FC = () => {
   };
 
   const handleDeleteCity = (cityId: string) => {
-    console.log('Delete city,ת: ' , cityId);
     if (!selectedState) return;
     if (user?.permissions?.canDelete) {
       if (window.confirm('Are you sure you want to delete this city?')) {
