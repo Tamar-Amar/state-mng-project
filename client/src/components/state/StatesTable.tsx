@@ -1,3 +1,4 @@
+//states-mng-project\client\src\components\state\StateTable.tsx
 import React, { useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
