@@ -12,10 +12,14 @@ export const getAllRegion = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const createRegion = async (req: Request, res: Response, next: NextFunction) => {
-    try{
+    try {
         const newRegion = await createRegionService(req.body);
         res.status(201).json(newRegion);
     } catch (error) {
-        next(error);
+        if ((error as any).code === 11000) {
+            res.status(400).json({ message: 'Region with this name already exists' });
+        } else {
+            next(error);
+        }
     }
-}
+};
