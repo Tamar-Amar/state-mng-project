@@ -9,7 +9,6 @@ import { useRecoilValue } from 'recoil';
 const PersonalPage: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const user = useRecoilValue(userAtom);
-  console.log("user: " , user);
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);

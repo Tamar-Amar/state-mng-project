@@ -23,7 +23,8 @@ export const stateCreateValidationSchema = () => {
     name: yup.string()
       .min(3, 'Name must be at least 3 characters long')
       .matches(/^[\p{L}\s\-]+$/u, 'Name can only contain letters from any language, spaces, and hyphens')
-      .required('Name is required'),
+      .required('Name is required')
+      .max(30, 'Name must not exceed 30 characters'),
     isActive: yup.boolean(),
     flag: yup.string().url('Flag must be a valid URL').required('Flag is required'),
     population: yup.number().min(0, 'Population cannot be less than 0').required('Population is required'),

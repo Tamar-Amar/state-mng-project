@@ -17,7 +17,6 @@ export const getPendingRequests = async () => {
 
 export const getUserPendingRequests = async (userId: string) => {
     const user = await User.findById(userId);
-    console.log("---user",user)
     if (!user) {
       throw new Error('User not found');
     }
@@ -52,8 +51,6 @@ export const approvePermissionRequest = async (requestId: string, adminId: strin
     if (!request) throw new Error('Request not found');
     const user= await User.findById(request.user);
 
-    console.log("user", user);
-
     await setUserPermissions(request.user.toString(), {
         canAdd: approvals.canAdd || user?.permissions?.canAdd || false,
         canUpdate: approvals.canUpdate || user?.permissions?.canUpdate || false,
@@ -63,6 +60,7 @@ export const approvePermissionRequest = async (requestId: string, adminId: strin
     request.status = 'approved';
     request.reviewedBy = new mongoose.Types.ObjectId(adminId);
     return await request.save();
+    
 };
 
 export const denyPermissionRequest = async (requestId: string, adminId: string) => {

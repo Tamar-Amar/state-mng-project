@@ -87,7 +87,7 @@ const UsersPage: React.FC = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Users List
       </Typography>
-      <Paper sx={{ mt: 2 }}>
+      <Paper sx={{ mt: 2, overflowX: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>
