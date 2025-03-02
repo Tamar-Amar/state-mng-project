@@ -1,0 +1,33 @@
+// src/constants/stateFormConstants.ts
+export const STATE_FORM_TEXT = {
+    addStateTitle: 'Add New State',
+    editStateTitlePrefix: 'Edit State: ',
+    stateNameLabel: 'State Name',
+    flagUrlLabel: 'Flag URL',
+    populationLabel: 'Population',
+    regionLabel: 'Region',
+    regionNotFound: 'Region not found. Add it?',
+    addRegionButton: 'Add "{newRegion}" as a new region',
+    cancelButton: 'Cancel',
+    submitButtonAdd: 'Add State',
+    submitButtonUpdate: 'Update State',
+    unsavedChangesTitle: 'Unsaved Changes',
+    unsavedChangesMessage: 'You have unsaved changes. Are you sure you want to discard them and exit?',
+    dialogStayButton: 'Stay',
+    dialogDiscardButton: 'Discard and Exit',
+    noPermissionTitle: "You don’t have permission to {action} a state.",
+    redirectMessage: 'Redirecting you back to the home page...',
+    goHomeButton: 'Go to Home Now',
+    successUpdateMessage: 'State updated successfully!',
+    errorUpdateMessage: 'Failed to update state.',
+    successAddMessage: 'State added successfully!',
+    errorAddMessage: 'Failed to add state.',
+    successAddRegionMessage: 'Region "{newRegion}" added successfully!',
+    errorAddRegionMessage: 'Failed to add region.',
+    invalidRegionMessage: 'Invalid region name. Please use only letters and spaces.',
+    noPermission: "You don’t have permission to {action} a state.",
+    redirecting: "Redirecting you back to the home page...",
+    goHomeNow: "Go to Home Now",
+
+  };
+  

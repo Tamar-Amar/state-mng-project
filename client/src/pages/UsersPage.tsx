@@ -19,13 +19,15 @@ import {
   Button,
   Snackbar,
   Tooltip,
-  Avatar
+  Avatar,
 } from '@mui/material';
 import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
 import { useUsers, useDeleteUser } from '../hooks/useUsers';
 import { User } from '../types';
 import PermissionRequestsPopup from '../components/personal-zone/PendingPermissionRequestsPopup';
 import { usePendingRequests } from '../hooks/usePermissions';
+import GNRL_TXT from '../constants/generalTxt';
+import USER_TXT from '../constants/pages/userPageTxt';
 
 const UsersPage: React.FC = () => {
   const { data: users, isLoading, error } = useUsers();
@@ -35,16 +37,15 @@ const UsersPage: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [permPopupOpen, setPermPopupOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const { data: pendingRequests, isLoading: isLoadingRequests } = usePendingRequests(); 
+  const { data: pendingRequests, isLoading: isLoadingRequests } = usePendingRequests();
 
   const handleDeleteClick = (userId: string) => {
     setUserToDelete(userId);
     setConfirmOpen(true);
   };
 
-
   const handleViewPermissions = (user: User) => {
-    if (!pendingRequests || isLoadingRequests) return; 
+    if (!pendingRequests || isLoadingRequests) return;
     setSelectedUser(user);
     setPermPopupOpen(true);
   };
@@ -77,46 +78,44 @@ const UsersPage: React.FC = () => {
   if (error) {
     return (
       <Typography color="error" align="center" sx={{ mt: 15 }}>
-        Error loading users.
+        {GNRL_TXT.ERROR.LOAD('users')}
       </Typography>
     );
   }
 
   return (
-    <Box sx={{ p: 2 , maxWidth: 900, mx: 'auto', mt:15}}>
+    <Box sx={{ p: 2, maxWidth: 900, mx: 'auto', mt: 15 }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Users List
+        {USER_TXT.PAGE_TITLE}
       </Typography>
       <Paper sx={{ mt: 2, overflowX: 'auto' }}>
         <Table>
           <TableHead>
             <TableRow>
-            <TableCell>Profile</TableCell>
-              <TableCell>Username</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Permissions</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell>{GNRL_TXT.USER_PROP.PROFILE}</TableCell>
+              <TableCell>{GNRL_TXT.USER_PROP.USERNAME}</TableCell>
+              <TableCell>{GNRL_TXT.USER_PROP.NAME}</TableCell>
+              <TableCell>{GNRL_TXT.USER_PROP.EMAIL}</TableCell>
+              <TableCell>{GNRL_TXT.USER_PROP.ROLE}</TableCell>
+              <TableCell>{GNRL_TXT.USER_PROP.PERMISSIONS}</TableCell>
+              <TableCell align="center">{USER_TXT.TABLE.ACTIONS}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users &&
               users.map((user: User) => (
                 <TableRow key={user._id}>
-                   <TableCell>
+                  <TableCell>
                     <Avatar 
-                      src={user.profilePicture || ""} 
-                      alt={user.username} 
+                      src={user.profilePicture || ""}
+                      alt={user.username}
                       sx={{ width: 40, height: 40 }}
                     >
                       {!user.profilePicture && user.username.charAt(0).toUpperCase()}
                     </Avatar>
                   </TableCell>
                   <TableCell>{user.username}</TableCell>
-                  <TableCell>
-                    {user.firstName} {user.lastName}
-                  </TableCell>
+                  <TableCell>{user.firstName} {user.lastName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
@@ -127,17 +126,17 @@ const UsersPage: React.FC = () => {
                       : 'N/A'}
                   </TableCell>
                   <TableCell align="center">
-                  <Tooltip title="View Permission Requests">
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleViewPermissions(user || 'not-found')}
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                  </Tooltip>
+                    <Tooltip title={USER_TXT.TOOLTIP_VIEW_PERMISSIONS}>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleViewPermissions(user)}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Tooltip>
                     <IconButton
                       color="error"
-                      onClick={() => handleDeleteClick(user._id || 'not-found')}
+                      onClick={() => handleDeleteClick(user._id as string)}
                       disabled={!user.isActive}
                     >
                       <DeleteIcon />
@@ -151,18 +150,18 @@ const UsersPage: React.FC = () => {
 
       {/* Confirmation Dialog */}
       <Dialog open={confirmOpen} onClose={handleCancelDelete}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogTitle>{GNRL_TXT.DIALOG.CONFIRM_TITLE_DLT}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this user? This action will mark the user as inactive and remove them from the list.
+            {GNRL_TXT.DIALOG.CONFIRM_TEXT_DLT}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete} variant="outlined">
-            Cancel
+            {GNRL_TXT.BUTTON.CANCEL}
           </Button>
           <Button onClick={handleConfirmDelete} variant="contained" color="error">
-            Delete
+            {GNRL_TXT.BUTTON.DELETE}
           </Button>
         </DialogActions>
       </Dialog>
@@ -172,7 +171,7 @@ const UsersPage: React.FC = () => {
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        message="User deleted successfully"
+        message={GNRL_TXT.SNACKBAR.DELETE_SUCCESS}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
 
@@ -180,8 +179,8 @@ const UsersPage: React.FC = () => {
         <PermissionRequestsPopup
           open={permPopupOpen}
           onClose={() => setPermPopupOpen(false)}
-          userId={selectedUser?._id || 'unknown'}
-          username={selectedUser?.username|| 'unknown'}
+          userId={selectedUser._id || 'unknown'}
+          username={selectedUser.username || 'unknown'}
         />
       )}
     </Box>

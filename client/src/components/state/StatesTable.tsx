@@ -1,4 +1,4 @@
-//states-mng-project\client\src\components\state\StateTable.tsx
+// src/components/state/StateTable.tsx
 import React, { useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
@@ -14,64 +14,64 @@ import { userAtom } from '../../store/userAtom';
 import { useNavigate } from 'react-router-dom';
 import CityDrawer from '../cities/CityDrawer';
 import '../../styles/_statesTable.scss';
-import LocationCityIcon from '@mui/icons-material/LocationCity'; 
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import { STATE_TABLE_TEXT } from '../componentsTxt';
 
 const StatesTable: React.FC = () => {
   const { data: states, isLoading, isError } = useStates();
   const [quickFilterText, setQuickFilterText] = useState("");
-  const { data: allCities = [] } = useCities(); 
+  const { data: allCities = [] } = useCities();
   const deleteStateMutation = useDeleteState();
   const deleteCityMutation = useDeleteCity();
   const [editingStateName, setEditingStateName] = useRecoilState(editingStateAtom);
   const user = useRecoilValue(userAtom);
   const navigate = useNavigate();
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
-  const [selectedState, setSelectedState] = useState<State | null>(null); 
-  const [drawerOpen, setDrawerOpen] = useState(false); 
+  const [selectedState, setSelectedState] = useState<State | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const addCityMutation = useAddCity();
-
 
   const handleSnackbarClose = () => setSnackbarMessage(null);
 
   const handleDeleteState = (id: string) => {
     if (user?.permissions?.canDelete) {
-      if (window.confirm('Are you sure you want to delete this state?')) {
+      if (window.confirm(STATE_TABLE_TEXT.confirmDeleteState)) {
         deleteStateMutation.mutate(id, {
-          onSuccess: () => alert('State deleted successfully!'),
-          onError: () => alert('State deletion failed.'),
+          onSuccess: () => alert(STATE_TABLE_TEXT.stateDeletedSuccess),
+          onError: () => alert(STATE_TABLE_TEXT.stateDeletionFailed),
         });
       }
     } else {
-      setSnackbarMessage('You don’t have permission to delete this state. Please contact the system administrator.');
+      setSnackbarMessage(STATE_TABLE_TEXT.noPermissionDeleteState);
     }
   };
 
   const handleDeleteCity = (cityId: string) => {
     if (!selectedState) return;
     if (user?.permissions?.canDelete) {
-      if (window.confirm('Are you sure you want to delete this city?')) {
+      if (window.confirm(STATE_TABLE_TEXT.confirmDeleteCity)) {
         deleteCityMutation.mutate(cityId, {
           onSuccess: () => {
             setSelectedState((prevState) =>
               prevState
-                ? { ...prevState, cities: (prevState.cities?? []).filter((city) => city._id !== cityId) }
+                ? { ...prevState, cities: (prevState.cities ?? []).filter((city) => city._id !== cityId) }
                 : null
             );
           },
         });
       }
     } else {
-      setSnackbarMessage('You don’t have permission to delete this city.');
+      setSnackbarMessage(STATE_TABLE_TEXT.noPermissionDeleteCity);
     }
   };
 
   const handleEditState = (state: State) => {
-    console.log("state: " , state);
+    console.log("state:", state);
     if (user?.permissions?.canUpdate) {
       setEditingStateName(state.name);
       navigate(`/state-form/${state._id}`);
     } else {
-      setSnackbarMessage('You don’t have permission to edit this state. Please contact the system administrator.');
+      setSnackbarMessage(STATE_TABLE_TEXT.noPermissionEditState);
     }
   };
 
@@ -82,14 +82,14 @@ const StatesTable: React.FC = () => {
 
   const handleAddCity = (cityName: string) => {
     if (!selectedState || !cityName.trim()) return;
-  
+
     addCityMutation.mutate(
       { cityName, stateId: selectedState._id || " " },
       {
         onSuccess: (newCity) => {
           setSelectedState((prevState) =>
             prevState
-              ? { ...prevState, cities: [...(prevState.cities?? []), newCity] }
+              ? { ...prevState, cities: [...(prevState.cities ?? []), newCity] }
               : null
           );
         },
@@ -99,10 +99,10 @@ const StatesTable: React.FC = () => {
 
   const columnDefs = useMemo(() => [
     {
-      headerName: 'Flag',
+      headerName: STATE_TABLE_TEXT.headerFlag,
       field: 'flag',
-      flex: 1, 
-      minWidth: 100, 
+      flex: 1,
+      minWidth: 100,
       cellStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
       cellRenderer: (params: any) => (
         <img
@@ -112,46 +112,49 @@ const StatesTable: React.FC = () => {
         />
       ),
     },
-    { headerName: 'Country Name', field: 'name', flex: 2, minWidth: 150 },
-    { headerName: 'Region', field: 'region', flex: 1, minWidth: 100 },
-    { headerName: 'Population', field: 'population', flex: 1, minWidth: 100 },
+    { headerName: STATE_TABLE_TEXT.headerCountryName, field: 'name', flex: 2, minWidth: 150 },
+    { headerName: STATE_TABLE_TEXT.headerRegion, field: 'region', flex: 1, minWidth: 100 },
+    { headerName: STATE_TABLE_TEXT.headerPopulation, field: 'population', flex: 1, minWidth: 100 },
     {
-      headerName: 'Actions',
+      headerName: STATE_TABLE_TEXT.headerActions,
       field: 'actions',
       flex: 3,
       minWidth: 340,
       cellRendererFramework: (params: any) => (
-        <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', alignItems: 'center'}}>
-          <Button variant="outlined" color="primary" onClick={() => handleEditState(params.data)}>Edit</Button>
-          <Button variant="outlined" color="error" onClick={() => handleDeleteState(params.data._id)}>Delete</Button>
+        <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', alignItems: 'center' }}>
+          <Button variant="outlined" color="primary" onClick={() => handleEditState(params.data)}>
+            {STATE_TABLE_TEXT.editButton}
+          </Button>
+          <Button variant="outlined" color="error" onClick={() => handleDeleteState(params.data._id)}>
+            {STATE_TABLE_TEXT.deleteButton}
+          </Button>
           <Button
             sx={{
               height: '40px',
-              borderRadius: '6px', 
-              fontSize: '12px', 
-              backgroundColor: '#FFBC21', 
-              color: 'white', 
+              borderRadius: '6px',
+              fontSize: '12px',
+              backgroundColor: '#FFBC21',
+              color: 'white',
               '&:hover': {
-                backgroundColor: '#1565C0', 
+                backgroundColor: '#1565C0',
               },
             }}
             variant="contained"
-            startIcon={<LocationCityIcon />} 
+            startIcon={<LocationCityIcon />}
             onClick={() => handleViewCities(params.data)}
           >
-            View Cities
+            {STATE_TABLE_TEXT.viewCitiesButton}
           </Button>
         </div>
       ),
     },
   ], [user]);
-  
 
   return (
     <div className="states-table-container">
       <input
         type="text"
-        placeholder="Quick search"
+        placeholder={STATE_TABLE_TEXT.quickSearchPlaceholder}
         onChange={(e) => setQuickFilterText(e.target.value)}
       />
       <div className="ag-theme-alpine rtl">
@@ -164,7 +167,7 @@ const StatesTable: React.FC = () => {
           paginationPageSize={40}
           rowHeight={70}
           defaultColDef={{
-            cellStyle: { display: 'flex', alignItems: 'center' }, 
+            cellStyle: { display: 'flex', alignItems: 'center' },
           }}
         />
       </div>

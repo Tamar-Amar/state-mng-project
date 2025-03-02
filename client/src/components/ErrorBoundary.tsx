@@ -1,6 +1,8 @@
+// src/components/ErrorBoundary.tsx
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Paper, Typography, Button } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { ERROR_BOUNDARY_TEXTS } from '../constants/components/errorBoundaryTxt';
 
 interface Props {
   children: ReactNode;
@@ -43,13 +45,13 @@ class ErrorBoundary extends Component<Props, State> {
           <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
             <ErrorOutlineIcon color="error" sx={{ fontSize: 50 }} />
             <Typography variant="h5" sx={{ mt: 2 }}>
-              Oops! Something went wrong.
+              {ERROR_BOUNDARY_TEXTS.errorTitle}
             </Typography>
             <Typography variant="body1" sx={{ mt: 1 }}>
-              An unexpected error occurred. Please try refreshing the page.
+              {ERROR_BOUNDARY_TEXTS.errorMessage}
             </Typography>
             <Button variant="contained" color="primary" sx={{ mt: 3 }} onClick={this.handleReload}>
-              Reload Page
+              {ERROR_BOUNDARY_TEXTS.reloadButton}
             </Button>
           </Paper>
         </Box>

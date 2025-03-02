@@ -7,6 +7,7 @@ import PersonalPage from '../pages/PersonalPage';
 import UsersPage from '../pages/UsersPage.tsx';
 import PermissionsPage from '../pages/PermissionsPage.tsx';
 import ProtectedRoute from './ProtectedRoute';
+import GNRL_TXT from '../constants/generalTxt.ts'
 
 const AppRoutes: React.FC = () => {
   return (
@@ -25,7 +26,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/personal" element={<PersonalPage />} />
       </Route>
 
-      <Route path="*" element={<p>Not Found</p>} />
+      <Route path="*" element={<p>{GNRL_TXT.ERROR.NOT_FOUND}</p>} />
     </Routes>
   );
 };

@@ -1,4 +1,4 @@
-// src/components/PersonalDetails.tsx
+// src/components/personal-zone/PersonalDetails.tsx
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Avatar } from '@mui/material';
 import { 
@@ -13,6 +13,7 @@ import { useRecoilState } from 'recoil';
 import { User } from '../../types';
 import { useUpdateUser } from '../../hooks/useUsers';
 import { userAtom } from '../../store/userAtom';
+import { PERSONAL_TEXT } from './personalTxt';
 
 const PersonalDetails: React.FC = () => {
   const [user, setUser] = useRecoilState(userAtom);
@@ -50,7 +51,7 @@ const PersonalDetails: React.FC = () => {
   return (
     <Box sx={{ p: 2, textAlign: 'center' }}>
       {!editMode ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 , mt:3}}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 3 }}>
           <Avatar 
             src={user?.profilePicture} 
             alt={user?.username} 
@@ -79,52 +80,52 @@ const PersonalDetails: React.FC = () => {
             onClick={() => setEditMode(true)} 
             sx={{ mt: 2 }}
           >
-            Edit Details
+            {PERSONAL_TEXT.editDetailsButton}
           </Button>
         </Box>
       ) : (
-        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2, textAlign: 'left' , mt:2}}>
-        <Avatar 
+        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2, textAlign: 'left', mt: 2 }}>
+          <Avatar 
             src={user?.profilePicture} 
             alt={user?.username} 
-            sx={{ width: 120, height: 120, margin: '0 auto' , mb:2}} 
+            sx={{ width: 120, height: 120, margin: '0 auto', mb: 2 }} 
           />
-                    <TextField
+          <TextField
             name="username"
-            label="Username"
+            label={PERSONAL_TEXT.labelUsername}
             value={formData.username}
             disabled
           />
           <TextField
             name="firstName"
-            label="First Name"
+            label={PERSONAL_TEXT.labelFirstName}
             value={formData.firstName}
             onChange={handleInputChange}
           />
           <TextField
             name="lastName"
-            label="Last Name"
+            label={PERSONAL_TEXT.labelLastName}
             value={formData.lastName}
             onChange={handleInputChange}
           />
           <TextField
             name="email"
-            label="Email"
+            label={PERSONAL_TEXT.labelEmail}
             value={formData.email}
             onChange={handleInputChange}
           />
           <TextField
             name="phone"
-            label="Phone"
+            label={PERSONAL_TEXT.labelPhone}
             value={formData.phone}
             onChange={handleInputChange}
           />
           <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
             <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave}>
-              Save
+              {PERSONAL_TEXT.saveButton}
             </Button>
             <Button variant="outlined" startIcon={<CancelIcon />} onClick={() => setEditMode(false)}>
-              Cancel
+              {PERSONAL_TEXT.cancelButton}
             </Button>
           </Box>
         </Box>

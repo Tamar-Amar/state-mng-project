@@ -1,3 +1,4 @@
+// src/components/Navbar.tsx
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -15,7 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
-
+import { NAVBAR_TEXT } from '../constants/components/navbarTxt';
 
 const Navbar = () => {
   const location = useLocation();
@@ -30,7 +31,6 @@ const Navbar = () => {
     setDrawerOpen(open);
   };
 
-
   const handleProfileClick = () => {
     navigate('/personal');
   };
@@ -43,41 +43,40 @@ const Navbar = () => {
 
   const menuItems = (
     <List sx={{ mt:10 }}>
-    <ListItem disablePadding>
-      <ListItemButton onClick={() => navigate('/')}>
-        <ListItemText primary="States" />
-      </ListItemButton>
-    </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton onClick={() => navigate('/')}>
+          <ListItemText primary={NAVBAR_TEXT.states} />
+        </ListItemButton>
+      </ListItem>
       {user?.role === 'admin' && (
         <>
-        <Divider />
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/users')}>
-            <ListItemText primary="Users" />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/permissions')}>
-            <ListItemText primary="Permissions" />
-          </ListItemButton>
-        </ListItem>
+          <Divider />
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate('/users')}>
+              <ListItemText primary={NAVBAR_TEXT.users} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate('/permissions')}>
+              <ListItemText primary={NAVBAR_TEXT.permissions} />
+            </ListItemButton>
+          </ListItem>
         </>
       )}
       <Divider />
       <ListItem disablePadding>
-      <ListItemButton onClick={() => navigate('/personal')}>
-        <ListItemText primary="Personal Details" />
-      </ListItemButton>
-    </ListItem>
+        <ListItemButton onClick={() => navigate('/personal')}>
+          <ListItemText primary={NAVBAR_TEXT.personalDetails} />
+        </ListItemButton>
+      </ListItem>
       {user && (
         <>
           <Divider />
           <ListItem disablePadding>
-          <ListItemButton onClick={handleLogout}>
-            <ListItemText primary="Logout" />
-          </ListItemButton>
-        </ListItem>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemText primary={NAVBAR_TEXT.logout} />
+            </ListItemButton>
+          </ListItem>
         </>
       )}
     </List>
@@ -86,64 +85,59 @@ const Navbar = () => {
   return (
     <AppBar position="fixed" color="primary" elevation={3} sx={{ zIndex: 1300 }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-
-      {isMobile ? (
+        {isMobile ? (
           <IconButton edge="start" color="inherit" onClick={() => toggleDrawer(true)}>
             <MenuIcon />
           </IconButton>
         ) : (
-        <Box sx={{ display: 'flex', gap: 2 }}>
-        {user && (
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={handleLogout}
-            sx={{ textTransform: 'none' }}
-          >
-            Logout
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            {user && (
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={handleLogout}
+                sx={{ textTransform: 'none' }}
+              >
+                {NAVBAR_TEXT.logout}
+              </Button>
+            )}
+            <Button
+              color={location.pathname === '/' ? 'secondary' : 'inherit'}
+              onClick={() => navigate('/')}
+            >
+              {NAVBAR_TEXT.states}
+            </Button>
+            {user?.role === 'admin' && (
+              <>
+                <Button
+                  color={location.pathname === '/users' ? 'secondary' : 'inherit'}
+                  onClick={() => navigate('/users')}
+                >
+                  {NAVBAR_TEXT.users}
+                </Button>
+                <Button
+                  color={location.pathname === '/permissions' ? 'secondary' : 'inherit'}
+                  onClick={() => navigate('/permissions')}
+                >
+                  {NAVBAR_TEXT.permissions}
+                </Button>
+              </>
+            )}
+            <Button
+              color={location.pathname === '/personal' ? 'secondary' : 'inherit'}
+              onClick={() => navigate('/personal')}
+            >
+              {NAVBAR_TEXT.personalDetails}
+            </Button>
+          </Box>
         )}
-          <Button
-            color={location.pathname === '/' ? 'secondary' : 'inherit'}
-            onClick={() => navigate('/')}
-          >
-            States
-          </Button>
-
-          {user?.role === 'admin' && (
-            <>
-              <Button
-                color={location.pathname === '/users' ? 'secondary' : 'inherit'}
-                onClick={() => navigate('/users')}
-              >
-                Users
-              </Button>
-
-              <Button
-                color={location.pathname === '/permissions' ? 'secondary' : 'inherit'}
-                onClick={() => navigate('/permissions')}
-              >
-                Permissions
-              </Button>
-            </>
-          )}
-
-          <Button
-            color={location.pathname === '/personal' ? 'secondary' : 'inherit'}
-            onClick={() => navigate('/personal')}
-          >
-            Personal Details
-          </Button>
-          
-        </Box>
-      )}
 
         {editingStateName && (
           <Typography
             variant="subtitle1"
             sx={{ marginLeft: 'auto', fontStyle: 'italic', color: 'yellow' }}
           >
-            Editing: {editingStateName}
+            {NAVBAR_TEXT.editing} {editingStateName}
           </Typography>
         )}
 
@@ -165,13 +159,11 @@ const Navbar = () => {
             />
           </IconButton>
         )}
-
       </Toolbar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
         {menuItems}
       </Drawer>
-
     </AppBar>
   );
 };
