@@ -46,5 +46,6 @@ export const PERSONAL_TEXT = {
     noneText: "None",
     byText: " by ",
     updatedText: "Updated:",
+    noUserFound: "No user found",
   };
   

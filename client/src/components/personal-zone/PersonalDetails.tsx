@@ -17,6 +17,17 @@ import { PERSONAL_TEXT } from './personalTxt';
 
 const PersonalDetails: React.FC = () => {
   const [user, setUser] = useRecoilState(userAtom);
+
+  if (!user) {
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="h6">
+          {PERSONAL_TEXT.noUserFound}
+        </Typography>
+      </Box>
+    );
+  }
+  
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState<User>({
     firstName: user?.firstName || '',
