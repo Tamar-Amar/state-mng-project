@@ -13,7 +13,7 @@ import { useRecoilState } from 'recoil';
 import { User } from '../../types';
 import { useUpdateUser } from '../../hooks/useUsers';
 import { userAtom } from '../../store/userAtom';
-import { PERSONAL_TEXT } from '../componentsTxt';
+import { PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 const PersonalDetails: React.FC = () => {
   const [user, setUser] = useRecoilState(userAtom);

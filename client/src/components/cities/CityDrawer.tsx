@@ -7,7 +7,7 @@ import { City } from '../../types/City';
 import { State } from '../../types';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
-import { CITY_TEXT } from '../componentsTxt';
+import { CITY_TEXT } from '../../constants/componentsTxt';
 
 interface CityDrawerProps {
   open: boolean;

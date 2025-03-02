@@ -16,7 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
-import { NAVBAR_TEXT } from './componentsTxt';
+import { NAVBAR_TEXT } from '../constants/componentsTxt';
 
 const Navbar = () => {
   const location = useLocation();

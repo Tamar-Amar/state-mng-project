@@ -4,7 +4,7 @@ import { Box, Typography, Paper, Chip, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PERSONAL_TEXT } from '../componentsTxt';
+import { PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface CurrentPermissionsSummaryProps {
   username: string;

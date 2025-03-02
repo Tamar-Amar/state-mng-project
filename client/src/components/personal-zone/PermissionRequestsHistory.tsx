@@ -1,5 +1,4 @@
 // src/components/personal-zone/PermissionRequestsHistory.tsx
-// src/components/PermissionRequestsHistory.tsx
 import React from 'react';
 import {
   Box,
@@ -15,7 +14,7 @@ import {
 import { PermissionRequestFromServer } from '../../types';
 import styles from '../../styles/PermissionsHistory.module.scss';
 import { useUserPermissionRequests } from '../../hooks/usePermissions';
-import { PERSONAL_TEXT } from '../componentsTxt';
+import { PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface PermissionRequestsHistoryProps {
   userId: string;

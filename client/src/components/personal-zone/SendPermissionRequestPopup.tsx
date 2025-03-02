@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useCreateRequestPermission, useUserPermissionRequests } from '../../hooks/usePermissions';
 import { PermissionOption, getAvailablePermissionOptions, buildPermissionsObject } from '../../utils/permissionRequestUtils';
-import { PERSONAL_TEXT } from '../componentsTxt';
+import { PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface SendPermissionRequestPopupProps {
   open: boolean;
@@ -38,6 +38,7 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
   const { data: existingRequests } = useUserPermissionRequests(userId);
   const availableOptions = getAvailablePermissionOptions(currentPermissions, existingRequests);
   const hasAvailableOptions = availableOptions.length > 0;
+  
   const [selectedOption, setSelectedOption] = useState<PermissionOption>(availableOptions[0] || 'add');
   const { mutate: sendPermissionRequest } = useCreateRequestPermission(userId);
   const [snackbarOpen, setSnackbarOpen] = useState(false);

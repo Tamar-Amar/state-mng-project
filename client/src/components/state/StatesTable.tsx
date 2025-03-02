@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import CityDrawer from '../cities/CityDrawer';
 import '../../styles/_statesTable.scss';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
-import { STATE_TABLE_TEXT } from '../componentsTxt';
+import { STATE_TABLE_TEXT } from '../../constants/componentsTxt';
 
 const StatesTable: React.FC = () => {
   const { data: states, isLoading, isError } = useStates();

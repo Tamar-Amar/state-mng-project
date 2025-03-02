@@ -5,7 +5,7 @@ import PersonalDetails from '../components/personal-zone/PersonalDetails';
 import PermissionsHistory from '../components/personal-zone/PersonalPermissions';
 import { userAtom } from '../store/userAtom';
 import { useRecoilValue } from 'recoil';
-import {GNRL_TXT} from '../components/componentsTxt';
+import {GNRL_TXT} from '../constants/componentsTxt';
 
 const PersonalPage: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);

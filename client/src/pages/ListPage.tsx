@@ -4,7 +4,7 @@ import { Button, Box, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../store/userAtom';
-import {GNRL_TXT} from '../components/componentsTxt';
+import {GNRL_TXT} from '../constants/componentsTxt';
 
 const ListPage: React.FC = () => {
   const navigate = useNavigate();

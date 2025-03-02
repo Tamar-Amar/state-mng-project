@@ -11,7 +11,7 @@ import { State } from '../../types/State';
 import { editingStateAtom } from '../../store/stateAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
-import { STATE_FORM_TEXT } from '../componentsTxt';
+import { STATE_FORM_TEXT } from '../../constants/componentsTxt';
 
 const StateForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
