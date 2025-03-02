@@ -16,7 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
-import { NAVBAR_TEXT } from '../constants/componentsTxt';
+import { LABELS } from '../constants/componentsTxt';
 
 const Navbar = () => {
   const location = useLocation();
@@ -45,7 +45,7 @@ const Navbar = () => {
     <List sx={{ mt:10 }}>
       <ListItem disablePadding>
         <ListItemButton onClick={() => navigate('/')}>
-          <ListItemText primary={NAVBAR_TEXT.states} />
+          <ListItemText primary={LABELS.states} />
         </ListItemButton>
       </ListItem>
       {user?.role === 'admin' && (
@@ -53,12 +53,12 @@ const Navbar = () => {
           <Divider />
           <ListItem disablePadding>
             <ListItemButton onClick={() => navigate('/users')}>
-              <ListItemText primary={NAVBAR_TEXT.users} />
+              <ListItemText primary={LABELS.users} />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton onClick={() => navigate('/permissions')}>
-              <ListItemText primary={NAVBAR_TEXT.permissions} />
+              <ListItemText primary={LABELS.permissions} />
             </ListItemButton>
           </ListItem>
         </>
@@ -66,7 +66,7 @@ const Navbar = () => {
       <Divider />
       <ListItem disablePadding>
         <ListItemButton onClick={() => navigate('/personal')}>
-          <ListItemText primary={NAVBAR_TEXT.personalDetails} />
+          <ListItemText primary={LABELS.personalDetails} />
         </ListItemButton>
       </ListItem>
       {user && (
@@ -74,7 +74,7 @@ const Navbar = () => {
           <Divider />
           <ListItem disablePadding>
             <ListItemButton onClick={handleLogout}>
-              <ListItemText primary={NAVBAR_TEXT.logout} />
+              <ListItemText primary={LABELS.logout} />
             </ListItemButton>
           </ListItem>
         </>
@@ -98,14 +98,14 @@ const Navbar = () => {
                 onClick={handleLogout}
                 sx={{ textTransform: 'none' }}
               >
-                {NAVBAR_TEXT.logout}
+                {LABELS.logout}
               </Button>
             )}
             <Button
               color={location.pathname === '/' ? 'secondary' : 'inherit'}
               onClick={() => navigate('/')}
             >
-              {NAVBAR_TEXT.states}
+              {LABELS.states}
             </Button>
             {user?.role === 'admin' && (
               <>
@@ -113,13 +113,13 @@ const Navbar = () => {
                   color={location.pathname === '/users' ? 'secondary' : 'inherit'}
                   onClick={() => navigate('/users')}
                 >
-                  {NAVBAR_TEXT.users}
+                  {LABELS.users}
                 </Button>
                 <Button
                   color={location.pathname === '/permissions' ? 'secondary' : 'inherit'}
                   onClick={() => navigate('/permissions')}
                 >
-                  {NAVBAR_TEXT.permissions}
+                  {LABELS.permissions}
                 </Button>
               </>
             )}
@@ -127,7 +127,7 @@ const Navbar = () => {
               color={location.pathname === '/personal' ? 'secondary' : 'inherit'}
               onClick={() => navigate('/personal')}
             >
-              {NAVBAR_TEXT.personalDetails}
+              {LABELS.personalDetails}
             </Button>
           </Box>
         )}
@@ -137,7 +137,7 @@ const Navbar = () => {
             variant="subtitle1"
             sx={{ marginLeft: 'auto', fontStyle: 'italic', color: 'yellow' }}
           >
-            {NAVBAR_TEXT.editing} {editingStateName}
+            {LABELS.editing} {editingStateName}
           </Typography>
         )}
 
