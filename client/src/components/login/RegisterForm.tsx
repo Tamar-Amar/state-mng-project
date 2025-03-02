@@ -1,13 +1,24 @@
-//states-mng-project\client\src\components\login\RegisterForm.tsx
+// src/components/login/RegisterForm.tsx
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Box, Typography, MenuItem, Alert, IconButton, InputAdornment, Avatar, Snackbar } from '@mui/material';
-import { Visibility, VisibilityOff, Close } from '@mui/icons-material';
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  MenuItem,
+  Alert,
+  IconButton,
+  InputAdornment,
+  Avatar,
+  Snackbar,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import { registerValidationSchema } from '../../types/validations/UserValidation';
 import { useCurrentUser, useRegisterUser } from '../../hooks/useAuth';
 import styles from '../../styles/RegisterForm.module.scss';
 import { useNavigate } from 'react-router-dom';
-
+import { LOGIN_TEXT } from './loginTxt';
 
 const RegisterForm: React.FC = () => {
   const registerMutation = useRegisterUser();
@@ -16,7 +27,6 @@ const RegisterForm: React.FC = () => {
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
-  
   
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,7 +57,7 @@ const RegisterForm: React.FC = () => {
       
       registerMutation.mutate(data, {
         onSuccess: () => {
-          alert('Registration successful! Redirecting to login...');
+          alert(LOGIN_TEXT.registrationSuccessMessage);
           resetForm();
           setPreview(null);
           setIsImageUploaded(false);
@@ -56,18 +66,17 @@ const RegisterForm: React.FC = () => {
         },
         onError: (err) => {
           console.error('Registration failed:', err);
-          setErrors({ email: 'Registration failed. Please try again.' });
+          setErrors({ email: LOGIN_TEXT.registrationFailedMessage });
           setSubmitting(false);
         },
       });
     },
   });
 
-
   return (
     <Box component="form" onSubmit={formik.handleSubmit} className={styles.formContainer}>
       <Typography variant="h5" gutterBottom className={styles.title}>
-        Register
+        {LOGIN_TEXT.registerFormTitle}
       </Typography>
 
       {formik.errors.email && (
@@ -78,7 +87,7 @@ const RegisterForm: React.FC = () => {
 
       <Box className={styles.flexContainer}>
         <TextField
-          label="First Name"
+          label={LOGIN_TEXT.firstNameLabel}
           name="firstName"
           fullWidth
           value={formik.values.firstName}
@@ -89,7 +98,7 @@ const RegisterForm: React.FC = () => {
         />
 
         <TextField
-          label="Last Name"
+          label={LOGIN_TEXT.lastNameLabel}
           name="lastName"
           fullWidth
           value={formik.values.lastName}
@@ -101,7 +110,7 @@ const RegisterForm: React.FC = () => {
       </Box>
 
       <TextField
-        label="Username"
+        label={LOGIN_TEXT.usernameLabel}
         name="username"
         fullWidth
         margin="normal"
@@ -114,7 +123,7 @@ const RegisterForm: React.FC = () => {
 
       <Box className={styles.flexContainer}>
         <TextField
-          label="Email"
+          label={LOGIN_TEXT.emailLabel}
           name="email"
           type="email"
           fullWidth
@@ -126,7 +135,7 @@ const RegisterForm: React.FC = () => {
         />
 
         <TextField
-          label="Phone"
+          label={LOGIN_TEXT.phoneLabel}
           name="phone"
           fullWidth
           value={formik.values.phone}
@@ -138,7 +147,7 @@ const RegisterForm: React.FC = () => {
       </Box>
 
       <TextField
-        label="Password"
+        label={LOGIN_TEXT.passwordLabel}
         name="password"
         type={showPassword ? 'text' : 'password'}
         fullWidth
@@ -163,19 +172,18 @@ const RegisterForm: React.FC = () => {
         }}
       />
 
-<TextField
+      <TextField
         select
-        label="Role"
+        label={LOGIN_TEXT.roleLabel}
         name="role"
         fullWidth
         margin="normal"
         value={formik.values.role}
         onChange={formik.handleChange}
       >
-        <MenuItem value="user">user</MenuItem>
+        <MenuItem value={LOGIN_TEXT.optionUser}>{LOGIN_TEXT.optionUser}</MenuItem>
         {currentUser && currentUser.user?.role === 'admin' && (
-
-          <MenuItem value="admin">admin</MenuItem>
+          <MenuItem value={LOGIN_TEXT.optionAdmin}>{LOGIN_TEXT.optionAdmin}</MenuItem>
         )}
       </TextField>
 
@@ -190,7 +198,7 @@ const RegisterForm: React.FC = () => {
           component="label"
           className={`${styles.uploadButton} ${isImageUploaded ? styles.uploaded : ''}`}
         >
-          {isImageUploaded ? 'Change Profile Image' : 'Upload Profile Picture'}
+          {isImageUploaded ? LOGIN_TEXT.changeProfileImage : LOGIN_TEXT.uploadProfilePicture}
           <input
             type="file"
             name="profilePicture"
@@ -209,12 +217,21 @@ const RegisterForm: React.FC = () => {
       </Box>
 
       <Button type="submit" variant="contained" fullWidth className={styles.submitButton} disabled={formik.isSubmitting}>
-        Register
+        {LOGIN_TEXT.registerSubmit}
       </Button>
 
+      <Snackbar
+        open={Boolean(formik.isSubmitting)}
+        autoHideDuration={3000}
+        onClose={() => {}}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          {LOGIN_TEXT.registrationSuccessMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
 export default RegisterForm;
-

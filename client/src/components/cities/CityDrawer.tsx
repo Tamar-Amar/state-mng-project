@@ -1,3 +1,4 @@
+// src/components/CityDrawer.tsx
 import React, { useState } from 'react';
 import { Drawer, List, ListItem, ListItemText, IconButton, Typography, Box, Button, TextField, Snackbar, Alert } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -6,6 +7,7 @@ import { City } from '../../types/City';
 import { State } from '../../types';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
+import { CITY_TEXT } from './cityTxt';
 
 interface CityDrawerProps {
   open: boolean;
@@ -23,7 +25,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
 
   const handleAddCity = () => {
     if (!user?.permissions?.canAdd) {
-      setSnackbarMessage("You don’t have permission to add a city.");
+      setSnackbarMessage(CITY_TEXT.permissionAddCity);
       return;
     }
     if (newCityName.trim()) {
@@ -34,7 +36,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
 
   const handleDeleteCity = (cityId: string) => {
     if (!user?.permissions?.canDelete) {
-      setSnackbarMessage("You don’t have permission to delete a city.");
+      setSnackbarMessage(CITY_TEXT.permissionDeleteCity);
       return;
     }
     onDelete(cityId);
@@ -45,12 +47,16 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
       <Box sx={{ width: 300, padding: 2, mt: 10 }}>
         {selectedState && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-            <img src={selectedState.flag} alt={`${selectedState.name} flag`} style={{ width: 150, height: 100, borderRadius: 2 }} />
+            <img 
+              src={selectedState.flag} 
+              alt={`${selectedState.name} flag`} 
+              style={{ width: 150, height: 100, borderRadius: 2 }} 
+            />
           </Box>
         )}
 
         <Typography variant="h6" gutterBottom>
-          Cities in {selectedState?.name}
+          {CITY_TEXT.citiesInTitle.replace('{stateName}', selectedState?.name || '')}
         </Typography>
 
         <List>
@@ -60,7 +66,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
                 <IconButton 
                   edge="end" 
                   color="error" 
-                  onClick={() => handleDeleteCity(city._id || '')} 
+                  onClick={() => handleDeleteCity(city._id as string)} 
                   disabled={!user?.permissions?.canDelete} 
                 >
                   <DeleteIcon />
@@ -70,7 +76,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
               </ListItem>
             ))
           ) : (
-            <Typography color="textSecondary">No cities available.</Typography>
+            <Typography color="textSecondary">{CITY_TEXT.noCitiesAvailable}</Typography>
           )}
         </List>
 
@@ -79,7 +85,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
             fullWidth
             variant="outlined"
             size="small"
-            label="City Name"
+            label={CITY_TEXT.cityNameLabel}
             value={newCityName}
             onChange={(e) => setNewCityName(e.target.value)}
             disabled={!user?.permissions?.canAdd}
@@ -95,7 +101,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
         </Box>
 
         <Button variant="outlined" fullWidth onClick={onClose} sx={{ mt: 2 }}>
-          Close
+          {CITY_TEXT.closeButton}
         </Button>
 
         <Snackbar
