@@ -22,7 +22,7 @@ import { usePendingRequests, useApprovePermission, useDenyPermission } from '../
 import { PermissionRequestFromServer } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
 import PERM_TXT from '../constants/pages/permissonPageTxt';
-import {GNRL_TXT} from '../constants/componentsTxt';
+import {ERROR, GNRL_TXT} from '../constants/componentsTxt';
 
 const PermissionsPage: React.FC = () => {
   const { data: pendingRequests = [], isLoading, error } = usePendingRequests();
@@ -41,7 +41,7 @@ const PermissionsPage: React.FC = () => {
   if (error) {
     return (
       <Typography color="error" align="center" sx={{ mt: 4 }}>
-        {GNRL_TXT.ERROR.LOAD('permission requests')}
+        {ERROR.loading('permission requests')}
       </Typography>
     );
   }

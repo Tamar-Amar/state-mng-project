@@ -4,7 +4,7 @@ import { Button, Box, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../store/userAtom';
-import {GNRL_TXT} from '../constants/componentsTxt';
+import {ERROR, OPTION} from '../constants/componentsTxt';
 
 const ListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const ListPage: React.FC = () => {
             },
           }}
         >
-          {GNRL_TXT.OPTIONS.CREATE('state')}
+          {OPTION.create('state')}
         </Button>
       </Box>
 
@@ -49,7 +49,7 @@ const ListPage: React.FC = () => {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="warning" onClose={() => setOpenSnackbar(false)} sx={{ fontSize: '1rem', padding: '16px 24px' , mt: '70%'}}>
-          {GNRL_TXT.ERROR.PERMISSION}
+          {ERROR.permission}
         </Alert>
       </Snackbar>
     </Box>

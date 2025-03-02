@@ -11,7 +11,7 @@ import { State } from '../../types/State';
 import { editingStateAtom } from '../../store/stateAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
-import { STATE_FORM_TEXT } from '../../constants/componentsTxt';
+import { BUTTON, DIALOG, ERROR, STATE_FORM_TEXT } from '../../constants/componentsTxt';
 
 const StateForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -59,7 +59,7 @@ const StateForm: React.FC = () => {
       return (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="error">
-            {STATE_FORM_TEXT.noPermission.replace('{action}', id ? 'edit' : 'add')}
+            {ERROR.permission}
           </Typography>
           <Typography variant="body1">
             {STATE_FORM_TEXT.redirecting}
@@ -230,34 +230,34 @@ const StateForm: React.FC = () => {
         <Box mt={2}>
           <Typography color="error">{STATE_FORM_TEXT.regionNotFound}</Typography>
           <Button variant="outlined" color="primary" onClick={handleAddRegion} style={{ marginTop: '8px' }}>
-            {STATE_FORM_TEXT.addRegionButton.replace('{newRegion}', newRegion)}
+            {BUTTON.addRegion.replace('{newRegion}', newRegion)}
           </Button>
         </Box>
       )}
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
         <Button variant="outlined" color="error" onClick={handleCancel}>
-          {STATE_FORM_TEXT.cancelButton}
+          {BUTTON.cancel}
         </Button>
         <Button variant="contained" color="primary" type="submit" disabled={!formik.dirty || !formik.isValid}>
-          {isEditMode ? STATE_FORM_TEXT.submitButtonUpdate : STATE_FORM_TEXT.submitButtonAdd}
+          {isEditMode ? BUTTON.submitUpdate : BUTTON.submitAdd}
         </Button>
       </Box>
       </form>
 
       <Dialog open={showConfirmation} onClose={() => setShowConfirmation(false)}>
-        <DialogTitle>{STATE_FORM_TEXT.unsavedChangesTitle}</DialogTitle>
+        <DialogTitle>{DIALOG.unsavedChangesTitle}</DialogTitle>
         <DialogContent>
           <Typography>
-            {STATE_FORM_TEXT.unsavedChangesMessage}
+            {DIALOG.unsavedChangesMessage}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowConfirmation(false)} color="primary">
-            {STATE_FORM_TEXT.dialogStayButton}
+            {DIALOG.dialogStay}
           </Button>
           <Button onClick={confirmCancel} color="secondary">
-            {STATE_FORM_TEXT.dialogDiscardButton}
+            {DIALOG.dialogDiscard}
           </Button>
         </DialogActions>
       </Dialog>

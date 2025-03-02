@@ -5,7 +5,7 @@ import PersonalDetails from '../components/personal-zone/PersonalDetails';
 import PermissionsHistory from '../components/personal-zone/PersonalPermissions';
 import { userAtom } from '../store/userAtom';
 import { useRecoilValue } from 'recoil';
-import {GNRL_TXT} from '../constants/componentsTxt';
+import { LABELS} from '../constants/componentsTxt';
 
 const PersonalPage: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -18,8 +18,8 @@ const PersonalPage: React.FC = () => {
   return (
     <Box sx={{ width: '100%', maxWidth: 600, margin: 'auto', mt: 15 }}>
       <Tabs value={tabIndex} onChange={handleTabChange} centered>
-        <Tab label={GNRL_TXT.TAB_LBL.PRSNL_DTLS} />
-        <Tab label={GNRL_TXT.TAB_LBL.PERMISSION} />
+        <Tab label={LABELS.personalDetails} />
+        <Tab label={LABELS.permissions} />
       </Tabs>
       {tabIndex === 0 && <PersonalDetails />}
       {tabIndex === 1 && user && (

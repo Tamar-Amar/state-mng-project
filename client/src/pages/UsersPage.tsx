@@ -26,7 +26,7 @@ import { useUsers, useDeleteUser } from '../hooks/useUsers';
 import { User } from '../types';
 import PermissionRequestsPopup from '../components/personal-zone/PendingPermissionRequestsPopup';
 import { usePendingRequests } from '../hooks/usePermissions';
-import {GNRL_TXT} from '../constants/componentsTxt';
+import {BUTTON, DIALOG, ERROR, LABELS, SUCCESS} from '../constants/componentsTxt';
 import USER_TXT from '../constants/pages/userPageTxt';
 
 const UsersPage: React.FC = () => {
@@ -78,7 +78,7 @@ const UsersPage: React.FC = () => {
   if (error) {
     return (
       <Typography color="error" align="center" sx={{ mt: 15 }}>
-        {GNRL_TXT.ERROR.LOAD('users')}
+        {ERROR.loading('users')}
       </Typography>
     );
   }
@@ -92,13 +92,13 @@ const UsersPage: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{GNRL_TXT.USER_PROP.PROFILE}</TableCell>
-              <TableCell>{GNRL_TXT.USER_PROP.USERNAME}</TableCell>
-              <TableCell>{GNRL_TXT.USER_PROP.NAME}</TableCell>
-              <TableCell>{GNRL_TXT.USER_PROP.EMAIL}</TableCell>
-              <TableCell>{GNRL_TXT.USER_PROP.ROLE}</TableCell>
-              <TableCell>{GNRL_TXT.USER_PROP.PERMISSIONS}</TableCell>
-              <TableCell align="center">{USER_TXT.TABLE.ACTIONS}</TableCell>
+              <TableCell>{LABELS.profile}</TableCell>
+              <TableCell>{LABELS.userName}</TableCell>
+              <TableCell>{LABELS.name}</TableCell>
+              <TableCell>{LABELS.email}</TableCell>
+              <TableCell>{LABELS.role}</TableCell>
+              <TableCell>{LABELS.permissions}</TableCell>
+              <TableCell align="center">{LABELS.actions}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -107,7 +107,7 @@ const UsersPage: React.FC = () => {
                 <TableRow key={user._id}>
                   <TableCell>
                     <Avatar 
-                      src={user.profilePicture || ""}
+                      src={user.profilePicture as string}
                       alt={user.username}
                       sx={{ width: 40, height: 40 }}
                     >
@@ -150,18 +150,18 @@ const UsersPage: React.FC = () => {
 
       {/* Confirmation Dialog */}
       <Dialog open={confirmOpen} onClose={handleCancelDelete}>
-        <DialogTitle>{GNRL_TXT.DIALOG.CONFIRM_TITLE_DLT}</DialogTitle>
+        <DialogTitle>{DIALOG.confirmTitleDelete}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {GNRL_TXT.DIALOG.CONFIRM_TEXT_DLT}
+            {DIALOG.confirmTextDelete}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete} variant="outlined">
-            {GNRL_TXT.BUTTON.CANCEL}
+            {BUTTON.cancel}
           </Button>
           <Button onClick={handleConfirmDelete} variant="contained" color="error">
-            {GNRL_TXT.BUTTON.DELETE}
+            {BUTTON.delete}
           </Button>
         </DialogActions>
       </Dialog>
@@ -171,7 +171,7 @@ const UsersPage: React.FC = () => {
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        message={GNRL_TXT.SNACKBAR.DELETE_SUCCESS}
+        message={SUCCESS.deleteMessage}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
 

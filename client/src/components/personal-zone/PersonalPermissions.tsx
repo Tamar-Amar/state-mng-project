@@ -5,7 +5,7 @@ import CurrentPermissionsSummary from './CurrentPermissionsSummary';
 import PermissionRequestsHistory from './PermissionRequestsHistory';
 import SendPermissionRequestPopup from './SendPermissionRequestPopup';
 import SendIcon from '@mui/icons-material/Send';
-import { PERSONAL_TEXT } from '../../constants/componentsTxt';
+import { BUTTON, PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface PermissionsHistoryProps {
   userId: string;
@@ -41,7 +41,7 @@ const PersonalPermissions: React.FC<PermissionsHistoryProps> = ({ userId, userna
             },
           }}
         >
-          {PERSONAL_TEXT.sendPermissionRequestButton}
+          {BUTTON.sendPermissionRequest}
         </Button>
       </Box>
       

@@ -14,7 +14,7 @@ import {
 import { PermissionRequestFromServer } from '../../types';
 import styles from '../../styles/PermissionsHistory.module.scss';
 import { useUserPermissionRequests } from '../../hooks/usePermissions';
-import { PERSONAL_TEXT } from '../../constants/componentsTxt';
+import { ERROR, LABELS, PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface PermissionRequestsHistoryProps {
   userId: string;
@@ -26,7 +26,7 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
   return (
     <Paper sx={{ mt: 2 }}>
       <Typography variant="h6" gutterBottom sx={{ p: 2 }}>
-        {PERSONAL_TEXT.permissionsHistoryTitle}
+        {LABELS.permissionsHistory}
       </Typography>
       {isLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -34,15 +34,15 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
         </Box>
       ) : error ? (
         <Typography color="error" align="center">
-          {PERSONAL_TEXT.errorLoadingPermissions}
+          {ERROR.loadingPermissions}
         </Typography>
       ) : (
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{PERSONAL_TEXT.tableHeaderDate}</TableCell>
-              <TableCell>{PERSONAL_TEXT.tableHeaderRequestedPermissions}</TableCell>
-              <TableCell>{PERSONAL_TEXT.tableHeaderStatus}</TableCell>
+              <TableCell>{LABELS.date}</TableCell>
+              <TableCell>{LABELS.requestedPermissions}</TableCell>
+              <TableCell>{LABELS.status}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -59,12 +59,12 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
                   statusClass = styles.denied;
                 }
                 const permissionsText = [
-                  requestedPermissions.canAdd ? PERSONAL_TEXT.chipAdd : '',
-                  requestedPermissions.canUpdate ? PERSONAL_TEXT.chipUpdate : '',
-                  requestedPermissions.canDelete ? PERSONAL_TEXT.chipDelete : '',
+                  requestedPermissions.canAdd ? LABELS.add: '',
+                  requestedPermissions.canUpdate ? LABELS.update : '',
+                  requestedPermissions.canDelete ? LABELS.delete : '',
                 ]
                   .filter(Boolean)
-                  .join(', ') || PERSONAL_TEXT.noneText;
+                  .join(', ') || LABELS.none;
                 return (
                   <TableRow key={record._id}>
                     <TableCell>{new Date(record.createdAt).toLocaleDateString()}</TableCell>

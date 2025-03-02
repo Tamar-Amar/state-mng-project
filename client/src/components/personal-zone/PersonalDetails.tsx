@@ -13,7 +13,7 @@ import { useRecoilState } from 'recoil';
 import { User } from '../../types';
 import { useUpdateUser } from '../../hooks/useUsers';
 import { userAtom } from '../../store/userAtom';
-import { PERSONAL_TEXT } from '../../constants/componentsTxt';
+import { BUTTON, ERROR, LABELS, PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 const PersonalDetails: React.FC = () => {
   const [user, setUser] = useRecoilState(userAtom);
@@ -22,7 +22,7 @@ const PersonalDetails: React.FC = () => {
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
         <Typography variant="h6">
-          {PERSONAL_TEXT.noUserFound}
+          {ERROR.noUserFound}
         </Typography>
       </Box>
     );
@@ -91,7 +91,7 @@ const PersonalDetails: React.FC = () => {
             onClick={() => setEditMode(true)} 
             sx={{ mt: 2 }}
           >
-            {PERSONAL_TEXT.editDetailsButton}
+            {BUTTON.editDetails}
           </Button>
         </Box>
       ) : (
@@ -103,40 +103,40 @@ const PersonalDetails: React.FC = () => {
           />
           <TextField
             name="username"
-            label={PERSONAL_TEXT.labelUsername}
+            label={LABELS.userNames}
             value={formData.username}
             disabled
           />
           <TextField
             name="firstName"
-            label={PERSONAL_TEXT.labelFirstName}
+            label={LABELS.firstName}
             value={formData.firstName}
             onChange={handleInputChange}
           />
           <TextField
             name="lastName"
-            label={PERSONAL_TEXT.labelLastName}
+            label={LABELS.lastName}
             value={formData.lastName}
             onChange={handleInputChange}
           />
           <TextField
             name="email"
-            label={PERSONAL_TEXT.labelEmail}
+            label={LABELS.email}
             value={formData.email}
             onChange={handleInputChange}
           />
           <TextField
             name="phone"
-            label={PERSONAL_TEXT.labelPhone}
+            label={LABELS.phone}
             value={formData.phone}
             onChange={handleInputChange}
           />
           <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
             <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSave}>
-              {PERSONAL_TEXT.saveButton}
+              {BUTTON.save}
             </Button>
             <Button variant="outlined" startIcon={<CancelIcon />} onClick={() => setEditMode(false)}>
-              {PERSONAL_TEXT.cancelButton}
+              {BUTTON.cancel}
             </Button>
           </Box>
         </Box>
