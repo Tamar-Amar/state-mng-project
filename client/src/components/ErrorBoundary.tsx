@@ -2,7 +2,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Paper, Typography, Button } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { ERROR_BOUNDARY_TEXTS } from '../constants/components/errorBoundaryTxt';
+import { ERROR_BOUNDARY_TEXTS } from './componentsTxt';
 
 interface Props {
   children: ReactNode;

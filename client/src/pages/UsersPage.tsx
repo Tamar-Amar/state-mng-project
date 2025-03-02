@@ -26,7 +26,7 @@ import { useUsers, useDeleteUser } from '../hooks/useUsers';
 import { User } from '../types';
 import PermissionRequestsPopup from '../components/personal-zone/PendingPermissionRequestsPopup';
 import { usePendingRequests } from '../hooks/usePermissions';
-import GNRL_TXT from '../constants/generalTxt';
+import {GNRL_TXT} from '../components/componentsTxt';
 import USER_TXT from '../constants/pages/userPageTxt';
 
 const UsersPage: React.FC = () => {

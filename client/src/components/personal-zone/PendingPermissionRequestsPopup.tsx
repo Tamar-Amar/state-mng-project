@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useApprovePermission, useFilteredUserRequests } from '../../hooks/usePermissions';
 import { PermissionRequestFromServer } from '../../types';
-import { PERSONAL_TEXT } from './personalTxt';
+import { PERSONAL_TEXT } from '../componentsTxt';
 
 interface PermissionRequestsPopupProps {
   open: boolean;

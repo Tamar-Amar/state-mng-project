@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useCreateRequestPermission, useUserPermissionRequests } from '../../hooks/usePermissions';
 import { PermissionOption, getAvailablePermissionOptions, buildPermissionsObject } from '../../utils/permissionRequestUtils';
-import { PERSONAL_TEXT } from './personalTxt';
+import { PERSONAL_TEXT } from '../componentsTxt';
 
 interface SendPermissionRequestPopupProps {
   open: boolean;

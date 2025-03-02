@@ -15,7 +15,7 @@ import {
 import { PermissionRequestFromServer } from '../../types';
 import styles from '../../styles/PermissionsHistory.module.scss';
 import { useUserPermissionRequests } from '../../hooks/usePermissions';
-import { PERSONAL_TEXT } from './personalTxt';
+import { PERSONAL_TEXT } from '../componentsTxt';
 
 interface PermissionRequestsHistoryProps {
   userId: string;

@@ -18,7 +18,7 @@ import { registerValidationSchema } from '../../types/validations/UserValidation
 import { useCurrentUser, useRegisterUser } from '../../hooks/useAuth';
 import styles from '../../styles/RegisterForm.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { LOGIN_TEXT } from './loginTxt';
+import { LOGIN_TEXT } from '../componentsTxt';
 
 const RegisterForm: React.FC = () => {
   const registerMutation = useRegisterUser();

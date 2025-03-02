@@ -6,7 +6,7 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '../store/userAtom';
 import { User } from '../types/User';
 import { Navigate } from 'react-router-dom';
-import GNRL_TXT from '../constants/generalTxt';
+import {GNRL_TXT} from '../components/componentsTxt';
 import AUTH_TXT from '../constants/pages/authPageTxt';
 
 const AuthPage: React.FC = () => {

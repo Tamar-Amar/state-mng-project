@@ -5,7 +5,7 @@ import CurrentPermissionsSummary from './CurrentPermissionsSummary';
 import PermissionRequestsHistory from './PermissionRequestsHistory';
 import SendPermissionRequestPopup from './SendPermissionRequestPopup';
 import SendIcon from '@mui/icons-material/Send';
-import { PERSONAL_TEXT } from './personalTxt';
+import { PERSONAL_TEXT } from '../componentsTxt';
 
 interface PermissionsHistoryProps {
   userId: string;

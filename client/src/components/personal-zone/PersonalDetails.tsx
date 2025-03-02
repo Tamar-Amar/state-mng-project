@@ -13,7 +13,7 @@ import { useRecoilState } from 'recoil';
 import { User } from '../../types';
 import { useUpdateUser } from '../../hooks/useUsers';
 import { userAtom } from '../../store/userAtom';
-import { PERSONAL_TEXT } from './personalTxt';
+import { PERSONAL_TEXT } from '../componentsTxt';
 
 const PersonalDetails: React.FC = () => {
   const [user, setUser] = useRecoilState(userAtom);
@@ -27,7 +27,7 @@ const PersonalDetails: React.FC = () => {
       </Box>
     );
   }
-  
+
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState<User>({
     firstName: user?.firstName || '',

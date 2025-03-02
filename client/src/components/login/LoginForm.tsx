@@ -5,8 +5,7 @@ import { useLoginUser } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { userAtom } from '../../store/userAtom';
-import { LOGIN_TEXT } from './loginTxt';
-
+import { LOGIN_TEXT } from '../componentsTxt';
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState<string | null>(null);
