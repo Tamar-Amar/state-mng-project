@@ -16,7 +16,8 @@ import {
   Typography,
 } from '@mui/material';
 import { useApprovePermission, useFilteredUserRequests } from '../../hooks/usePermissions';
-import {PermissionRequestFromServer } from '../../types';
+import { PermissionRequestFromServer } from '../../types';
+import { PERSONAL_TEXT } from './personalTxt';
 
 interface PermissionRequestsPopupProps {
   open: boolean;
@@ -32,16 +33,14 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
   username,
 }) => {
   const userPendingRequest = useFilteredUserRequests(userId);
-  console.log("userPendingRequest: " ,userPendingRequest); 
-    
-    const approveMutation = useApprovePermission();
-
+  
+  const approveMutation = useApprovePermission();
 
   const formatPermissions = (requestedPermissions: PermissionRequestFromServer['requestedPermissions']) => {
     const perms: string[] = [];
-    if (requestedPermissions.canAdd) perms.push('Add');
-    if (requestedPermissions.canUpdate) perms.push('Update');
-    if (requestedPermissions.canDelete) perms.push('Delete');
+    if (requestedPermissions.canAdd) perms.push(PERSONAL_TEXT.chipAdd);
+    if (requestedPermissions.canUpdate) perms.push(PERSONAL_TEXT.chipUpdate);
+    if (requestedPermissions.canDelete) perms.push(PERSONAL_TEXT.chipDelete);
     return perms.join(', ') || 'None';
   };
 
@@ -49,40 +48,41 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
     approveMutation.mutate(
       {
         id: requestId,
-        approvals: requestedPermissions, 
+        approvals: requestedPermissions,
       },
       {
         onSuccess: () => {
-          console.log('✔️ Approved request:', requestId);
         },
         onError: (error) => {
-          console.error('❌ Error approving permission request:', error);
         },
       }
     );
   };
 
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Pending Permission Requests for {username}</DialogTitle>
+      <DialogTitle>
+        {PERSONAL_TEXT.permissionRequestsDialogTitle.replace('{username}', username)}
+      </DialogTitle>
       <DialogContent>
-      {userPendingRequest.length === 0 && (
-            <DialogContentText>No permission requests found for this user.</DialogContentText>
-          )}
+        {userPendingRequest.length === 0 && (
+          <DialogContentText>
+            {PERSONAL_TEXT.noPermissionRequestsFound}
+          </DialogContentText>
+        )}
         {userPendingRequest.length > 0 && (
           <DialogContentText>
-            No permission requests found for this user.
+            {PERSONAL_TEXT.noPermissionRequestsFound}
           </DialogContentText>
         )}
         {userPendingRequest && userPendingRequest.length > 0 && (
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Requested Permissions</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>{PERSONAL_TEXT.tableHeaderDate}</TableCell>
+                <TableCell>{PERSONAL_TEXT.tableHeaderRequestedPermissions}</TableCell>
+                <TableCell>{PERSONAL_TEXT.tableHeaderStatus}</TableCell>
+                <TableCell>{PERSONAL_TEXT.tableHeaderAction}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -97,10 +97,14 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
                         variant="contained"
                         size="small"
                         color="primary"
-                        onClick={() => handleApprove(request._id || "unde", request.requestedPermissions)}
+                        onClick={() =>
+                          handleApprove(request._id as string, request.requestedPermissions)
+                        }
                         disabled={approveMutation.isPending}
                       >
-                        {approveMutation.isPending ? "Approving..." : "Approve"}
+                        {approveMutation.isPending
+                          ? PERSONAL_TEXT.approvingText
+                          : PERSONAL_TEXT.approveButton}
                       </Button>
                     )}
                   </TableCell>
@@ -112,7 +116,7 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="contained">
-          Close
+          {PERSONAL_TEXT.closeButton}
         </Button>
       </DialogActions>
     </Dialog>

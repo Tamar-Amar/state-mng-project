@@ -1,11 +1,26 @@
 import * as yup from 'yup';
+import VALID_MSG from '../../constants/validationTxt';
 
 export const registerValidationSchema = yup.object().shape({
-  firstName: yup.string().min(2, 'First name must be at least 2 characters').required('First name is required'),
-  lastName: yup.string().min(2, 'Last name must be at least 2 characters').required('Last name is required'),
-  username: yup.string().min(4, 'Username must be at least 4 characters').required('Username is required'),
-  email: yup.string().email('Invalid email format').required('Email is required'),
-  phone: yup.string().matches(/^\d+$/, 'Phone must contain only numbers').required('Phone is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-  role: yup.string().oneOf(['user', 'admin'], 'Invalid role').required('Role is required'),
+  firstName: yup.string()
+    .min(2, VALID_MSG.NAME_MIN)
+    .required(VALID_MSG.REQUIRED_MSG('First name')),
+  lastName: yup.string()
+    .min(2, VALID_MSG.NAME_MIN)
+    .required(VALID_MSG.REQUIRED_MSG('Last name')),
+  username: yup.string()
+    .min(4, VALID_MSG.USERNAME_MIN)
+    .required(VALID_MSG.REQUIRED_MSG('Username')),
+  email: yup.string()
+    .email(VALID_MSG.EMAIL_INVALID)
+    .required(VALID_MSG.REQUIRED_MSG('Email')),
+  phone: yup.string()
+    .matches(/^\d+$/, VALID_MSG.PHONE_ONLY_NUMBERS)
+    .required(VALID_MSG.REQUIRED_MSG('Phone')),
+  password: yup.string()
+    .min(6, VALID_MSG.PASSWORD_MIN)
+    .required(VALID_MSG.REQUIRED_MSG('Password')),
+  role: yup.string()
+    .oneOf(['user', 'admin'], VALID_MSG.ROLE_INVALID)
+    .required(VALID_MSG.REQUIRED_MSG('Role')),
 });

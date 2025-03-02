@@ -6,6 +6,8 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '../store/userAtom';
 import { User } from '../types/User';
 import { Navigate } from 'react-router-dom';
+import GNRL_TXT from '../constants/generalTxt';
+import AUTH_TXT from '../constants/pages/authPageTxt';
 
 const AuthPage: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -24,8 +26,8 @@ const AuthPage: React.FC = () => {
       {!user && (
         <Box sx={{ width: '100%', maxWidth: 400, margin: 'auto', mt: 4 }}>
           <Tabs value={tabIndex} onChange={handleTabChange} centered>
-            <Tab label="Login" />
-            <Tab label="Register" />
+            <Tab label={AUTH_TXT.TAB_LBL.LOGIN} />
+            <Tab label={AUTH_TXT.TAB_LBL.SIGNUP} />
           </Tabs>
           {tabIndex === 0 && <LoginForm />}
           {tabIndex === 1 && <RegisterForm />}
@@ -34,7 +36,7 @@ const AuthPage: React.FC = () => {
       {user && user.role === 'admin' && (
         <Box sx={{ width: '100%', maxWidth: 400, margin: 'auto', mt: 4 }}>
           <Typography variant="h5" align="center" gutterBottom>
-            Add New User
+          {GNRL_TXT.OPTIONS.CREATE('User')}
           </Typography>
           <RegisterForm />
         </Box>

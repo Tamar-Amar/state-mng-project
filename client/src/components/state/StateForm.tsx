@@ -1,3 +1,4 @@
+//states-mng-project\client\src\components\state\StateForm.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Autocomplete, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert } from '@mui/material';
@@ -10,6 +11,7 @@ import { State } from '../../types/State';
 import { editingStateAtom } from '../../store/stateAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
+import { STATE_FORM_TEXT } from '../../constants/components/state/stateFormTxt';
 
 const StateForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -53,21 +55,21 @@ const StateForm: React.FC = () => {
     ? user?.permissions?.canUpdate 
     : user?.permissions?.canAdd;
 
-  if (!hasPermission) {
-    return (
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="h6" color="error">
-          You don’t have permission to {id ? 'edit' : 'add'} a state.
-        </Typography>
-        <Typography variant="body1">
-          Redirecting you back to the home page...
-        </Typography>
-        <Button onClick={() => navigate('/')} variant="contained" sx={{ mt: 2 }}>
-          Go to Home Now
-        </Button>
-      </Box>
-    );
-  }
+    if (!hasPermission) {
+      return (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6" color="error">
+            {STATE_FORM_TEXT.noPermission.replace('{action}', id ? 'edit' : 'add')}
+          </Typography>
+          <Typography variant="body1">
+            {STATE_FORM_TEXT.redirecting}
+          </Typography>
+          <Button onClick={() => navigate('/')} variant="contained" sx={{ mt: 2 }}>
+            {STATE_FORM_TEXT.goHomeNow}
+          </Button>
+        </Box>
+      );
+    }
 
   const confirmCancel = () => {
     setShowConfirmation(false);
@@ -107,7 +109,6 @@ const StateForm: React.FC = () => {
           { ...values, _id: id },
           {
             onSuccess: () => {
-              console.log("Success mutation triggered");
               setSnackbar({ open: true, message: 'State updated successfully!', severity: 'success' });
               setTimeout(() => {
                 navigate('/');
@@ -116,7 +117,6 @@ const StateForm: React.FC = () => {
             },
             onError: (error: any) => {
               const errorMessage = error?.response?.data?.message || 'Failed to update state.';
-              console.log("Error mutation triggered:", errorMessage);
               setSnackbar({ open: true, message: errorMessage, severity: 'error' });
               setEditingStateName(null)
             },
@@ -125,7 +125,6 @@ const StateForm: React.FC = () => {
       } else {
         addMutation.mutate(values, {
           onSuccess: () => {
-            console.log("Success mutation triggered");
             setSnackbar({ open: true, message: 'State added successfully!', severity: 'success' });
             setTimeout(() => {
               navigate('/');
@@ -133,7 +132,6 @@ const StateForm: React.FC = () => {
           },
           onError: (error: any) => {
             const errorMessage = error?.response?.data?.message || 'Failed to add state.';
-              console.log("Error mutation triggered:", errorMessage);
             setSnackbar({ open: true, message: errorMessage, severity: 'error' });
           },
         });
@@ -161,103 +159,109 @@ const StateForm: React.FC = () => {
   return (
     <Box sx={{ padding: 3, maxWidth: 500, margin: 'auto', mt: 15 }}>
       <Typography variant="h4" gutterBottom>
-        {isEditMode ? `Edit State: ${stateToEdit?.name || ''}` : 'Add New State'}
+        {isEditMode 
+          ? `${STATE_FORM_TEXT.editStateTitlePrefix}${stateToEdit?.name || ''}` 
+          : STATE_FORM_TEXT.addStateTitle}
       </Typography>
       <form onSubmit={formik.handleSubmit}>
-        <TextField
-          fullWidth
-          label="State Name"
-          name="name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          margin="normal"
-          error={formik.touched.name && Boolean(formik.errors.name)}
-          helperText={formik.touched.name && formik.errors.name}
-          disabled={isEditMode}
-        />
-        <TextField
-          fullWidth
-          label="Flag URL"
-          name="flag"
-          value={formik.values.flag}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          margin="normal"
-          error={formik.touched.flag && Boolean(formik.errors.flag)}
-          helperText={formik.touched.flag && formik.errors.flag}
-        />
-        <TextField
-          fullWidth
-          label="Population"
-          name="population"
-          type="number"
-          value={formik.values.population}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          margin="normal"
-          error={formik.touched.population && Boolean(formik.errors.population)}
-          helperText={formik.touched.population && formik.errors.population}
-        />
-        <Autocomplete
-          options={regions}
-          freeSolo
-          value={formik.values.region || ''}
-          onChange={(event, value) => {
-            formik.setFieldValue('region', value);
-            setNewRegion(value || '');
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Region"
-              name="region"
-              margin="dense"
-              error={formik.touched.region && Boolean(formik.errors.region)}
-              helperText={formik.touched.region && formik.errors.region}
-            />
-          )}
-          onInputChange={(event, value) => {
-            formik.setFieldValue('region', value);
-            setNewRegion(value);
-          }}
-        />
-        {newRegion && !regions.includes(newRegion) && (
-          <Box mt={2}>
-            <Typography color="error">Region not found. Add it?</Typography>
-            <Button variant="outlined" color="primary" onClick={handleAddRegion} style={{ marginTop: '8px' }}>
-              Add "{newRegion}" as a new region
-            </Button>
-          </Box>
+      <TextField
+        fullWidth
+        label={STATE_FORM_TEXT.stateNameLabel}
+        name="name"
+        value={formik.values.name}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        margin="normal"
+        error={formik.touched.name && Boolean(formik.errors.name)}
+        helperText={formik.touched.name && formik.errors.name}
+        disabled={isEditMode}
+      />
+
+      <TextField
+        fullWidth
+        label={STATE_FORM_TEXT.flagUrlLabel}
+        name="flag"
+        value={formik.values.flag}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        margin="normal"
+        error={formik.touched.flag && Boolean(formik.errors.flag)}
+        helperText={formik.touched.flag && formik.errors.flag}
+      />
+
+      <TextField
+        fullWidth
+        label={STATE_FORM_TEXT.populationLabel}
+        name="population"
+        type="number"
+        value={formik.values.population}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        margin="normal"
+        error={formik.touched.population && Boolean(formik.errors.population)}
+        helperText={formik.touched.population && formik.errors.population}
+      />
+
+      <Autocomplete
+        options={regions}
+        freeSolo
+        value={formik.values.region as string}
+        onChange={(event, value) => {
+          formik.setFieldValue('region', value);
+          setNewRegion(value as string);
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={STATE_FORM_TEXT.regionLabel}
+            name="region"
+            margin="dense"
+            error={formik.touched.region && Boolean(formik.errors.region)}
+            helperText={formik.touched.region && formik.errors.region}
+          />
         )}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-          <Button variant="outlined" color="error" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="primary" type="submit" disabled={!formik.dirty || !formik.isValid}>
-            {isEditMode ? 'Update State' : 'Add State'}
+        onInputChange={(event, value) => {
+          formik.setFieldValue('region', value);
+          setNewRegion(value);
+        }}
+      />
+
+      {newRegion && !regions.includes(newRegion) && (
+        <Box mt={2}>
+          <Typography color="error">{STATE_FORM_TEXT.regionNotFound}</Typography>
+          <Button variant="outlined" color="primary" onClick={handleAddRegion} style={{ marginTop: '8px' }}>
+            {STATE_FORM_TEXT.addRegionButton.replace('{newRegion}', newRegion)}
           </Button>
         </Box>
+      )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
+        <Button variant="outlined" color="error" onClick={handleCancel}>
+          {STATE_FORM_TEXT.cancelButton}
+        </Button>
+        <Button variant="contained" color="primary" type="submit" disabled={!formik.dirty || !formik.isValid}>
+          {isEditMode ? STATE_FORM_TEXT.submitButtonUpdate : STATE_FORM_TEXT.submitButtonAdd}
+        </Button>
+      </Box>
       </form>
 
       <Dialog open={showConfirmation} onClose={() => setShowConfirmation(false)}>
-        <DialogTitle>Unsaved Changes</DialogTitle>
+        <DialogTitle>{STATE_FORM_TEXT.unsavedChangesTitle}</DialogTitle>
         <DialogContent>
           <Typography>
-            You have unsaved changes. Are you sure you want to discard them and exit?
+            {STATE_FORM_TEXT.unsavedChangesMessage}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShowConfirmation(false)} color="primary">
-            Stay
+            {STATE_FORM_TEXT.dialogStayButton}
           </Button>
           <Button onClick={confirmCancel} color="secondary">
-            Discard and Exit
+            {STATE_FORM_TEXT.dialogDiscardButton}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* הוספת Snackbar להצגת הודעות */}
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}

@@ -1,9 +1,11 @@
+// src/components/login/LoginForm.tsx
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Snackbar, Alert } from '@mui/material';
 import { useLoginUser } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { userAtom } from '../../store/userAtom';
+import { LOGIN_TEXT } from './loginTxt';
 
 const LoginForm: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -25,19 +27,20 @@ const LoginForm: React.FC = () => {
       onSuccess: (data) => {
         localStorage.setItem('token', data.token);
         setUser(data.user);
-        setSuccess(true); 
+        setSuccess(true);
         setTimeout(() => navigate('/'), 1500);
       },
       onError: (error) => {
-        console.error('Login failed:', error);
-        setError('Login failed. Please check your credentials.');
+        setError(LOGIN_TEXT.loginFailedMessage);
       },
     });
   };
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, maxWidth: 400, mx: 'auto' }}>
-      <Typography variant="h5" gutterBottom align="center">Login</Typography>
+      <Typography variant="h5" gutterBottom align="center">
+        {LOGIN_TEXT.loginFormTitle}
+      </Typography>
 
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -46,7 +49,7 @@ const LoginForm: React.FC = () => {
       )}
 
       <TextField
-        label="Username"
+        label={LOGIN_TEXT.loginUsernameLabel}
         name="username"
         fullWidth
         margin="normal"
@@ -54,7 +57,7 @@ const LoginForm: React.FC = () => {
         required
       />
       <TextField
-        label="Password"
+        label={LOGIN_TEXT.loginPasswordLabel}
         name="password"
         type="password"
         fullWidth
@@ -64,7 +67,7 @@ const LoginForm: React.FC = () => {
       />
 
       <Button type="submit" variant="contained" fullWidth disabled={loginMutation.isPending}>
-        {loginMutation.isPending ? 'Logging in...' : 'Login'}
+        {loginMutation.isPending ? LOGIN_TEXT.loginSubmitPending : LOGIN_TEXT.loginSubmit}
       </Button>
 
       <Snackbar
@@ -74,7 +77,7 @@ const LoginForm: React.FC = () => {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
-          Login successful! Redirecting...
+          {LOGIN_TEXT.loginSuccessMessage}
         </Alert>
       </Snackbar>
     </Box>

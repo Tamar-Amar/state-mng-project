@@ -1,4 +1,5 @@
 // src/components/personal-zone/PermissionRequestsHistory.tsx
+// src/components/PermissionRequestsHistory.tsx
 import React from 'react';
 import {
   Box,
@@ -14,6 +15,7 @@ import {
 import { PermissionRequestFromServer } from '../../types';
 import styles from '../../styles/PermissionsHistory.module.scss';
 import { useUserPermissionRequests } from '../../hooks/usePermissions';
+import { PERSONAL_TEXT } from './personalTxt';
 
 interface PermissionRequestsHistoryProps {
   userId: string;
@@ -25,7 +27,7 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
   return (
     <Paper sx={{ mt: 2 }}>
       <Typography variant="h6" gutterBottom sx={{ p: 2 }}>
-        Permissions History:
+        {PERSONAL_TEXT.permissionsHistoryTitle}
       </Typography>
       {isLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -33,15 +35,15 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
         </Box>
       ) : error ? (
         <Typography color="error" align="center">
-          Error loading permission requests.
+          {PERSONAL_TEXT.errorLoadingPermissions}
         </Typography>
       ) : (
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Requested Permissions</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell>{PERSONAL_TEXT.tableHeaderDate}</TableCell>
+              <TableCell>{PERSONAL_TEXT.tableHeaderRequestedPermissions}</TableCell>
+              <TableCell>{PERSONAL_TEXT.tableHeaderStatus}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -57,28 +59,27 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
                 } else if (record.status === 'denied') {
                   statusClass = styles.denied;
                 }
+                const permissionsText = [
+                  requestedPermissions.canAdd ? PERSONAL_TEXT.chipAdd : '',
+                  requestedPermissions.canUpdate ? PERSONAL_TEXT.chipUpdate : '',
+                  requestedPermissions.canDelete ? PERSONAL_TEXT.chipDelete : '',
+                ]
+                  .filter(Boolean)
+                  .join(', ') || PERSONAL_TEXT.noneText;
                 return (
                   <TableRow key={record._id}>
                     <TableCell>{new Date(record.createdAt).toLocaleDateString()}</TableCell>
-                    <TableCell>
-                      {[
-                        requestedPermissions.canAdd ? 'Add' : '',
-                        requestedPermissions.canUpdate ? 'Update' : '',
-                        requestedPermissions.canDelete ? 'Delete' : '',
-                      ]
-                        .filter(Boolean)
-                        .join(', ') || 'None'}
-                    </TableCell>
+                    <TableCell>{permissionsText}</TableCell>
                     <TableCell>
                       <span className={`${styles.statusCell} ${statusClass}`}>
                         {record.status}
                         {record.status === 'approved' && record.reviewedBy && (
-                          <> by {record.reviewedBy.username}</>
+                          <> {PERSONAL_TEXT.byText}{record.reviewedBy.username}</>
                         )}
                         {record.status !== 'pending' && (
                           <>
                             <br />
-                            Updated: {new Date(record.updatedAt).toLocaleDateString()}
+                            {PERSONAL_TEXT.updatedText} {new Date(record.updatedAt).toLocaleDateString()}
                           </>
                         )}
                       </span>
@@ -89,7 +90,7 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
             ) : (
               <TableRow>
                 <TableCell colSpan={3} align="center">
-                  No permission requests found.
+                  {PERSONAL_TEXT.noPermissionRequestsFoundHistory}
                 </TableCell>
               </TableRow>
             )}

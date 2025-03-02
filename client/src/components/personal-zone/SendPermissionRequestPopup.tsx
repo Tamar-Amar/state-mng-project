@@ -1,3 +1,4 @@
+// src/components/personal-zone/SendPermissionRequestPopup.tsx
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -15,6 +16,7 @@ import {
 } from '@mui/material';
 import { useCreateRequestPermission, useUserPermissionRequests } from '../../hooks/usePermissions';
 import { PermissionOption, getAvailablePermissionOptions, buildPermissionsObject } from '../../utils/permissionRequestUtils';
+import { PERSONAL_TEXT } from './personalTxt';
 
 interface SendPermissionRequestPopupProps {
   open: boolean;
@@ -26,6 +28,7 @@ interface SendPermissionRequestPopupProps {
     canDelete: boolean;
   };
 }
+
 const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
   open,
   onClose,
@@ -43,7 +46,7 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
 
   const handleSubmit = () => {
     if (!hasAvailableOptions) {
-      setSnackbarMessage('You already have the requested permissions or a pending request exists.');
+      setSnackbarMessage(PERSONAL_TEXT.noPermissionOptionsMessage);
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
@@ -52,14 +55,14 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
     const permissions = buildPermissionsObject(selectedOption);
     sendPermissionRequest(permissions, {
       onSuccess: () => {
-        setSnackbarMessage('Your permission request has been sent successfully! Thank you.');
+        setSnackbarMessage(PERSONAL_TEXT.successPermissionRequestMessage);
         setSnackbarSeverity('success');
         onClose();
         setSnackbarOpen(true);
       },
       onError: (error) => {
         console.error('Error sending permission request:', error);
-        setSnackbarMessage('There was an error sending your permission request. Please try again later.');
+        setSnackbarMessage(PERSONAL_TEXT.errorPermissionRequestMessage);
         setSnackbarSeverity('error');
         onClose();
         setSnackbarOpen(true);
@@ -70,22 +73,30 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
   return (
     <>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle>Send Permission Request</DialogTitle>
+        <DialogTitle>{PERSONAL_TEXT.sendPermissionRequestDialogTitle}</DialogTitle>
         <DialogContent>
           {hasAvailableOptions ? (
             <Typography variant="body1" sx={{ mb: 2 }}>
-              Please select the permission you would like to request:
+              {PERSONAL_TEXT.selectPermissionPrompt}
             </Typography>
           ) : (
             <Typography variant="body1" sx={{ mb: 2 }}>
-              You already have all the permissions or a pending request exists.
+              {PERSONAL_TEXT.noPermissionOptionsMessage}
             </Typography>
           )}
           {hasAvailableOptions && (
             <FormControl component="fieldset">
-              <RadioGroup value={selectedOption} onChange={(e) => setSelectedOption(e.target.value as PermissionOption)}>
+              <RadioGroup
+                value={selectedOption}
+                onChange={(e) => setSelectedOption(e.target.value as PermissionOption)}
+              >
                 {availableOptions.map((option) => (
-                  <FormControlLabel key={option} value={option} control={<Radio />} label={`Request '${option}' Permission`} />
+                  <FormControlLabel
+                    key={option}
+                    value={option}
+                    control={<Radio />}
+                    label={PERSONAL_TEXT.requestPermissionLabel(option)}
+                  />
                 ))}
               </RadioGroup>
             </FormControl>
@@ -93,11 +104,11 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} variant="outlined">
-            Cancel
+            {PERSONAL_TEXT.cancelButton}
           </Button>
           {hasAvailableOptions && (
             <Button onClick={handleSubmit} variant="contained" color="primary">
-              Submit Request
+              {PERSONAL_TEXT.submitRequestButton}
             </Button>
           )}
         </DialogActions>

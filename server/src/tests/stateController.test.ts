@@ -1,17 +1,15 @@
 import request from 'supertest';
-import app from '../index'; // הנח שהקובץ הראשי שלך מייבא את Express
+import app from '../index'; 
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import { State } from '../models/State';
-import Region from '../models/Region';
 import PermissionRequest from '../models/PermissionRequest';
 import User from '../models/User';
 
 let mongoServer: MongoMemoryServer;
 
 beforeAll(async () => {
-  // יצירת מופע MongoDB בזיכרון
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
   await mongoose.connect(uri, {
@@ -21,7 +19,6 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  // ניקוי כל האוספים אחרי כל בדיקה
   const collections = mongoose.connection.collections;
   for (const key in collections) {
     await collections[key].deleteMany({});

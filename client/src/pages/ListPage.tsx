@@ -4,6 +4,7 @@ import { Button, Box, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../store/userAtom';
+import GNRL_TXT from '../constants/generalTxt';
 
 const ListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const ListPage: React.FC = () => {
             },
           }}
         >
-          Add New State
+          {GNRL_TXT.OPTIONS.CREATE('state')}
         </Button>
       </Box>
 
@@ -48,7 +49,7 @@ const ListPage: React.FC = () => {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity="warning" onClose={() => setOpenSnackbar(false)} sx={{ fontSize: '1rem', padding: '16px 24px' , mt: '70%'}}>
-          You don’t have permission to add a new state. Please contact the system administrator.
+          {GNRL_TXT.ERROR.PERMISSION}
         </Alert>
       </Snackbar>
     </Box>

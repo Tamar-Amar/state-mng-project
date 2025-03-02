@@ -1,19 +1,21 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as yup from 'yup';
 import { useRegions } from '../../hooks/useRegions';
-
+import VALID_MSG from '../../constants/validationTxt';
 
 export const stateEditValidationSchema = () => {
   const { data: regions = [] } = useRegions();
   
   return yup.object().shape({
-    flag: yup.string().url('Flag must be a valid URL').required('Flag is required'),
-    population: yup.number().min(0, 'Population cannot be less than 0').required('Population is required'),
+    flag: yup.string().url(VALID_MSG.FLAG_URL)
+    .required(VALID_MSG.REQUIRED_MSG('flag')),
+    population: yup.number().min(0, VALID_MSG.POPULATION_MIN)
+    .required(VALID_MSG.REQUIRED_MSG('population')),
     region: yup.string()
-      .test('isValidRegion', 'Region must be one of the predefined options or a newly added one', 
+      .test('isValidRegion', VALID_MSG.REGION_INVALID, 
         (value) => !value || regions.includes(value)
       )
-      .required('Region is required'),
+      .required(VALID_MSG.REQUIRED_MSG('region')),
   });
 };
 
@@ -21,22 +23,23 @@ export const stateCreateValidationSchema = () => {
   const { data: regions = [] } = useRegions();
   return yup.object().shape({
     name: yup.string()
-      .min(3, 'Name must be at least 3 characters long')
-      .matches(/^[\p{L}\s\-]+$/u, 'Name can only contain letters from any language, spaces, and hyphens')
-      .required('Name is required')
-      .max(30, 'Name must not exceed 30 characters'),
+      .min(3, VALID_MSG.NAME_MIN)
+      .matches(/^[\p{L}\s\-]+$/u, VALID_MSG.NAME_MATCH)
+      .required(VALID_MSG.REQUIRED_MSG('name'))
+      .max(30, VALID_MSG.NAME_MAX),
     isActive: yup.boolean(),
-    flag: yup.string().url('Flag must be a valid URL').required('Flag is required'),
-    population: yup.number().min(0, 'Population cannot be less than 0').required('Population is required'),
+    flag: yup.string().url(VALID_MSG.FLAG_URL)
+    .required(VALID_MSG.REQUIRED_MSG('flag')),
+    population: yup.number().min(0, VALID_MSG.POPULATION_MIN)
+    .required(VALID_MSG.REQUIRED_MSG('population')),
     region: yup.string()
-      .test('isValidRegion', 'Region must be one of the predefined options or a newly added one', 
+      .test('isValidRegion', VALID_MSG.REGION_INVALID, 
         (value) => !value || regions.includes(value)
       )
-      .required('Region is required')
-      .notOneOf(['000'], 'Region cannot be empty'),
+      .required(VALID_MSG.REQUIRED_MSG('region'))
+      .notOneOf(['000'], VALID_MSG.REGION_NOT_EMPTY),
   });
 };
-
 
 export const useDynamicRegions = () => {
   const { data: regions = [] } = useRegions();
@@ -53,4 +56,3 @@ export const useDynamicRegions = () => {
 
   return { regions, addRegion };
 };
-    
