@@ -5,7 +5,7 @@ import CurrentPermissionsSummary from './CurrentPermissionsSummary';
 import PermissionRequestsHistory from './PermissionRequestsHistory';
 import SendPermissionRequestPopup from './SendPermissionRequestPopup';
 import SendIcon from '@mui/icons-material/Send';
-import { PERSONAL_TEXT } from './personalTxt';
+import { BUTTON, PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface PermissionsHistoryProps {
   userId: string;
@@ -17,12 +17,14 @@ interface PermissionsHistoryProps {
   };
 }
 
-const PermissionsHistory: React.FC<PermissionsHistoryProps> = ({ userId, username, currentPermissions }) => {
+const PersonalPermissions: React.FC<PermissionsHistoryProps> = ({ userId, username, currentPermissions }) => {
   const [openSendPopup, setOpenSendPopup] = useState(false);
   
   return (
     <Box sx={{ p: 2, maxWidth: 800, mx: 'auto' }}>
+      
       <CurrentPermissionsSummary username={username} currentPermissions={currentPermissions} />
+      
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
         <Button
           variant="outlined"
@@ -39,10 +41,12 @@ const PermissionsHistory: React.FC<PermissionsHistoryProps> = ({ userId, usernam
             },
           }}
         >
-          {PERSONAL_TEXT.sendPermissionRequestButton}
+          {BUTTON.sendPermissionRequest}
         </Button>
       </Box>
+      
       <PermissionRequestsHistory userId={userId} />
+
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
         <SendPermissionRequestPopup
           open={openSendPopup}
@@ -55,4 +59,4 @@ const PermissionsHistory: React.FC<PermissionsHistoryProps> = ({ userId, usernam
   );
 };
 
-export default PermissionsHistory;
+export default PersonalPermissions;

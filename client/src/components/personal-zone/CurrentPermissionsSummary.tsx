@@ -4,7 +4,7 @@ import { Box, Typography, Paper, Chip, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PERSONAL_TEXT } from './personalTxt';
+import { LABELS, PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface CurrentPermissionsSummaryProps {
   username: string;
@@ -24,7 +24,7 @@ const CurrentPermissionsSummary: React.FC<CurrentPermissionsSummaryProps> = ({ u
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mt: 3 }}>
         <Chip
           icon={<AddIcon />}
-          label={PERSONAL_TEXT.chipAdd}
+          label={LABELS.add}
           sx={{
             backgroundColor: currentPermissions.canAdd ? '#c8e6c9' : '#e0e0e0',
             color: currentPermissions.canAdd ? 'black' : '#757575',
@@ -34,7 +34,7 @@ const CurrentPermissionsSummary: React.FC<CurrentPermissionsSummaryProps> = ({ u
         />
         <Chip
           icon={<EditIcon />}
-          label={PERSONAL_TEXT.chipUpdate}
+          label={LABELS.update}
           sx={{
             backgroundColor: currentPermissions.canUpdate ? '#c8e6c9' : '#e0e0e0',
             color: currentPermissions.canUpdate ? 'black' : '#757575',
@@ -44,7 +44,7 @@ const CurrentPermissionsSummary: React.FC<CurrentPermissionsSummaryProps> = ({ u
         />
         <Chip
           icon={<DeleteIcon />}
-          label={PERSONAL_TEXT.chipDelete}
+          label={LABELS.delete}
           sx={{
             backgroundColor: currentPermissions.canDelete ? '#c8e6c9' : '#e0e0e0',
             color: currentPermissions.canDelete ? 'black' : '#757575',
