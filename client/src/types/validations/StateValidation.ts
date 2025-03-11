@@ -5,7 +5,6 @@ import { VALID_MSG } from '../../constants/componentsTxt';
 
 export const stateEditValidationSchema = () => {
   const { data: regions = [] } = useRegions();
-  
   return yup.object().shape({
     flag: yup.string().url(VALID_MSG.flagUrl)
     .required(VALID_MSG.requiredFiled('flag')),

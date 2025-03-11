@@ -12,11 +12,9 @@ const logger = createLogger({
     ),
     transports: [
         new transports.File({ filename: 'logs/app.log' }),
-
         new transports.File({ filename: 'logs/error.log', level: 'error' }),
     ],
 });
-
 
 if (process.env.NODE_ENV === 'development') {
     logger.add(

@@ -12,6 +12,8 @@ export const useLoginUser = () => {
       localStorage.setItem('token', data.token);
     },
     onError: (error) => {
+      console.log('Error logging in:', error);
+      
     },
   });
 };

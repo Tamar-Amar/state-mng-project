@@ -10,3 +10,17 @@ const RegionSchema: Schema = new Schema({
 });
 
 export default mongoose.model<IRegion>('Region', RegionSchema, 'regions-collections');
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -50,12 +50,6 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
         id: requestId,
         approvals: requestedPermissions,
       },
-      {
-        onSuccess: () => {
-        },
-        onError: (error) => {
-        },
-      }
     );
   };
 

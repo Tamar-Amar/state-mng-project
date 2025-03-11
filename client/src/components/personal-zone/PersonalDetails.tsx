@@ -13,9 +13,10 @@ import { useRecoilState } from 'recoil';
 import { User } from '../../types';
 import { useUpdateUser } from '../../hooks/useUsers';
 import { userAtom } from '../../store/userAtom';
-import { BUTTON, ERROR, LABELS, PERSONAL_TEXT } from '../../constants/componentsTxt';
+import { BUTTON, ERROR, LABELS } from '../../constants/componentsTxt';
 
 const PersonalDetails: React.FC = () => {
+
   const [user, setUser] = useRecoilState(userAtom);
 
   if (!user) {

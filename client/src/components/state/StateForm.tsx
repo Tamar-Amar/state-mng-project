@@ -1,7 +1,7 @@
 //states-mng-project\client\src\components\state\StateForm.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Autocomplete, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert } from '@mui/material';
+import { Box, Button, TextField, Typography, Autocomplete, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert, Avatar, InputAdornment } from '@mui/material';
 import { useFormik } from 'formik';
 import { stateCreateValidationSchema, stateEditValidationSchema } from '../../types/validations/StateValidation';
 import { useAddState, useUpdateState } from '../../hooks/useStates';
@@ -12,6 +12,11 @@ import { editingStateAtom } from '../../store/stateAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
 import { BUTTON, DIALOG, ERROR, STATE_FORM_TEXT } from '../../constants/componentsTxt';
+import FlagIcon from '@mui/icons-material/Flag';
+import ImageIcon from '@mui/icons-material/Image';
+import PeopleIcon from '@mui/icons-material/People';
+import PublicIcon from '@mui/icons-material/Public';
+
 
 const StateForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -139,22 +144,7 @@ const StateForm: React.FC = () => {
     },
   });
 
-  const handleAddRegion = () => {
-    if (newRegion && /^[a-zA-Z\s]+$/.test(newRegion)) {
-      createRegionMutation.mutate(newRegion, {
-        onSuccess: () => {
-          setSnackbar({ open: true, message: `Region "${newRegion}" added successfully!`, severity: 'success' });
-          formik.setFieldValue('region', newRegion);
-          setNewRegion('');
-        },
-        onError: () => {
-          setSnackbar({ open: true, message: 'Failed to add region.', severity: 'error' });
-        },
-      });
-    } else {
-      setSnackbar({ open: true, message: 'Invalid region name. Please use only letters and spaces.', severity: 'error' });
-    }
-  };
+
 
   return (
     <Box sx={{ padding: 3, maxWidth: 500, margin: 'auto', mt: 15 }}>
@@ -163,6 +153,12 @@ const StateForm: React.FC = () => {
           ? `${STATE_FORM_TEXT.editStateTitlePrefix}${stateToEdit?.name || ''}` 
           : STATE_FORM_TEXT.addStateTitle}
       </Typography>
+
+      {stateToEdit?.flag && (
+        <Box sx={{ display: 'flex', justifyContent: 'start', mb: 2 }}>
+          <Avatar src={stateToEdit.flag} variant="rounded" sx={{ width: 120, height: 80 }} />
+        </Box>)}
+
       <form onSubmit={formik.handleSubmit}>
       <TextField
         fullWidth
@@ -175,6 +171,13 @@ const StateForm: React.FC = () => {
         error={formik.touched.name && Boolean(formik.errors.name)}
         helperText={formik.touched.name && formik.errors.name}
         disabled={isEditMode}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <FlagIcon />
+            </InputAdornment>
+          ),
+        }}
       />
 
       <TextField
@@ -187,6 +190,13 @@ const StateForm: React.FC = () => {
         margin="normal"
         error={formik.touched.flag && Boolean(formik.errors.flag)}
         helperText={formik.touched.flag && formik.errors.flag}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <ImageIcon />
+            </InputAdornment>
+          ),
+        }}
       />
 
       <TextField
@@ -200,11 +210,18 @@ const StateForm: React.FC = () => {
         margin="normal"
         error={formik.touched.population && Boolean(formik.errors.population)}
         helperText={formik.touched.population && formik.errors.population}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <PeopleIcon />
+            </InputAdornment>
+          ),
+        }}
+
       />
 
       <Autocomplete
         options={regions}
-        freeSolo
         value={formik.values.region as string}
         onChange={(event, value) => {
           formik.setFieldValue('region', value);
@@ -218,22 +235,19 @@ const StateForm: React.FC = () => {
             margin="dense"
             error={formik.touched.region && Boolean(formik.errors.region)}
             helperText={formik.touched.region && formik.errors.region}
+            InputProps={{
+              ...params.InputProps,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PublicIcon />
+                </InputAdornment>
+              ),
+            }}
           />
         )}
-        onInputChange={(event, value) => {
-          formik.setFieldValue('region', value);
-          setNewRegion(value);
-        }}
+
       />
 
-      {newRegion && !regions.includes(newRegion) && (
-        <Box mt={2}>
-          <Typography color="error">{STATE_FORM_TEXT.regionNotFound}</Typography>
-          <Button variant="outlined" color="primary" onClick={handleAddRegion} style={{ marginTop: '8px' }}>
-            {BUTTON.addRegion.replace('{newRegion}', newRegion)}
-          </Button>
-        </Box>
-      )}
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
         <Button variant="outlined" color="error" onClick={handleCancel}>

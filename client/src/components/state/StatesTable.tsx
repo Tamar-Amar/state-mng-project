@@ -122,11 +122,13 @@ const StatesTable: React.FC = () => {
       minWidth: 340,
       cellRendererFramework: (params: any) => (
         <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', alignItems: 'center' }}>
-          <Button variant="outlined" color="primary" onClick={() => handleEditState(params.data)}>
+          <Button variant="outlined" color="primary" onClick={() => handleEditState(params.data)} disabled={!user?.permissions?.canUpdate}>
             {BUTTON.edit}
+            
           </Button>
-          <Button variant="outlined" color="error" onClick={() => handleDeleteState(params.data._id)}>
+          <Button variant="outlined" color="error" onClick={() => handleDeleteState(params.data._id)} disabled={!user?.permissions?.canDelete}>
             {BUTTON.delete}
+            
           </Button>
           <Button
             sx={{

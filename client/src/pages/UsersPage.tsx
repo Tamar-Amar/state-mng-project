@@ -119,12 +119,11 @@ const UsersPage: React.FC = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
-                    {user.permissions
-                      ? `${user.permissions.canAdd ? 'Add, ' : ''}${
-                          user.permissions.canUpdate ? 'Update, ' : ''
-                        }${user.permissions.canDelete ? 'Delete' : ''}`
-                      : 'N/A'}
+                    {user.permissions && (user.permissions.canAdd || user.permissions.canUpdate || user.permissions.canDelete)
+                      ? `${user.permissions.canAdd ? 'Add, ' : ''}${user.permissions.canUpdate ? 'Update, ' : ''}${user.permissions.canDelete ? 'Delete' : ''}`
+                      : 'No permissions granted.'}
                   </TableCell>
+
                   <TableCell align="center">
                     <Tooltip title={USER_TXT.TOOLTIP_VIEW_PERMISSIONS}>
                       <IconButton

@@ -72,7 +72,7 @@ const PermissionRequestsHistory: React.FC<PermissionRequestsHistoryProps> = ({ u
                     <TableCell>
                       <span className={`${styles.statusCell} ${statusClass}`}>
                         {record.status}
-                        {record.status === 'approved' && record.reviewedBy && (
+                        {(record.status === 'approved' || record.status === 'denied') && record.reviewedBy && (
                           <> {PERSONAL_TEXT.byText}{record.reviewedBy.username}</>
                         )}
                         {record.status !== 'pending' && (

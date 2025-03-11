@@ -44,6 +44,7 @@ export const useAddCity = () => {
       );
     },
     onError: (error: any) => {
+      console.log("Error adding city:", error);
     },
   });
 };
@@ -66,6 +67,7 @@ export const useDeleteCity = () => {
       );
     },
     onError: (error: any) => {
+      console.log("Error deleting city:", error);
     },
   });
 };

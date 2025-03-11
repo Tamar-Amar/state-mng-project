@@ -46,7 +46,8 @@ const PermissionsPage: React.FC = () => {
     );
   }
 
-  const groupedByUser: Record<string, PermissionRequestFromServer[]> = pendingRequests.reduce((acc, request) => {
+  const groupedByUser: Record<string, PermissionRequestFromServer[]> = 
+  pendingRequests.reduce((acc, request) => {
     if (!acc[request.user._id]) {
       acc[request.user._id] = [];
     }
@@ -109,6 +110,7 @@ const PermissionsPage: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+
                   {requests
                     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                     .map((request: PermissionRequestFromServer) => (
@@ -123,11 +125,11 @@ const PermissionsPage: React.FC = () => {
                                 <IconButton 
                                   color="success" 
                                   onClick={() => handleApprove(request)}
-                                  disabled={approveMutation.isPending}
-                                >
+                                  disabled={approveMutation.isPending}>
                                   <CheckCircleIcon />
                                 </IconButton>
                               </Tooltip>
+
                               <Tooltip title={GNRL_TXT.TOOLTIP.DENY}>
                                 <IconButton 
                                   color="error" 

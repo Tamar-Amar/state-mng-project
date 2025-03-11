@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useCurrentUser } from '../hooks/useAuth';
-import GNRL_TXT from '../constants/generalTxt.ts'
+import { LABELS } from '../constants/componentsTxt';
 
 
 interface ProtectedRouteProps {
@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const { user: currentUser, loading } = useCurrentUser();
 
   if (loading) {
-    return <div>{<p>{GNRL_TXT.LOADING}</p>}</div>;
+    return <div>{<p>{LABELS.loading}</p>}</div>;
   }
 
   if (!currentUser || !allowedRoles.includes(currentUser.role)) {

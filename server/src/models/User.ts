@@ -18,7 +18,6 @@ interface IUser extends Document {
         canDelete: boolean;
     };
     permissionRequests: mongoose.Types.ObjectId[];
-    comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 
@@ -51,8 +50,5 @@ UserSchema.pre<IUser>('save', async function (next) {
     next();
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword: string) {
-    return await bcrypt.compare(candidatePassword, this.password);
-};
 
 export default mongoose.model<IUser>('User', UserSchema, 'users-collections');

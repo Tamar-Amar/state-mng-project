@@ -35,8 +35,11 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
   userId,
   currentPermissions,
 }) => {
-  const { data: existingRequests } = useUserPermissionRequests(userId);
-  const availableOptions = getAvailablePermissionOptions(currentPermissions, existingRequests);
+  
+  const { data: existingRequests } = 
+    useUserPermissionRequests(userId);
+  const availableOptions = 
+    getAvailablePermissionOptions(currentPermissions, existingRequests);
   const hasAvailableOptions = availableOptions.length > 0;
 
   const [selectedOption, setSelectedOption] = useState<PermissionOption>(availableOptions[0] || 'add');
@@ -54,9 +57,10 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
     }
 
     const permissions = buildPermissionsObject(selectedOption);
+
     sendPermissionRequest(permissions, {
       onSuccess: () => {
-        setSnackbarMessage(SUCCESS.successPermissionRequestMessage);
+        setSnackbarMessage(SUCCESS.permissionRequestMessage);
         setSnackbarSeverity('success');
         onClose();
         setSnackbarOpen(true);

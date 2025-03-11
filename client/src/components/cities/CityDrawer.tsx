@@ -76,7 +76,9 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
               </ListItem>
             ))
           ) : (
-            <Typography color="textSecondary">{CITY_TEXT.noCitiesAvailable}</Typography>
+            <Typography color="textSecondary">
+              {CITY_TEXT.noCitiesAvailable}
+            </Typography>
           )}
         </List>
 
