@@ -12,7 +12,8 @@ export const useLoginUser = () => {
       localStorage.setItem('token', data.token);
     },
     onError: (error) => {
-      console.error('Login failed:', error);
+      console.log('Error logging in:', error);
+      
     },
   });
 };
@@ -21,7 +22,6 @@ export const useRegisterUser = () => {
   return useMutation({
     mutationFn: registerUser,
     onError: (error) => {
-      console.error('Registration failed:', error);
     },
   });
 };

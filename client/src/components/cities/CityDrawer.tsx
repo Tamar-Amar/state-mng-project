@@ -7,7 +7,7 @@ import { City } from '../../types/City';
 import { State } from '../../types';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../store/userAtom';
-import { CITY_TEXT } from './cityTxt';
+import { CITY_TEXT, LABELS } from '../../constants/componentsTxt';
 
 interface CityDrawerProps {
   open: boolean;
@@ -76,7 +76,9 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
               </ListItem>
             ))
           ) : (
-            <Typography color="textSecondary">{CITY_TEXT.noCitiesAvailable}</Typography>
+            <Typography color="textSecondary">
+              {CITY_TEXT.noCitiesAvailable}
+            </Typography>
           )}
         </List>
 
@@ -85,7 +87,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
             fullWidth
             variant="outlined"
             size="small"
-            label={CITY_TEXT.cityNameLabel}
+            label={LABELS.cityName}
             value={newCityName}
             onChange={(e) => setNewCityName(e.target.value)}
             disabled={!user?.permissions?.canAdd}
@@ -101,7 +103,7 @@ const CityDrawer: React.FC<CityDrawerProps> = ({ open, onClose, cities, onDelete
         </Box>
 
         <Button variant="outlined" fullWidth onClick={onClose} sx={{ mt: 2 }}>
-          {CITY_TEXT.closeButton}
+          {LABELS.close}
         </Button>
 
         <Snackbar

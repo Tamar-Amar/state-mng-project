@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import CityDrawer from '../cities/CityDrawer';
 import '../../styles/_statesTable.scss';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
-import { STATE_TABLE_TEXT } from '../componentsTxt';
+import { BUTTON, LABELS, STATE_TABLE_TEXT } from '../../constants/componentsTxt';
 
 const StatesTable: React.FC = () => {
   const { data: states, isLoading, isError } = useStates();
@@ -99,7 +99,7 @@ const StatesTable: React.FC = () => {
 
   const columnDefs = useMemo(() => [
     {
-      headerName: STATE_TABLE_TEXT.headerFlag,
+      headerName: LABELS.flag,
       field: 'flag',
       flex: 1,
       minWidth: 100,
@@ -112,21 +112,23 @@ const StatesTable: React.FC = () => {
         />
       ),
     },
-    { headerName: STATE_TABLE_TEXT.headerCountryName, field: 'name', flex: 2, minWidth: 150 },
-    { headerName: STATE_TABLE_TEXT.headerRegion, field: 'region', flex: 1, minWidth: 100 },
-    { headerName: STATE_TABLE_TEXT.headerPopulation, field: 'population', flex: 1, minWidth: 100 },
+    { headerName: LABELS.countryName, field: 'name', flex: 2, minWidth: 150 },
+    { headerName: LABELS.region, field: 'region', flex: 1, minWidth: 100 },
+    { headerName: LABELS.population, field: 'population', flex: 1, minWidth: 100 },
     {
-      headerName: STATE_TABLE_TEXT.headerActions,
+      headerName: LABELS.actions,
       field: 'actions',
       flex: 3,
       minWidth: 340,
       cellRendererFramework: (params: any) => (
         <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', alignItems: 'center' }}>
-          <Button variant="outlined" color="primary" onClick={() => handleEditState(params.data)}>
-            {STATE_TABLE_TEXT.editButton}
+          <Button variant="outlined" color="primary" onClick={() => handleEditState(params.data)} disabled={!user?.permissions?.canUpdate}>
+            {BUTTON.edit}
+            
           </Button>
-          <Button variant="outlined" color="error" onClick={() => handleDeleteState(params.data._id)}>
-            {STATE_TABLE_TEXT.deleteButton}
+          <Button variant="outlined" color="error" onClick={() => handleDeleteState(params.data._id)} disabled={!user?.permissions?.canDelete}>
+            {BUTTON.delete}
+            
           </Button>
           <Button
             sx={{
@@ -143,7 +145,7 @@ const StatesTable: React.FC = () => {
             startIcon={<LocationCityIcon />}
             onClick={() => handleViewCities(params.data)}
           >
-            {STATE_TABLE_TEXT.viewCitiesButton}
+            {BUTTON.viewCities}
           </Button>
         </div>
       ),

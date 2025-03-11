@@ -22,7 +22,7 @@ import { usePendingRequests, useApprovePermission, useDenyPermission } from '../
 import { PermissionRequestFromServer } from '../types';
 import { useQueryClient } from '@tanstack/react-query';
 import PERM_TXT from '../constants/pages/permissonPageTxt';
-import GNRL_TXT from '../constants/generalTxt';
+import {ERROR, GNRL_TXT} from '../constants/componentsTxt';
 
 const PermissionsPage: React.FC = () => {
   const { data: pendingRequests = [], isLoading, error } = usePendingRequests();
@@ -41,12 +41,13 @@ const PermissionsPage: React.FC = () => {
   if (error) {
     return (
       <Typography color="error" align="center" sx={{ mt: 4 }}>
-        {GNRL_TXT.ERROR.LOAD('permission requests')}
+        {ERROR.loading('permission requests')}
       </Typography>
     );
   }
 
-  const groupedByUser: Record<string, PermissionRequestFromServer[]> = pendingRequests.reduce((acc, request) => {
+  const groupedByUser: Record<string, PermissionRequestFromServer[]> = 
+  pendingRequests.reduce((acc, request) => {
     if (!acc[request.user._id]) {
       acc[request.user._id] = [];
     }
@@ -109,6 +110,7 @@ const PermissionsPage: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+
                   {requests
                     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                     .map((request: PermissionRequestFromServer) => (
@@ -123,11 +125,11 @@ const PermissionsPage: React.FC = () => {
                                 <IconButton 
                                   color="success" 
                                   onClick={() => handleApprove(request)}
-                                  disabled={approveMutation.isPending}
-                                >
+                                  disabled={approveMutation.isPending}>
                                   <CheckCircleIcon />
                                 </IconButton>
                               </Tooltip>
+
                               <Tooltip title={GNRL_TXT.TOOLTIP.DENY}>
                                 <IconButton 
                                   color="error" 

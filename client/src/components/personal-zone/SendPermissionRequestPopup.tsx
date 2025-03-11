@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useCreateRequestPermission, useUserPermissionRequests } from '../../hooks/usePermissions';
 import { PermissionOption, getAvailablePermissionOptions, buildPermissionsObject } from '../../utils/permissionRequestUtils';
-import { PERSONAL_TEXT } from './personalTxt';
+import { BUTTON, ERROR, PERSONAL_TEXT, SUCCESS } from '../../constants/componentsTxt';
 
 interface SendPermissionRequestPopupProps {
   open: boolean;
@@ -35,9 +35,13 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
   userId,
   currentPermissions,
 }) => {
-  const { data: existingRequests } = useUserPermissionRequests(userId);
-  const availableOptions = getAvailablePermissionOptions(currentPermissions, existingRequests);
+  
+  const { data: existingRequests } = 
+    useUserPermissionRequests(userId);
+  const availableOptions = 
+    getAvailablePermissionOptions(currentPermissions, existingRequests);
   const hasAvailableOptions = availableOptions.length > 0;
+
   const [selectedOption, setSelectedOption] = useState<PermissionOption>(availableOptions[0] || 'add');
   const { mutate: sendPermissionRequest } = useCreateRequestPermission(userId);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -53,16 +57,17 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
     }
 
     const permissions = buildPermissionsObject(selectedOption);
+
     sendPermissionRequest(permissions, {
       onSuccess: () => {
-        setSnackbarMessage(PERSONAL_TEXT.successPermissionRequestMessage);
+        setSnackbarMessage(SUCCESS.permissionRequestMessage);
         setSnackbarSeverity('success');
         onClose();
         setSnackbarOpen(true);
       },
       onError: (error) => {
         console.error('Error sending permission request:', error);
-        setSnackbarMessage(PERSONAL_TEXT.errorPermissionRequestMessage);
+        setSnackbarMessage(ERROR.permissionRequestMessage);
         setSnackbarSeverity('error');
         onClose();
         setSnackbarOpen(true);
@@ -104,11 +109,11 @@ const SendPermissionRequestPopup: React.FC<SendPermissionRequestPopupProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} variant="outlined">
-            {PERSONAL_TEXT.cancelButton}
+            {BUTTON.cancel}
           </Button>
           {hasAvailableOptions && (
             <Button onClick={handleSubmit} variant="contained" color="primary">
-              {PERSONAL_TEXT.submitRequestButton}
+              {BUTTON.submitRequest}
             </Button>
           )}
         </DialogActions>

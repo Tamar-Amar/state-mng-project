@@ -59,7 +59,7 @@ const App: React.FC = () => {
           </BrowserRouter>
       </RecoilRoot>
     </ErrorBoundary>
-    <ReactQueryDevtools initialIsOpen={false} />
+    <ReactQueryDevtools initialIsOpen={false} /> 
     </QueryClientProvider>
   );
 };

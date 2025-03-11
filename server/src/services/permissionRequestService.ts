@@ -46,18 +46,17 @@ export const setUserPermissions = async (userId: string, permissions: { canAdd: 
     }
 };
 
-export const approvePermissionRequest = async (requestId: string, adminId: string, approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean }) => {
+export const approvePermissionRequest = async (
+  requestId: string, adminId: string, approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean }
+) => {
     const request = await PermissionRequest.findById(requestId);
-
     if (!request) throw new Error('Request not found');
     const user= await User.findById(request.user);
-
     await setUserPermissions(request.user.toString(), {
         canAdd: approvals.canAdd || user?.permissions?.canAdd || false,
         canUpdate: approvals.canUpdate || user?.permissions?.canUpdate || false,
         canDelete: approvals.canDelete || user?.permissions?.canDelete || false
     });
-
     request.status = 'approved';
     request.reviewedBy = new mongoose.Types.ObjectId(adminId);
     return await request.save();

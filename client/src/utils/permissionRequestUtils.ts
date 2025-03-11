@@ -18,17 +18,45 @@ export function getAvailablePermissionOptions(
   currentPermissions: CurrentPermissions,
   existingRequests: any[] = []
 ): PermissionOption[] {
+
   const options: PermissionOption[] = [];
 
-  if (!currentPermissions.canAdd && !existingRequests.some(req => req.requestedPermissions?.canAdd)) {
+  if (
+    !currentPermissions.canAdd &&
+    !existingRequests.some((req) => {
+      if (!req.requestedPermissions?.canAdd) return false;
+      if (req.status !== 'denied') return true;
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+      return Date.now() - new Date(req.updatedAt).getTime() < oneWeek;
+    })
+  ) {
     options.push('add');
   }
-  if (!currentPermissions.canUpdate && !existingRequests.some(req => req.requestedPermissions?.canUpdate)) {
+
+  if (
+    !currentPermissions.canUpdate &&
+    !existingRequests.some((req) => {
+      if (!req.requestedPermissions?.canUpdate) return false;
+      if (req.status !== 'denied') return true;
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+      return Date.now() - new Date(req.updatedAt).getTime() < oneWeek;
+    })
+  ) {
     options.push('update');
   }
-  if (!currentPermissions.canDelete && !existingRequests.some(req => req.requestedPermissions?.canDelete)) {
-    options.push('delete');
-  }
+
+if (
+  !currentPermissions.canDelete &&
+  !existingRequests.some((req) => {
+    if (!req.requestedPermissions?.canDelete) return false;
+    if (req.status !== 'denied') return true;
+    const oneWeek = 7 * 24 * 60 * 60 * 1000;
+    return Date.now() - new Date(req.updatedAt).getTime() < oneWeek;
+  })
+) {
+  options.push('delete');
+}
+
   if (options.length === 3) {
     options.push('all');
   }

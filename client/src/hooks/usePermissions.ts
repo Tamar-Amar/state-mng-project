@@ -7,7 +7,7 @@ import {
   denyPermissionRequest,
   getUserPermissionRequests,
 } from '../services/permissionRequestsService';
-import { PermissionRequest, PermissionRequestFromServer } from '../types';
+import {  PermissionRequestFromServer } from '../types';
 
 export const useRequestPermission = () => {
   const queryClient = useQueryClient();
@@ -67,9 +67,11 @@ export const usePendingRequests = () =>
   export const useApprovePermission = () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: ({ id, approvals }: { id: string; approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean } }) => 
+      mutationFn: ({ id, approvals }: 
+        { id: string; approvals: { canAdd?: boolean; canUpdate?: boolean; canDelete?: boolean } }) => 
         approvePermissionRequest( id, approvals),
       onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
+      onError: (error) => console.log('Error approving permission:', error),
     });
   };
 
@@ -78,5 +80,8 @@ export const useDenyPermission = () => {
   return useMutation({
     mutationFn: denyPermissionRequest,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['pendingPermissionRequests'] }),
+    onError: (error) => console.log('Error denying permission:', error),
   });
 };
+
+

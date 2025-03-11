@@ -3,6 +3,7 @@ import { api } from "./apiService";
 
 export const loginUser = async (credentials: { username: string; password: string }): Promise<{ token: string; user: User }> => {
     const response = await api.post('/auth/login', credentials);
+    console.log("---------fgh",response.data);
     return response.data;
   };
   

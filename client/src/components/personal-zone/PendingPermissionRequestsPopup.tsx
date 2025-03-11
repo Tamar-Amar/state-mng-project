@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useApprovePermission, useFilteredUserRequests } from '../../hooks/usePermissions';
 import { PermissionRequestFromServer } from '../../types';
-import { PERSONAL_TEXT } from './personalTxt';
+import { BUTTON, LABELS, PERSONAL_TEXT } from '../../constants/componentsTxt';
 
 interface PermissionRequestsPopupProps {
   open: boolean;
@@ -38,9 +38,9 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
 
   const formatPermissions = (requestedPermissions: PermissionRequestFromServer['requestedPermissions']) => {
     const perms: string[] = [];
-    if (requestedPermissions.canAdd) perms.push(PERSONAL_TEXT.chipAdd);
-    if (requestedPermissions.canUpdate) perms.push(PERSONAL_TEXT.chipUpdate);
-    if (requestedPermissions.canDelete) perms.push(PERSONAL_TEXT.chipDelete);
+    if (requestedPermissions.canAdd) perms.push(LABELS.add);
+    if (requestedPermissions.canUpdate) perms.push(LABELS.update);
+    if (requestedPermissions.canDelete) perms.push(LABELS.delete);
     return perms.join(', ') || 'None';
   };
 
@@ -50,12 +50,6 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
         id: requestId,
         approvals: requestedPermissions,
       },
-      {
-        onSuccess: () => {
-        },
-        onError: (error) => {
-        },
-      }
     );
   };
 
@@ -79,10 +73,10 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>{PERSONAL_TEXT.tableHeaderDate}</TableCell>
-                <TableCell>{PERSONAL_TEXT.tableHeaderRequestedPermissions}</TableCell>
-                <TableCell>{PERSONAL_TEXT.tableHeaderStatus}</TableCell>
-                <TableCell>{PERSONAL_TEXT.tableHeaderAction}</TableCell>
+                <TableCell>{LABELS.date}</TableCell>
+                <TableCell>{LABELS.requestedPermissions}</TableCell>
+                <TableCell>{LABELS.status}</TableCell>
+                <TableCell>{LABELS.actions}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -103,8 +97,8 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
                         disabled={approveMutation.isPending}
                       >
                         {approveMutation.isPending
-                          ? PERSONAL_TEXT.approvingText
-                          : PERSONAL_TEXT.approveButton}
+                          ? LABELS.approving
+                          : BUTTON.approve}
                       </Button>
                     )}
                   </TableCell>
@@ -116,7 +110,7 @@ const PermissionRequestsPopup: React.FC<PermissionRequestsPopupProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="contained">
-          {PERSONAL_TEXT.closeButton}
+          {BUTTON.close}
         </Button>
       </DialogActions>
     </Dialog>

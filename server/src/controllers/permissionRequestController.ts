@@ -81,7 +81,12 @@ export const approvePermissionRequestController = async (req: Request, res: Resp
 
 export const denyPermissionRequestController = async (req: Request, res: Response): Promise<void> => {
     try {
-        await denyPermissionRequest(req.params.id, req.user!.id);
+        const adminId = req.user?.id || req.body.admin;
+        if (!adminId) {
+            res.status(401).json({ message: 'Admin not authenticated' });
+            return;
+        }
+        await denyPermissionRequest(req.params.id,adminId);
         res.status(200).json({ message: 'Permission request denied' });
     } catch (error) {
         res.status(500).json({ message: 'Error denying permission request', error });
