@@ -1,1 +1,0 @@
-vscode://file/C:/Users/TamarAmar/Desktop/states-mng-project/client/src/components/state/StatesTable.tsx:48

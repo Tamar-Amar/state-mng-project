@@ -143,7 +143,7 @@ const RegisterForm: React.FC = () => {
             />
           </Box>
 
-          {/* שדה שם משתמש */}
+
           <TextField
             label={LOGIN_TEXT.usernameLabel}
             name="username"
@@ -314,17 +314,6 @@ const RegisterForm: React.FC = () => {
           >
             {LOGIN_TEXT.registerSubmit}
           </Button>
-
-          {/* <Snackbar
-            open={Boolean(formik.isSubmitting)}
-            autoHideDuration={3000}
-            onClose={() => {}}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          >
-            <Alert severity="success" sx={{ width: '100%' }}>
-              {LOGIN_TEXT.registrationSuccessMessage}
-            </Alert>
-          </Snackbar> */}
 
           <Snackbar
             open={showSuccess}
